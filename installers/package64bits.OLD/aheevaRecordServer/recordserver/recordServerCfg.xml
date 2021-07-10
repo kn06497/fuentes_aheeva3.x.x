@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<RecordServer>
+	<log level = "trace"/>
+	<username name="xxxxxxxx"/>
+	<password value="xxxxxxxx"/>	
+	<updateport value="8000"/>		
+	<AsteriskCTI>
+		<hostcti name="192.168.xxx.xxx"/>
+		<ctiport value="8765"/>	
+	</AsteriskCTI>	
+	<ssl>
+		<certf fname="aheeva.pem"/>
+		<keyf fname="aheeva.pem"/>
+	</ssl>
+ </RecordServer>

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Add a new tenant</title>
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript">
+function validateInfo(now_tname){
+	//alert(now_tname)
+	//alert(modifytenant.n_tname.value)
+	if(document.modifytenant.n_tname.value == "") // sil ne met rien comme nouvelle valeur
+		alert("Please enter tenant name.")
+	else if(validation(document.modifytenant.n_tname.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !!!");
+		document.modifytenant.n_tname.focus();		
+	}
+	else // s il y a quelque chose
+		{
+		if(now_tname == document.modifytenant.n_tname.value)  //s il ne change pas de valeur du Tenant
+			alert("No changes to tenant informations.")
+		else  /// si le nom du tenant est change, envoye la nouvelle info
+			{
+			already_use = false;    //Verifier que le nom de tenant n existe pas encore
+			var tenants 	= appletObj.getTenantInfo();
+			var jsTenants	= tenants + "";
+			arrayTenants	= jsTenants .split("|");
+
+			for(h=0; h < arrayTenants.length && !already_use; h++)
+				{
+				thisTenantInfos = arrayTenants[h].split(",");
+				if(thisTenantInfos[1] == document.modifytenant.n_tname.value)
+					{
+					alert("Tenant name "+document.modifytenant.n_tname.value+" already exists. \n Please retry !");
+					already_use = true;
+					}
+				}
+
+			if(!already_use)			//si ce tenant n est pas encore utilise,
+				{
+				appletObj.modifyTenant(document.modifytenant.tenant_id.value , document.modifytenant.n_tname.value);
+				//alert("New Tenant has been created");
+				}
+			}
+		}
+}
+
+function askDelete(now_tname)
+	{
+	yesno = confirm("You are about to delete Tenant "+now_tname+"\n Do you want to continue ?");
+
+	if(yesno == true) // sil desire vraiment deleter
+		{
+		appletObj.deleteTenant(document.modifytenant.tenant_id.value);
+		//alert("New Tenant has been deleted");
+		}
+        document.location = "../defaultpage.htm"
+	}
+</script>
+</head>
+
+<body class="bottompagebody" TEXT="#000000" LINK="#000066" VLINK="#666666" >
+<script language="javascript" type="text/javascript">
+tName = normalizeString(QueryString("tName"));
+dbid = normalizeString(QueryString("dbid"));
+		document.write("<form name=\"modifytenant\" method=\"get\">");
+			document.write("<table border=\"0\">");
+				document.write("<tr>");
+					document.write("<td>&nbsp;</td><td><h3>Modify tenant name</h3></td>");
+				document.write("</tr>");
+				document.write("<tr>");
+					document.write("<td>Tenant ID</td><td><input name=\"tenant_id\" type=\"text\" disabled value=\""+dbid+"\"></td>");
+				document.write("</tr>");
+				document.write("<tr>");
+					document.write("<td>Tenant Name</td><td><input name=\"n_tname\" type=\"text\" value=\""+tName+"\"></td>");
+				document.write("</tr>");
+				document.write("<tr>");
+					document.write("<td>&nbsp;</td><td><input name=\"submit\" type=\"button\" value=\" Update \" onClick=\"validateInfo('"+tName+"')\">&nbsp;&nbsp;<input name=\"detele_b\" type=\"button\" value=\" Delete \" onClick=\"askDelete('"+tName+"')\"></td>");
+document.write("</tr>");
+document.write("</table>");
+document.write("</form>");
+</script>
+</body>
+</html>

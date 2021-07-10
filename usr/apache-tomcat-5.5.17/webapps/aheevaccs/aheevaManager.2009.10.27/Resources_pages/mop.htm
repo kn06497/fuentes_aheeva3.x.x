@@ -1,0 +1,313 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="tab_luna.css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="style_2.css" />
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Language" content="en-us">
+
+
+<style type="text/css">
+.dynamic-tab-pane-control .tab-page {
+	height:		200px;
+}
+.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page {
+	height:		100px;
+}
+html, body {
+/*	background:	ThreeDFace; */
+
+}
+form {
+	margin:		0;
+	padding:	0;
+}
+/* over ride styles from webfxlayout */
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+</style>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="JavaScript" type="text/javascript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript" src="tabpane.js"></script>
+<script language="javascript" type="text/javascript" src="mopFunctions.js"></script>
+<script>
+function askHelp(URL) {
+day = new Date();
+id = day.getTime();
+eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300');");
+}
+</script>
+
+<script language="javascript">
+    // Associate a default button with pressing the Enter key
+	function KeyDownHandler(btn)
+    {
+        // process only the Enter key
+        if (event.keyCode == 13)
+        {
+            // cancel the default submit
+            event.returnValue=false;
+            event.cancel = true;
+            // submit the form by programmatically clicking the specified button
+            btn.click();
+        }
+    }
+</script>
+
+</head>
+
+<body class="bottompagebody" onLoad="displayMopInfo()" >
+
+
+<div class="tab-pane" id="tabPane1">
+<form name="mop_form" onKeyDown="KeyDownHandler(save)">
+<script type="text/javascript">
+tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+</script>
+	<div class="tab-page" id="tabGeneral">
+		<h2 class="tab"><script>document.write(MultiArray["General"][lang])</script></h2>
+		<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabGeneral" ) );</script>
+		<fieldset>
+			<legend><script>document.write(MultiArray["General settings"][lang])</script></legend>
+			<table border="0">
+			  <tr>
+			   <td height="21">&nbsp;			   </td>
+			   <td>			   </td>
+			  </tr>
+				<tr>
+					<td width="197" height="22"><script>document.write(MultiArray["Method of payment"][lang])</script></td>
+					<td width="292" height="22" align="left"><input type="text" name="mopName" onClick="enabledUpdateButton()" size="20"></td>
+				</tr>
+				<tr>
+					<td width="197" height="24"><script>document.write(MultiArray["Description"][lang])</script></td>
+					<td width="292"height="50"><textarea rows="3" name="mopDescription" cols="41" onChange="enabledUpdateButton()"></textarea></td>
+				</tr>
+				<tr>
+					<td width="197" height="25">
+						<script>document.write(MultiArray["Active"][lang])</script>
+						<input id="mopStatus" type="checkbox" name="mopStatus" value="ON" onClick="enabledUpdateButton()" checked>					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+	<div class="tab-page" id="tabCodes">
+		<h2 class="tab"><script>document.write(MultiArray["Codes"][lang])</script></h2>
+		<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabCodes" ) );</script>
+		<fieldset>
+		<legend><script>document.write(MultiArray["MOP Codes"][lang])</script></legend>
+			<table border="0">
+			  <tr>
+			   <td height="21">&nbsp;			   </td>
+			   <td>			   </td>
+			  </tr>
+				<tr>
+					<td width="197" height="36"><script>document.write(MultiArray["Training Code"][lang])</script></td>
+					<td  width="293" height="36">
+						<input type="text" maxlength="5" size="5" name="trainingCode" onClick="enabledUpdateButton()">
+						<script>document.write(MultiArray["Hours"][lang])</script><input type="radio" name="trainingCodeTag" value="1" checked>&nbsp;&nbsp;
+						<script>document.write(MultiArray["Dollars"][lang])</script><input type="radio" name="trainingCodeTag" value="2" disabled>					</td>
+				</tr>
+				<tr>
+					<td width="197" height="36"><script>document.write(MultiArray["Integration Code"][lang])</script></td>
+					<td  width="293" height="36">
+						<input type="text" maxlength="5" size="5" name="integrationCode" onClick="enabledUpdateButton()">
+						<script>document.write(MultiArray["Hours"][lang])</script><input type="radio" name="integrationCodeTag" value="1" checked>&nbsp;&nbsp;
+						<script>document.write(MultiArray["Dollars"][lang])</script><input type="radio" name="integrationCodeTag" value="2" disabled>				  </td>
+				</tr>
+				<tr>
+					<td width="197" height="36"><script>document.write(MultiArray["Production Code"][lang])</script></td>
+					<td  width="293" height="36">
+						<input type="text" maxlength="5" size="5" name="productionCode" onClick="enabledUpdateButton()">
+						<script>document.write(MultiArray["Hours"][lang])</script><input type="radio" name="productionCodeTag" value="1" checked>&nbsp;&nbsp;
+						<script>document.write(MultiArray["Dollars"][lang])</script><input type="radio" name="productionCodeTag" value="2" disabled>					</td>
+				</tr>
+				<tr>
+					<td width="197" height="36"><script>document.write(MultiArray["Overtime Code"][lang])</script></td>
+					<td  width="293" height="36">
+						<input type="text" maxlength="5" size="5" name="overtimeCode" onClick="enabledUpdateButton()">
+						<script>document.write(MultiArray["Hours"][lang])</script><input type="radio" name="overtimeCodeTag" value="1" checked>&nbsp;&nbsp;
+						<script>document.write(MultiArray["Dollars"][lang])</script><input type="radio" name="overtimeCodeTag" value="2" disabled>					</td>
+				</tr>
+				<tr>
+					<td width="197" height="36"><script>document.write(MultiArray["Commission Code"][lang])</script></td>
+					<td  width="293" height="36">
+						<input type="text" maxlength="5" size="5" name="commissionCode" onClick="enabledUpdateButton()">
+						<script>document.write(MultiArray["Hours"][lang])</script><input type="radio" name="commissionCodeTag" value="1" disabled>&nbsp;&nbsp;
+						<script>document.write(MultiArray["Dollars"][lang])</script><input type="radio" name="commissionCodeTag" value="2" checked>					</td>
+				</tr>
+				<tr>
+					<td width="197" height="36"><script>document.write(MultiArray["Continuing training Code"][lang])</script></td>
+					<td  width="293" height="36">
+						<input type="text" maxlength="5" size="5" name="continuingTrainingCode" onClick="enabledUpdateButton()">
+						<script>document.write(MultiArray["Hours"][lang])</script><input type="radio" name="continuingTrainingCodeTag" value="1" checked>&nbsp;&nbsp;
+						<script>document.write(MultiArray["Dollars"][lang])</script><input type="radio" name="continuingTrainingCodeTag" value="2" disabled>					</td>
+				</tr>
+			</table>
+		</fieldset>	
+	</div>
+	<div class="tab-page" id="tabTreats">
+		<h2 class="tab"><script>document.write(MultiArray["Commissions"][lang])</script></h2>
+		<script type="text/javascript">
+			if(QueryString('mopName') != null)
+				tp1.addTabPage( document.getElementById( "tabTreats" ) );
+		</script>
+		<fieldset>
+		<legend><script>document.write(MultiArray["Select a MOP commission"][lang])</script></legend>
+			<table border="0">
+			  <tr>
+			   <td height="21" align="center"><b><script>document.write(MultiArray["Available commissions"][lang])</script></b>
+			   </td>
+			   <td>
+			   </td>
+			   <td align="center"><b><script>document.write(MultiArray["Selected commissions"][lang])</script></b></td>
+			  </tr>
+			   <tr>
+				<td width="43%" height="138" align="center">
+				 <select width="200" style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 200px" name="availableTreatments" size="10" multiple onChange="enabledAddButton()">
+				 </select>
+				</td>
+				<td width="11%" height="138" bordercolordark="#c0c0c0" nowrap align="center">
+				 <p> </p>
+				 <p>
+				 <button name="addButton"  disabled onClick="chkAndAddTreatmentToMop()" style="WIDTH: 40px; HEIGHT: 26px" type=button> &gt;&gt; </button></p>
+				 <button name="dropButton" disabled onClick="chkAndDropTreatmentFromMop()" style="WIDTH: 40px; HEIGHT: 26px" type=button> &lt;&lt; </button>
+				 <p>&nbsp;</p>
+				</td>
+				<td width="288%" height="138" bordercolor="#000000" align="center">
+				 <select width="200" style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 200px" name="selectedTreatments" size="10" multiple onChange="enabledDropButton()">
+				 </select>
+				</td>
+			   </tr>
+			
+			</table>
+		</fieldset>	
+	</div>
+<!--
+	<div class="tab-page" id="tabHolidays">
+		<h2 class="tab">Holidays</h2>
+		<script type="text/javascript">
+			if(QueryString('mopName') != null)
+				tp1.addTabPage( document.getElementById( "tabHolidays" ) );
+		</script>
+		<fieldset>
+		<legend>Holidays</legend>
+			<table border="0">
+			  <tr>
+			   <td height="21">&nbsp;
+			   </td>
+			  </tr>
+				<tr>
+					<td width="197" height="36"><b>Select a date</b></td>
+					<td  width="293" height="36">
+						<input onClick="" type="text">
+					</td>
+				</tr>
+			</table>
+		</fieldset>	
+	</div>
+-->	
+	<div class="tab-page" id="tabOvertime">
+		<h2 class="tab"><script>document.write(MultiArray["Overtime"][lang])</script></h2>
+		<script type="text/javascript">
+			tp1.addTabPage( document.getElementById( "tabOvertime" ) );
+		</script>
+		<fieldset>
+		<legend><script>document.write(MultiArray["Overtime properties"][lang])</script></legend>
+			<table border="0">
+			  <tr>
+			   <td height="21">&nbsp;
+			   </td>
+			   <td>
+			   </td>
+			  </tr>
+				<tr>
+					<td width="197" height="36"><script>document.write(MultiArray["Number of weekly hours"][lang])</script></td>
+					<td  width="293" height="36">
+						<input type="text" maxlength="5" size="10" name="weeklyHours" onKeyPress="enabledUpdateButton()">
+					</td>
+				</tr>
+				<!--<tr>
+					<td width="197" height="36"><b>Multiplicative factor</b><br>(in overtime)</td>
+					<td  width="293" height="36">
+						<input type="text" maxlength="5" size="10" name="multFactor">
+					</td>
+				</tr>-->
+			</table>
+		
+      <p>&nbsp;</p>
+      </fieldset>	
+	</div>
+
+
+
+
+	<div class="tab-page" id="tabHelp">
+		<h2 class="tab"><script>document.write(MultiArray["Help"][lang])</script></h2>
+		<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabHelp" ) );</script>
+		<fieldset>
+			<legend><script>document.write(MultiArray["Help for methods of payment"][lang])</script></legend>
+			<table border="0">
+			  <tr>
+			   <td height="21">&nbsp;			   </td>
+			   <td>			   </td>
+			  </tr>
+				<tr>
+					<td width="600" >
+					
+		     <b><script>document.write(MultiArray["General"][lang])</script></b><br>
+			<script>document.write(MultiArray["This tab allows you to set a name(mandatory) for your MOP. You can also set a description and a status (active by default) for your MOP."][lang])</script>
+			<br><br>
+			<b><script>document.write(MultiArray["Codes"][lang])</script> </b><br>
+			<script>document.write(MultiArray["This tab allows you to set some codes for different activities. These activities are training, integration, production, commission and continuing training. These codes represent hourly rates(by default) or amount of money."][lang])</script>
+			<br><br>
+			<!-- <b><script>document.write(MultiArray["Commissions"][lang])</script> </b><br>
+			<script>document.write(MultiArray["This tab allows you to choose a treatment for your MOP. You cannot choose more than one treatment."][lang])</script> 
+			<br><br>  -->
+			<b><script>document.write(MultiArray["Overtime"][lang])</script> </b><br>
+			<script>document.write(MultiArray["This tab allows you to set a limit from which overtime hours will be counted. You can also set the multiplicative factor for overtime hours."][lang])</script>
+			<br><br>
+					
+					</td>
+					
+				</tr>
+				
+			</table>
+		</fieldset>
+	</div>
+
+<tr>
+	   <td align="center">
+	   
+	   	<script>document.write("<input disabled id=\"save\" name=\"updateInfo\" type=\"button\" value=\""+MultiArray["Update"][lang]+"\" onClick=\"validateInfo()\">")</script>
+		<script>document.write("<input name=\"deleteMop\" type=\"button\" value=\""+MultiArray["Delete"][lang]+"\" onClick=\"askDelete()\">")</script>
+		
+	
+        </td>
+	</tr>
+</form>
+</div>
+
+
+
+</body>
+
+</html>

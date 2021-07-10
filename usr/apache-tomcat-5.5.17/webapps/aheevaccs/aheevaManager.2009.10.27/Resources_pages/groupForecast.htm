@@ -1,0 +1,197 @@
+<html>
+
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<!-- Calendrier début -->
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<!-- Calendrier fin -->
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script>
+
+var vValue = normalizeString(QueryString('type'));
+var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+//alert("vValue"+vValue);
+function fillObjectCombo()
+{
+    if((vValue=='GroupForecast') )
+	{
+		var agentGroups = String( appletObj.getAgentGroupByDBIDandName(tenant_dbid) );
+		var jsAgentGroups = agentGroups + "";
+    	        arrayGroups = jsAgentGroups.split("|");
+		for (j = 0; j <arrayGroups.length; j++){
+                  var groups = arrayGroups[j].split(",");
+
+    			myOption = new Option(groups[0],arrayGroups[j])
+			optionPos = document.theForm.objects.options.length
+			document.theForm.objects.options[optionPos]=myOption
+    		}
+
+    }
+
+    if(document.theForm.objects.options.length >= 10)
+	   	document.theForm.objects.size = 10;
+	else
+		document.theForm.objects.size = document.theForm.objects.options.length;
+
+
+}
+
+function selectAll()
+{
+  for (j = 0; j <document.theForm.objects.options.length; j++)
+	  document.theForm.objects.options[j].selected = true;  
+}
+
+function unSelectAll()
+{
+  for (j = 0; j <document.theForm.objects.options.length; j++)
+	  document.theForm.objects.options[j].selected = false;  
+
+}
+
+function getSelectedObjects()
+{
+
+	selectedObjects = new Array()
+	for (i=document.theForm.objects.selectedIndex;i<document.theForm.objects.options.length;i++) {
+  		if (document.theForm.objects.options[i].selected) {
+  			selectedObjects[selectedObjects.length]=document.theForm.objects.options[i].value;
+  		}
+  	}
+        var url = '';
+	if (selectedObjects.length > 0)
+	{
+		url= escape(selectedObjects.join('/'))
+	}
+
+	return url;
+}
+
+function getRequestedReport()
+{
+
+	var destination = '';
+	if(document.theForm.objects.selectedIndex == -1)
+	{
+		alert(MultiArray["Please select at least one object"][lang]);
+		return;
+	}
+	else
+	{
+		if(document.theForm.startingDateDaily.value.length == 0)
+		{
+		alert(MultiArray["Please enter a date for report"][lang]);
+		return false;
+		}
+	}
+	//if(vValue == 'groupForecast'){
+		destination = "../jsp/groupForecastReports.jsp"
+	//}
+	
+	destination += "?lang="+lang;
+ 	//destination +="&spacing=15";
+	//destination += document.theForm.spacing.value;
+	destination += "&startingDateDaily="
+	destination += document.theForm.startingDateDaily.value;	
+	destination +="&objects=";
+	destination += getSelectedObjects();
+	//if(vValue == 'groupForecast')
+	//{
+		destination +="&prec=-1&suiv=1&current=0&all_obj=0";
+	//}
+	window.open(destination);
+}
+</script>
+<style type="text/css">
+<!--
+.style1 {
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}
+-->
+</style>
+</head>
+
+<body class="bottompagebody" onLoad="fillObjectCombo()">
+<form name="theForm">
+<table width="100%">
+<tr><td width="100%">
+	<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="100%" align="center">
+		<tr>
+			<td  valign="top" width="40%" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >
+			  <div align="center"><span class="style1">
+			<script language="JavaScript">
+			var vValue = normalizeString(QueryString('type'));
+			if (vValue == 'GroupForecast'){
+			  document.write(MultiArray["Group Forecast Daily Report"][lang])
+			}
+			</script>
+			</span>
+			  </div>
+			</td>
+		</tr>
+		<tr><td height="20">&nbsp;</td></tr>
+	</table>
+	</td></tr>
+<tr><td width="100%">
+	<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="70%"  >
+	  
+		<script language="JavaScript">
+		var vValue = normalizeString(QueryString('type'));
+		if (vValue != '')
+		{
+			document.write('<tr height="45"><td width="34%" valign="top" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1" >')
+			document.write('<br>')
+			document.write('<select name="objects" multiple>')
+			document.write('</select>')
+			document.write('</td></tr>') 
+			if((vValue == 'GroupForecast') )
+			{ 	 
+				document.write('<tr><td colspan="8" height=10></td></tr><tr><td></td></tr>');
+				document.write('<tr><td colspan=4><button name=\"selectAllButton\" onClick=\"selectAll()\" ID="Button1">'+MultiArray["Select all"][lang]+'</button> &nbsp;&nbsp; <button name=\"unSelectButton\"  onClick=\"unSelectAll()\" ID="Button2">'+MultiArray["Select none"][lang]+'</button> </td></tr>')
+			 
+			} 
+		}
+		else
+		{
+		  document.write('<tr><td>&nbsp;</td>')
+		  document.write('<td>&nbsp;</td>')
+		  document.write('<td>&nbsp;</td></tr>')
+		}
+		</script>
+  		<tr ><td height="20">&nbsp;</td></tr>
+	</table>
+	</td></tr>
+<tr><td width="100%">
+	<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="30%" align="left">
+  		<tr>
+		   <td id="id_startingDateDaily" valign="top" width="34%" style="border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1" >
+			 &nbsp;&nbsp;&nbsp;<script language="JavaScript"> document.write(MultiArray["Daily For"][lang])</script>&nbsp;:&nbsp;&nbsp;<input type="text" size="20" onFocus="showCalendar('',this,this,'','id_startingDateDaily',0,30,1);this.blur()" name="startingDateDaily" />
+			</td>
+   		</tr>
+   		<tr><td height="20">&nbsp;</td></tr>
+	</table>  
+	</td></tr>
+<tr><td width="100%">
+	<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="50%" align="left">
+		<tr><td height="20">&nbsp;</td></tr>
+		<tr>
+			<td>
+	  			<script>document.write("<input type=\"button\" value=\""+MultiArray["Submit"][lang]+"\" onClick=\"getRequestedReport()\">")</script>
+			</td>
+  		</tr>
+	</table>
+	</td></tr></table>
+</form>
+	
+</body>
+
+</html>

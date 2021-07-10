@@ -1,0 +1,8 @@
+keytool -genkey -alias signFiles -keypass aheeva -keystore francoisstore -storepass conchita
+
+jarsigner -keystore francoisstore -signedjar sManager.jar manager.jar signFiles -verify
+
+keytool -export -keystore francoisstore -alias signFiles -file aheeva.cer
+
+
+6878f2b3944d19e3f3901234ca

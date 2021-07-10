@@ -1,0 +1,500 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language=JavaScript src="jsUtil.js"></script>
+<script language=javascript src="Browser.js" type=text/javascript></script>
+<script language=javascript src="AnchorPosition.js" type=text/javascript></script>
+<script language=javascript src="ColorPicker2.js" type=text/javascript></script>
+<script language=javascript src="PopupWindow.js" type=text/javascript></script>
+<script language=javascript src="alert_xparse.js" type=text/javascript></script>
+<script language=javascript src="alert_xReader.js" type=text/javascript></script>
+<script language=javascript src="alert_xWriter.js" type=text/javascript></script>
+
+<title>modifyStarPhoneAlert</title>
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="tab_luna.css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="style_2.css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<style type="text/css">
+
+.dynamic-tab-pane-control .tab-page {
+	height:		200px;
+}
+
+.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page {
+	height:		100px;
+}
+
+html, body {
+/*	background:	ThreeDFace; */
+
+}
+
+form {
+	margin:		0;
+	padding:	0;
+}
+
+/* over ride styles from webfxlayout */
+
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+</style>
+<script language="javascript" type="text/javascript" src="alert_tabpane.js"></script>
+
+<script language="javascript" type="text/javascript" >
+
+/***********************************************************************
+************************************************************************/
+
+var tenant_dbid = QueryString('tenant_dbid') ? normalizeString(QueryString('tenant_dbid')) : "";
+var alert_name = QueryString('alert_name') ? normalizeString(QueryString('alert_name')) : "";
+var alert_dbid ='';
+var client_id='StarPhone';
+var tabIndex;
+
+
+function updateAlertConditions(client)
+{
+	var alertConditions='alertConditions'+client;
+
+	if(document.getElementById(alertConditions).value=='--Define alert condition(s)--')
+		{
+			document.getElementById(alertConditions).value='';
+			document.getElementById(alertConditions).style.fontStyle ='normal';
+		}
+}
+
+/***********************************************************************
+************************************************************************/
+
+function updateAlertMessage(client)
+{
+	var alertMessage='alertMessage'+client;
+	
+	if( document.getElementById(alertMessage).value=='--Click to write the message--')
+		{
+			document.getElementById(alertMessage).value='';
+			document.getElementById(alertMessage).style.fontStyle ='normal';
+		}
+}
+
+/***********************************************************************
+************************************************************************/
+
+function pickColor(color) 
+{
+	var alertColor='alertColor'+client_id;
+	document.getElementById(alertColor).style.backgroundColor = color;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function enabledUpdateButton(client)
+{
+	var updateInfo='updateInfo'+client;
+	document.getElementById(updateInfo).disabled = false;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function enableReload( client)
+{
+   appletObj.fReloadMenu = true;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function setTabIndex(index)
+{
+	tabIndex=index;
+	if(tabIndex==0)
+		client_id='StarPhone';
+}
+/***********************************************************************
+************************************************************************/
+
+function changeTabPage()
+{
+	var alertName='alertName'+client_id;
+	//document.getElementById(alertName).focus();
+}
+
+/***********************************************************************
+************************************************************************/
+function validateInfo( client)
+{
+	var updateInfo = 'updateInfo' + client;
+	var alertState = 'alertState' + client;
+	var alertConditions ='alertConditions' +client;
+	var alertMessage ='alertMessage' +client;
+	var alertName ='alertName' +client;
+	var messageColor ='#000000';
+	var alertColor= 'alertColor' + client;
+ 	
+	if (document.getElementById(alertName).value =='')
+	{
+		alert(MultiArray["You must enter an ALERT NAME"][lang]);			
+	}
+	else if(validation(document.getElementById(alertName).value)==0)
+	{
+		alert(MultiArray["Invalid use of character"][lang]);
+		document.getElementById(alertName).focus();
+	}
+	else if((document.getElementById(alertConditions).value=='') || (document.getElementById(alertConditions).value=='--Define alert condition(s)--'))
+	{  
+		alert(MultiArray["You must define at least one condition!"][lang]);
+		updateAlertConditions(client);
+		document.getElementById(alertConditions).focus();
+	}
+	else if(validation(document.getElementById(alertConditions).value)==0)
+	{
+		alert(MultiArray["Invalid use of character"][lang]);
+		document.getElementById(alertConditions).focus();
+	}
+	else if(!isValideExpression(document.getElementById(alertConditions).value, client) )
+	{
+		document.getElementById(alertConditions).focus();
+	}
+	else if((document.getElementById(alertMessage).value=='') || (document.getElementById(alertMessage).value=='--Click to write the message--'))
+	{
+		alert(MultiArray["Please define a message"][lang]);
+		updateAlertMessage(client);
+		document.getElementById(alertMessage).focus();
+	}
+	else if(validation(document.getElementById(alertMessage).value)==0)
+	{
+		alert(MultiArray["Invalid use of character"][lang]);
+		document.getElementById(alertMessage).focus();
+	}
+	else 
+	{
+		var alReadyExist = false;
+		if(client=='StarPhone')
+			var alertsNames = String( appletObj.getAllStarPhoneAlerts() );
+		jsAlertsNames = alertsNames.split("|");
+
+			for(q = 0; q < jsAlertsNames.length; q++)
+			{
+				thisAlert = jsAlertsNames[q];
+				thisAlertArray = thisAlert.split(",");
+				if( document.getElementById(alertName).value == thisAlertArray[1] && alert_name != document.getElementById(alertName).value ) //le groupe existe deja
+				{
+					alReadyExist = true;
+					break;
+				}
+			}
+		if(alReadyExist)
+			alert(MultiArray["Alert already exists. Please chose another name"][lang]);
+		else
+		{
+			if(document.getElementById(alertColor).style.backgroundColor!='')
+				messageColor=document.getElementById(alertColor).style.backgroundColor;
+			
+			if(client=='StarPhone')
+			{
+				appletObj.modifyAlertForStarPhone(
+													alert_dbid,
+													tenant_dbid,
+													document.getElementById(alertName).value,
+													document.getElementById(alertState).checked == true ? '1':'0',
+													ExpressiontoXML(document.getElementById(alertConditions).value),
+													document.getElementById(alertMessage).value,
+													messageColor);
+			}
+			document.getElementById(updateInfo).disabled=true;	// reset the button to disabled
+		}
+	}
+}
+
+/***********************************************************************
+************************************************************************/
+
+function displayAlertInfo( )
+{
+	document.getElementById('alertNameStarPhone').value = alert_name ;
+	var alertDetails  =  String( appletObj.getStarPhoneAlertInfo(alert_name));
+	// parse info received
+	var jsDetails = alertDetails + "";
+	arrayDetails = jsDetails.split("|");
+	
+	document.getElementById('alertMessageStarPhone').style.fontStyle ='normal';
+	
+	for (i = 0; i <arrayDetails.length; i++)
+	{
+		if(i == 0) // DBID
+		{
+			alert_dbid = arrayDetails[i];
+		}
+		if (i == 1) // State
+		{
+			if(arrayDetails[i] == '1')
+				document.getElementById('alertStateStarPhone').checked = true;
+			else
+				document.getElementById('alertStateStarPhone').checked = false;
+		}
+		if(i == 2) // conditions
+		{
+			document.getElementById('alertConditionsStarPhone').value = XMLtoExpression(Xparse(arrayDetails[i]));
+		}
+		if(i == 3) // message
+		{
+			document.getElementById('alertMessageStarPhone').value = arrayDetails[i];
+		}
+		if(i == 4) // color
+		{
+			document.getElementById('alertColorStarPhone').style.backgroundColor= arrayDetails[i];
+		}
+	}
+	changeTabPage();
+}
+
+/***********************************************************************
+************************************************************************/
+
+function addThistoAlertMessageArea(text, client)
+{
+	var alertMessage= 'alertMessage' +client;
+	var option1Message = 'option1Message' + client;
+	updateAlertMessage(client);
+	insertAtCursor(document.getElementById(alertMessage), text);
+	document.getElementById(option1Message).selected=true;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function addThistoAlertConditionsArea(text, client)
+{
+	
+	var alertConditions= 'alertConditions' +client;
+	var option1Condition = 'option1Condition' + client;
+	updateAlertConditions(client);
+	insertAtCursor(document.getElementById(alertConditions), text);
+	document.getElementById(option1Condition).selected=true;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function insertAtCursor(myField, myValue) 
+{
+	//IE support
+	if (document.selection) {
+	myField.focus();
+	sel = document.selection.createRange();
+	sel.text = myValue;
+	}
+	//MOZILLA/NETSCAPE support
+	else if (myField.selectionStart || myField.selectionStart == '0') {
+	alert("nonIE");
+	var startPos = myField.selectionStart;
+	var endPos = myField.selectionEnd;
+	myField.value = myField.value.substring(0, startPos)
+	+ myValue
+	+ myField.value.substring(endPos, myField.value.length);
+	} else {
+	myField.value += myValue;
+	}
+}
+
+/***********************************************************************
+************************************************************************/
+
+function isValideExpression(expr, client)
+{
+	var j ;
+	//Verifier les parentheses...
+	var nbParen = 0;
+	for(j = 0; j < expr.length; j++)
+	{		
+		if(expr.charAt(j) == '(')
+			nbParen++;
+		else if(expr.charAt(j) == ')')
+			nbParen--;
+		if(nbParen == -1)
+		{
+			if( expr.length-j > 20 )
+				subExpr = expr.substring(j, j+20);
+			else
+				subExpr = expr.substring(j);				
+			alert(MultiArray["Error: Unexpected close bracket in alert condition(s)!"][lang]);
+			//alert('Error: Unexpected close bracket in " alert condition(s) ".\nNear: "'+subExpr+'";  Char#:'+j);
+			return  false;
+		} 
+	}
+	if(nbParen != 0)
+	{
+		alert(MultiArray["Error: Too many open brackets in alert condition(s)!"][lang]);
+		return  false;
+	}
+	return true;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function askDelete()
+{
+		answer = confirm(MultiArray["Are you sure you wish to delete this alert?"][lang])
+		if(answer)
+		{
+			appletObj.deleteStarPhoneAlert(alert_dbid);
+			// refresh the current page
+			document.location = "../defaultpage.htm";
+		}
+}
+/***********************************************************************
+************************************************************************/
+</script>
+
+</head>
+<body  class="bottompagebody" onload="displayAlertInfo()" >
+<div class="tab-pane" id="tabPane1">
+
+<script type="text/javascript">
+	tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+	var cp = new ColorPicker('window');
+</script>
+	<form id="formStarPhone" name="formStarPhone" >
+	<div class="tab-page" id="pageStarPhone">
+		<h2 class="tab" ><script>document.write(MultiArray["StarPhone"][lang])</script></h2 >
+		<script type="text/javascript">tp1.addTabPage( document.getElementById( "pageStarPhone" ) );</script>
+		<fieldset  >
+				<legend><script>document.write(MultiArray["Add alert for StarPhone"][lang])</script></legend>
+				<table border="0" width="100%" cellpadding="0" cellspacing="0">
+				
+					<table border = "0" width="100%" cellspacing="0" cellpadding=""="0">
+						<tr height ="5"><td  colspan="2"  ></td></tr>
+						<tr>
+							<td  valign = "center" align="center"  colspan="2" height=25 bgcolor="#6AA5D7"><script>document.write(MultiArray["Alert definition"][lang])</script></td>
+						</tr>
+						
+						<tr><td height=20 colspan="2" ></td></tr>
+						
+						<tr>
+							<td  width="120" height=25 ><script>document.write(MultiArray["Alert name"][lang])</script></td>
+							<td  height=25 align= left>
+								<input id="alertNameStarPhone"  type="text"  onchange= "enabledUpdateButton('StarPhone')" name="alertNameStarPhone">
+							</td> 
+						</tr>
+						<tr>
+							<td  width=120 height=25><script>document.write(MultiArray["Active"][lang])</script> </td>
+							<td  align= left height=25>
+								<input id="alertStateStarPhone"  align="center" onchange= "enabledUpdateButton('StarPhone')" type=checkbox CHECKED value=ON name="alertStateStarPhone">
+							</td> 
+						</tr>
+						<tr><td height=20 colspan="2" ></td></tr>
+					</table>
+					
+					<table border="0"  cellspacing="0" cellpadding=""="0" >
+						<tr height=20 bgcolor="#66CCCC" >
+							
+							<td  align="left" > 
+								<input type="button" value="()" onClick="addThistoAlertConditionsArea('()','StarPhone')">
+								<input type="button" value="AND" onClick="addThistoAlertConditionsArea(' AND ','StarPhone') ">
+								<input type="button" value="OR" onClick="addThistoAlertConditionsArea(' OR ','StarPhone') ">
+							</td>
+							<td>&nbsp;</td>
+							<td align="left">
+								<select name="selectStatisticConditionStarPhone" onChange=" if(this.value!='') addThistoAlertConditionsArea(this.options[this.selectedIndex].value,'StarPhone' )">
+									<option  id="option1ConditionStarPhone" value="" align=left>--<script>document.write(MultiArray["Select a statistic"][lang])</script> --</option>
+									<option value="$AHT" align=left>    		<script>document.write(MultiArray["Average handling time"][lang])</script></option>
+									<option value="$CallsInQ" align=left><script>document.write(MultiArray["Calls in queue"][lang])</script></option>
+									<option value="$ProRat" align=left>		<script>document.write(MultiArray["Productivity ratio"][lang])</script></option>
+								</select>
+							</td>
+							<td>&nbsp;</td>
+							<td id="alertOperandsStarPhone"  align="left">
+								<input type="button" value="<" onClick="addThistoAlertConditionsArea('&lt;','StarPhone') ">
+								<input type="button" value="=" onClick="addThistoAlertConditionsArea('=','StarPhone')">
+								<input type="button" value=">" onClick="addThistoAlertConditionsArea('&gt;','StarPhone') ">
+							</td>
+						</tr>
+						
+					</table>
+					
+					<tr height=20  >
+						<td>
+							<textarea name="alertConditionsStarPhone" onchange= "enabledUpdateButton('StarPhone')" onClick= "updateAlertConditions('StarPhone')" onFocus="updateAlertConditions('StarPhone')" rows="3" style=" width:99%; font-style:italic" >--<script>document.write(MultiArray["Define alert condition(s)"][lang])</script>--</textarea>
+						</td>
+					</tr>
+					
+					<table width="100%" cellpadding="0" cellspacing="0">
+						<tr height="20"><td colspan="2" ></td></tr>
+						<tr>
+							<td> </td>
+							<td bgcolor="#66CCCC">
+								<select name="selectStatisticMessageStarPhone" onChange="if(this.value!='') addThistoAlertMessageArea(this.options[this.selectedIndex].value,'StarPhone') ">
+									<option id="option1MessageStarPhone" value="" align=left>    --<script>document.write(MultiArray["Select a statistic"][lang])</script>--</option>
+									<option value="$AHT" align=left>    		<script>document.write(MultiArray["Average handling time"][lang])</script></option>
+									<option value="$CallsInQ" align=left><script>document.write(MultiArray["Calls in queue"][lang])</script></option>
+									<option value="$ProRat" align=left>		<script>document.write(MultiArray["Productivity ratio"][lang])</script></option>
+								</select>
+							</td>
+						</tr>
+						
+						<tr>
+							<td  valign="top" align="left" width="120">
+								<script>document.write(MultiArray["Message to send"][lang])</script>:
+							</td>
+							<td align="left" >
+								<textarea name="alertMessageStarPhone" onchange= "enabledUpdateButton('StarPhone')" onClick = "updateAlertMessage('StarPhone')" onFocus="updateAlertMessage('StarPhone')"rows="3" style=" width:98%; font-style:italic" >--<script>document.write(MultiArray["Click to write the message"][lang])</script>--</textarea>
+							</td>
+						</tr>
+					</table>
+					
+					<table width="100%" cellpadding="0" cellspacing="0">
+						<tr height = "10"><td colspan="2" ></td></tr>
+						<tr>
+							<td width="120">
+								<script>document.write(MultiArray["Message color"][lang])</script>:
+							</td>
+							<td align="left">
+								<input id="alertColorStarPhone"  type="text" readonly="" size=8  onClick="cp.show('pick'); enabledUpdateButton('StarPhone'); return false ; " name="alertColorStarPhone" style=" " >
+								<A HREF="#" onClick=" cp.show('pick');return false ; " NAME="pick" ID="pick"><u><script>document.write(MultiArray["Pick"][lang])</script></u></A>
+							</td>
+						</tr>
+						<tr height="20"><td colspan="2" ></td></tr>
+						
+					 	<tr>
+							<td  align="center" colspan="2"  >
+								<button id="updateInfoStarPhone" style=" HEIGHT: 25px" disabled onclick =validateInfo('StarPhone') name="updateInfoStarPhone" type=button> &nbsp;<script>document.write(MultiArray["Update"][lang])</script>&nbsp;</button> &nbsp;&nbsp;
+							<button id=Button4 style="WIDTH: 59px; HEIGHT: 26px" onclick=askDelete() name="deleteButton" id="deleteButton" type=button ><script>document.write(MultiArray["Delete"][lang])</script></button> </td>
+						</tr>
+					</table>
+							
+				</table> 
+			
+		</fieldset>
+	</div>
+	</form>
+
+</div>
+</body>
+</html>

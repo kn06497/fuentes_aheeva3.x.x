@@ -1,0 +1,148 @@
+<html>
+
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<!-- Calendrier début -->
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<!-- Calendrier fin -->
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script>
+
+var vValue = normalizeString(QueryString('type'));
+//var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+//alert("vValue"+vValue);
+
+function getRequestedReport()
+{
+
+	var destination = '';
+	
+	if(document.theForm.startingDateDaily.value.length == 0)
+		{
+			alert(MultiArray["Please enter a starting date"][lang]);
+			return false;
+		}
+	if(document.theForm.endingDateDaily.value.length == 0)
+	{
+		alert(MultiArray["Please enter an ending date"][lang]);
+		return false;
+	}
+	
+	var startDate = new Date(document.theForm.startingDateDaily.value);
+	var endDate =new Date(document.theForm.endingDateDaily.value);
+	
+	if(endDate < startDate)
+	{
+		alert(MultiArray["Your ending date cannnot be smaller than your starting date"][lang]);
+		return false;
+	}
+	if( ( (endDate.getTime() - startDate.getTime()) / (24*3600*1000) ) > 31)
+	{
+		alert(MultiArray["range is greater than 31 days"][lang]);
+		return false;
+	}
+	
+	destination = "../jsp/lineReports.jsp"
+	destination += "?lang="+lang;
+	destination += "&startingDateDaily="
+	destination += document.theForm.startingDateDaily.value;
+	
+	destination +="&endingDateDaily=";
+	destination += document.theForm.endingDateDaily.value;	
+
+	window.open(destination);
+}
+</script>
+<style type="text/css">
+<!--
+.style1 {
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}
+-->
+</style>
+</head>
+
+<body class="bottompagebody">
+<form name="theForm">
+<table width="100%">
+<tr><td width="100%">
+	<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="100%" align="center">
+		<tr>
+			<td  valign="top" width="40%" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >
+			  <div align="center"><span class="style1">
+			<script language="JavaScript">
+			var vValue = normalizeString(QueryString('type'));
+			document.write(MultiArray["Line usage details"][lang])
+			/*
+			if (vValue == 'GroupForecast'){
+			  document.write(MultiArray["Group Forecast Daily Report"][lang])
+			}
+			else if( vValue=='GroupSummary' )
+			{
+				document.write(MultiArray["Group Summary Report"][lang])
+			} */
+			</script>
+			</span>
+			  </div>
+			</td>
+		</tr>
+		<tr><td height="20">&nbsp;</td></tr>
+	</table>
+	</td></tr>
+<tr><td width="100%">
+	<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="70%"  >
+	 <tr>
+		<script language="JavaScript">
+		document.write('<td id=\"id_startingDateDaily\" valign=\"top\" width=\"50%\" style=\"border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1\">');
+		document.write('&nbsp;&nbsp;&nbsp;');
+		document.write(MultiArray["The report cannot be generated for a date range greater than 31 days."][lang]);
+		document.write('&nbsp;&nbsp;&nbsp;');
+		</script> 
+		</tr>
+		
+  		<tr ><td height="20">&nbsp;</td></tr>
+	</table>
+	</td></tr>
+<tr><td width="100%">
+	<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="100%" align="left" >
+  		<tr>
+			<script>
+			document.write('<td id=\"id_startingDateDaily\" valign=\"top\" width=\"50%\" style=\"border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1\">');
+			document.write('&nbsp;&nbsp;&nbsp;');
+			document.write(MultiArray["From"][lang]);
+			document.write('&nbsp;&nbsp;&nbsp;');
+			document.writeln("<input type=\"text\" size=\"20\" onFocus=\"showCalendar('',this,this,'','id_startingDateDaily',0,30,1);this.blur()\" name=\"startingDateDaily\" />");
+			document.write('</td>');
+			
+			document.write('<td id=\"id_endingDateDaily\" valign=\"top\" width=\"50%\" style=\"border-bottom-style: none; border-bottom-width: 1\" align=\"left"\>');
+			document.write('&nbsp;&nbsp;&nbsp;');
+			document.write(MultiArray["To"][lang]);
+			document.write('&nbsp;&nbsp;&nbsp;');
+			document.writeln("<input type=\"text\" size=\"20\" onFocus=\"showCalendar('',this,this,'','id_endingDateDaily',0,30,1);this.blur()\" name=\"endingDateDaily\" />");
+			document.write('</td>');
+			
+			//}
+			</script>
+   		</tr>
+   		<tr><td height="20">&nbsp;</td></tr>
+		<tr>
+			<td>
+	  			<script>document.write("<input type=\"button\" value=\""+MultiArray["Submit"][lang]+"\" onClick=\"getRequestedReport()\">")</script>
+			</td>
+		</tr>
+	</table> 
+		
+</form>
+	
+</body>
+
+</html>

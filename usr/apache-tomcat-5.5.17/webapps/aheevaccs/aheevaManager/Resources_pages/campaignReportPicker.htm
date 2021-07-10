@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>Record Picker</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<script language="JavaScript" src="jsUtil.js"></script>
+
+<!--<LINK href="style.css" rel="stylesheet" type="text/css" />-->
+<script language="JavaScript">
+var NS4 = document.layers ? 1:0
+var IE4 = document.all ? 1:0
+var IE5 = document.getElementById&&document.all ? 1:0
+var NS6 = document.getElementById&&!document.all ? 1:0
+
+var x=0;
+var y=0;
+var closetable = "</TD></TR></TABLE></TD></TR></TABLE>";	
+if(!IE4) {
+	document.captureEvents(Event.MOUSEMOVE);
+	document.onmousemove = GetPos;
+}
+	
+function Desc(text ) {
+ 	var opentable = "<TABLE BGCOLOR='#000000' BORDER=0 CELLPADDING=0 CELLSPACING=1 WIDTH=140><TR><TD ALIGN=center><TABLE BGCOLOR='#FFFFE1' BORDER=0 CELLPADDING=3 CELLSPACING=1 WIDTH=138><TR><TD VALIGN=top style='font-size:10px; font-family:Tahoma' align=left><IMG SRC='../img/help.gif' HEIGHT=24 WIDTH=30 VSPACE=0 HSPACE=0 ALIGN=left>";
+	 
+	if(NS6) {
+		document.getElementById("Description").innerHTML  = opentable+text+closetable;
+		document.getElementById("Description").style.left = x-12;
+		document.getElementById("Description").style.top  = y+10;
+		document.getElementById("Description").style.visibility = "visible";
+	}
+ 	if(IE4) {
+		
+		document.all["Description"].innerHTML = opentable+text+closetable;
+		Description.style.pixelLeft = event.clientX-12;
+		Description.style.posTop  = document.body.scrollTop+event.clientY+16;
+		Description.style.visibility = "visible";
+	}
+	else {
+		var nets = document.layers["Description"];
+		nets.document.open();
+		nets.document.write(opentable+text+closetable);
+		document.Description.left = x-12;
+		document.Description.top = y+10;
+		nets.visibility = "show";
+		document.close();
+	}
+}
+
+function GetPos(evnt){
+	x = evnt.pageX;
+	y = evnt.pageY;
+	return true;
+}
+
+function noDesc() {
+
+	if(NS6) {
+		document.getElementById("Description").style.visibility = "hidden";
+	}
+	if(IE4) {
+		Description.style.visibility = "hidden";
+	}
+	else {
+		document.Description.visibility = "hidden";
+	}
+}
+</script>
+<style type="text/css">
+
+.dynamic-tab-pane-control .contentText{
+	font:			12px Tahoma;
+	color:			Black;
+}
+.dynamic-tab-pane-control .tab-page {
+	clear:			both;
+	border:			1px solid rgb( 145, 155, 156 );
+	background:		rgb( 252, 252, 254 );
+	z-index:		2;
+	position:		relative;
+	top:			-2px;
+
+	font:			11px Tahoma;
+	color:			Black;
+
+	filter:			progid:DXImageTransform.Microsoft.Gradient(StartColorStr=#fffcfcfe, EndColorStr=#fff4f3ee, GradientType=0)
+					progid:DXImageTransform.Microsoft.Shadow(Color=#ff919899, Strength=2, Direction=135);
+	
+	/* 244, 243, 238 */ 
+	/*145, 155, 156 */
+	padding:		10px;
+}
+
+.dynamic-tab-pane-control .tab-row {
+	z-index:		1;
+	white-space:	nowrap;
+}
+ 
+.dynamic-tab-pane-control .tab-row .tab.selected {
+	width:				74px  ;
+	height:				18px  ;
+	background-image:	url( "tab.active.png" )  ;
+	background-repaet:	no-repeat;
+
+	border-bottom-width:	0;
+	z-index:		3;
+	padding:		2px 0 0px 0;
+	margin:			1px -3px -3px 0px;
+	top:			-2px;
+	font:			11px Tahoma;
+}
+
+.dynamic-tab-pane-control .tab-row .tab a {
+	font:				11px Tahoma;
+	color:				Black;
+	text-decoration:	none;
+	cursor:				default;
+}
+
+.dynamic-tab-pane-control .tab-row .tab.hover {
+	font:				11px Tahoma;
+	width:				70px;
+	height:				16px;
+	background-image:	url( "tab.hover.png" );
+	background-repaet:	no-repeat;
+}
+ 
+.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page {
+	height:		200px;
+}
+ 
+html, body {
+/*	background:	ThreeDFace; */
+
+}
+
+form {
+	margin:		0;
+	padding:	0;
+} 
+
+/* over ride styles from webfxlayout */
+ 
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+ 
+ .dynamic-tab-pane-control.tab-pane {
+	position:	relative;
+	width:		100%;		 
+	margin-right:	-2px;	 
+	height:		200px;
+	
+}
+
+</style>
+ 
+<script type="text/javascript" >
+var tenant_dbid  = normalizeString(QueryString('tenant_dbid'));
+
+function sortSelect(o)
+{
+ 	if (o.length==0) { return; }
+
+	if(viewckbox.checked == false){
+		o = o.sort(
+			function(a,b) {
+				if ((a.text+"") < (b.text+"")) { return -1; }
+				if ((a.text+"") > (b.text+"")) { return 1; }
+				return 0;
+				}
+			);
+	}
+	else{
+		o = o.sort(
+			function(a,b) {
+
+					if (parseInt(a.value) < parseInt(b.value)) { return -1; }
+					if (parseInt(a.value) > parseInt(b.value)) { return 1; }
+					return 0;
+				}
+			);
+	}
+ 
+}
+
+function fillObjectCombo()
+{
+ 	if(document.theForm.agent_group_report.options.length <= 1 ) {	
+        /*Fill campaign combo box with campaign name*/
+        var agentGroups;
+		agentGroups = String( appletObj.getAgentGroupByName() );
+		alert(agentGroups);
+        var jsAgentGroups = agentGroups + "";
+    	arrayAgentGroups = jsAgentGroups.split("|");
+    	for (j = 0; j < arrayAgentGroups.length; j++)
+		{
+		    var jsagentGroupData = (arrayAgentGroups[j]).split(",");
+			var dbid =  jsagentGroupData[0];
+			var name =  jsagentGroupData[1];
+			//var agent_group_dbid =  jscampaignData[2];
+			myOption = new Option(name,name)
+			optionPos = document.theForm.agent_group_report.options.length
+			document.theForm.agent_group_report.options[optionPos]=myOption
+    	}
+		//sortSelect(objects);
+	 }
+ }
+
+
+
+function getRequestedReport()
+{
+	var destination = '';
+
+	if(dateChecker() == false)
+	{
+		return;
+	}
+
+ 	destination = "../jsp/campaignHoursReports.jsp"
+	destination += "?startingDate="
+	destination += document.theForm.startingDate.value;
+	destination +="&endingDate=";
+	destination += document.theForm.endingDate.value;
+	destination +="&agent_group_report=";
+	destination += document.theForm.agent_group_report.value;
+
+ 	document.location = destination;
+}
+
+
+function dateChecker()
+{
+	var startDate=new Date(document.theForm.startingDate.value);
+	var endDate = new Date(document.theForm.endingDate.value);
+
+	if(endDate < startDate)
+	{
+	alert(MultiArray["Your ending date cannnot be smaller than your starting date"][lang]);
+		return false;
+	}
+	return true;
+}
+
+function toggleLayer(whichLayer)
+{
+	if (document.getElementById)
+	{
+		// this is the way the standards work
+		var style2 = document.getElementById(whichLayer).style;
+		style2.display = style2.display? "":"none";
+	}
+	else if (document.all)
+	{
+		// this is the way old msie versions work
+		var style2 = document.all[whichLayer].style;
+		style2.display = style2.display? "":"none";
+	}
+	else if (document.layers)
+	{
+		// this is the way nn4 works
+		var style2 = document.layers[whichLayer].style;
+		style2.display = style2.display? "":"none";
+	}
+}
+  
+</script>
+</head>
+
+<body class="bottompagebody">
+<p>&nbsp;</p>
+<DIV ID="Description" STYLE="position:absolute; visibility:hide; z-index:1; background-color:#FFFFCC;"></DIV>
+
+<div class="dynamic-tab-pane-control">
+	<div class="tab-pane" id="tabPane1"> 
+	  <fieldset > <h4 >
+	    <legend  style="font-size:13px; font-family:Tahoma; color:#000000 "> <script>document.write(MultiArray["Agent group report"][lang])</script></legend>
+	  </h4>
+ 		
+    <div class="tab-page" id="general"> 
+      <fieldset>
+      <legend>
+      <script>document.write(MultiArray["Agent group report parameters"][lang])</script>
+      </legend>
+      <form name="theForm">
+        <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="650">
+          <tr> 
+            <td style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1"
+							colspan="5">&nbsp;</td>
+          </tr>
+          <tr> 
+            <td height="26" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1"> 
+              <script>document.write(MultiArray["Select an agent group"][lang])</script></td>
+            <td width="260" height="22" align="left"> <select onChange="" name="agent_group_report" class="contentText">
+                <option value=""> 
+                <script>document.write(MultiArray["Select agent group"][lang])</script>
+                </option>
+              </select> </td>
+            <td></td>
+          </tr>
+          <tr> 
+            <td height="26" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1"> 
+              <script>document.write(MultiArray["Extract global hours"][lang])</script></td>
+            <td height="26" colspan="2" style="border-top-style: none; border-top-width: 1"> 
+              <script>document.write(MultiArray["From"][lang])</script> <input id="id_startingDate" type="text" size="20" onFocus="showCalendar('',this,this,'','id_startingDate',0,30,1);this.blur()" class="contentText" name="startingDate" /></td>
+            <td height="26" colspan="2" style="border-top-style: none; border-top-width: 1;border-right-style: none; border-right-width: 1"> 
+              <script>document.write(MultiArray["To"][lang])</script> <input id="id_endingDate" type="text" size="20" onFocus="showCalendar('',this,this,'','id_endingDate',0,30,1);this.blur()" class="contentText" name="endingDate" /> 
+            </td>
+          </tr>
+          <tr height="25"> </tr>
+          <tr> 
+            <td style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1">&nbsp;</td>
+            <td style="border-top-style: none; border-top-width: 1">&nbsp;</td>
+            <td style="border-top-style: none; border-top-width: 1" colspan="">&nbsp;</td>
+            <td style="border-top-style: none; border-top-width: 1">&nbsp;</td>
+            <td width="15" style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1"> 
+            </td>
+          </tr>
+        </table>
+      </form>
+      </fieldset>
+    </div>
+ 	  <div>
+	  	 <table width="182">	
+			<tr>
+				<td width="165" height="40" style="border-right-style: none; border-right-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1"
+					align="left">
+						<script>document.write("<input type=\"button\" value=\""+MultiArray["Submit"][lang]+"\" onClick=\"getRequestedReport()\">")</script>
+				</td>
+				<td style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+				</td>
+				<td style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+				</td>
+			</tr>
+  	    </table>	
+	  </div>	
+	</fieldset>  
+   </div>
+</div>
+  
+<script type="text/javascript">  
+	fillObjectCombo(); 
+</script>
+
+</body>
+</html>

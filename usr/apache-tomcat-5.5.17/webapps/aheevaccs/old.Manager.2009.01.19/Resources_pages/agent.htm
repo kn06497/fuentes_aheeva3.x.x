@@ -1,0 +1,306 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>Add an agent</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="tab_luna.css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="style_2.css" />
+<link type="text/css" rel="StyleSheet" href="slider/css/luna.css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<style type="text/css">
+.dynamic-tab-pane-control .tab-page {
+	height:		200px;
+}
+.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page {
+	height:		100px;
+}
+html, body {
+/*	background:	ThreeDFace; */
+
+}
+form {
+	margin:		0;
+	padding:	0;
+}
+/* over ride styles from webfxlayout */
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+</style>
+ <style>
+<!--
+BODY{
+scrollbar-face-color:#E1F4FF;
+scrollbar-arrow-color:#000000;
+scrollbar-track-color:#E1F4FF;
+scrollbar-shadow-color:#E1F4FF;
+scrollbar-highlight-color:#E1F4FF;
+scrollbar-3dlight-color:#E1F4FF;
+scrollbar-darkshadow-Color:#E1F4FF;
+}
+-->
+</style>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="javascript" type="text/javascript" src="agentFunctions.js"></script>
+<script language="javascript" type="text/javascript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript" src="tabpane.js"></script>
+<!-- Calendar required javascript -->
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;xcDateFormat="yyyy-mm-dd";</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<!-- End of calendar required section -->
+<script type="text/javascript" src="slider/js/range.js"></script>
+<script type="text/javascript" src="slider/js/timer.js"></script>
+<script type="text/javascript" src="slider/js/slider.js"></script>
+
+<script language="javascript" type="text/javascript">
+var agentName		= '';
+var agentFirstName	= '';
+var agentLastName	= '';
+var agentDBID		= '';
+var agentLoginID	= '';
+var tenant_dbid		= "NULL";
+var preferredSites 	= '^';
+var rightSkills 	= '';
+
+var vectorOfSkillDbid = new Array();
+var vectorOfWeight = new Array();
+
+agentName = normalizeString(QueryString('agtName'));
+</script>
+</head>
+<body class="bottompagebody">
+<div class="tab-pane" id="tabPane1">
+<form name="agent" >
+<script type="text/javascript">
+tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+</script>
+<div class="tab-page" id="tabGeneral">
+	<h2 class="tab"><script>document.write(MultiArray["General"][lang]);</script></h2>
+	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabGeneral" ) );</script>
+	<fieldset>
+	<legend><script>document.write(MultiArray["General information"][lang]);</script></legend>
+	<table border="0">
+		<tr>
+			<td>
+				<script>document.write(MultiArray["Group ID"][lang]);</script>
+			</td> 
+			<td>
+				<select size="1" name="AgentGroupSelection" onChange="enableUpdateButton()">
+				</select>
+			</td>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		<tr>
+			<td><script>document.write(MultiArray["Last name"][lang]);</script></td>
+			<td><input type="text" name="agtLastName" size="27" onChange="enableUpdateButton()"></td>
+			<td><script>document.write(MultiArray["First name"][lang]);</script></td>
+			<td><input type="text" name="agtFirstName" size="27" onChange="enableUpdateButton()"></td>
+		</tr>
+		<tr>
+			<td valign="top"><script>document.write(MultiArray["Comments"][lang]);</script></td>
+			<td colspan="3"><textarea rows="3" name="comments" cols="70" onChange="enableUpdateButton()"></textarea></td>
+		</tr>
+		<tr>
+			<td width="100">
+				<input type="hidden" name="username" size="16" onChange="enableUpdateButton()">
+				<script>document.write(MultiArray["Login"][lang]);</script>
+			</td>
+			<td>
+				<input type="text" name="login" size="10" onChange="enableUpdateButton()">
+			</td>
+			<td>
+				<script>document.write(MultiArray["Password"][lang]);</script>
+			</td>
+			<td>
+				<input type="password" name="password" size="10" onChange="enableUpdateButton()">
+			</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">
+				<script>document.write(MultiArray["Start Date"][lang]);</script>
+			</td>
+			<td valign="top" align="left">
+				<input type="text"  size="10" onclick="enableUpdateButton()" onFocus="showCalendar('',this,this,'','startWorkDate',0,30,1);this.blur()" id="startWorkDate"  name="startWorkDate" />
+			</td>
+			<td align="left" valign="top">
+				<script>document.write(MultiArray["End Date"][lang]);</script>
+			</td>
+			<td valign="top" align="left">
+				<input type="text"  size="10" onclick="enableUpdateButton()" onFocus="showCalendar('',this,this,'','endWorkDate',0,30,1);this.blur()" id="endWorkDate" name="endWorkDate" />
+			</td>
+		</tr>
+		<tr>
+			<td align="left">
+				<script>document.write(MultiArray["Active"][lang]);</script>
+			</td>
+			<td align="left">
+				<input type="checkbox" name="state" value="ON" onClick="enableUpdateButton()" checked>
+			</td>
+			<td align="left" valign="top">
+				<script>
+				if(userHasRight("ALLOW_WORK_FORCE_MANAGEMENT"))
+				{
+					document.write(MultiArray["Activity"][lang]);
+				}
+				</script>
+			</td>
+			<td valign="top" align="left">
+				<script>
+
+				if(userHasRight("ALLOW_FINANCIAL_CONFIGURATION") || userHasRight("ALLOW_FINANCIAL_REPORTS"))
+				{
+					document.write('<select id="activity_type" name="activity_type">');
+					document.write("<option value=\"\">"+MultiArray["Select"][lang]+"</option>");					
+					document.write('</select>');
+				}
+				
+				</script>			
+			</td>
+		</tr>
+	</table>
+	</fieldset>
+</div>
+<div class="tab-page" id="tabPersonal">
+	<h2 class="tab"><script>document.write(MultiArray["Personal"][lang]);</script></h2>
+	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPersonal" ) );</script>
+	<fieldset>
+	<legend><script>document.write(MultiArray["Personal information"][lang]);</script></legend>
+	<table border="0">
+		<tr>
+			<td valign="top" align="left"><script>document.write(MultiArray["Birth date"][lang]);</script></td>
+			<td valign="top" align="left"><input type="text" name="birthdate" size="27" onChange="enableUpdateButton()" onFocus="showCalendar('',this,this,'','birthdate',0,30,1);this.blur()" id="birthdate" ></td>
+		</tr>
+		<tr>
+			<td valign="top" align="left" >
+				<script>document.write(MultiArray["Address"][lang]);</script>
+			</td>
+			<td valign="top" align="left">
+				<textarea rows="3" name="address" cols="26" onChange="enableUpdateButton()" ></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" align="left" >
+				<script>document.write(MultiArray["City"][lang]);</script>
+			</td>
+			<td valign="top" align="left" >
+				<input type="text" name="city" size="27" onChange="enableUpdateButton()">
+			</td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">
+				<script>document.write(MultiArray["Salary"][lang]);</script>
+			</td>
+			<td  valign="top" align="left">
+				<input type="text" name="salary" size="20" onChange="enableUpdateButton()">
+			</td>
+		</tr>
+	</table>
+	</fieldset>
+</div>
+<div class="tab-page" id="tabSite">
+	<h2 class="tab"><script>document.write(MultiArray["Site"][lang]);</script></h2>
+	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabSite" ) );</script>
+	<fieldset>
+	<legend><script>document.write(MultiArray["Site details"][lang]);</script></legend>
+	<table border="0">
+		<tr>
+			<td align="left" valign="top">
+				<script>document.write(MultiArray["Site"][lang]);</script>
+			</td>
+			<td  valign="top" align="left">
+				<select size="1" name="SiteSelection" onChange="enableUpdateButton();addDefaultPreferredSite()">
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<table>
+					<tr>
+						<td colspan="2"><script>document.write(MultiArray["Preferred sites"][lang]);</script></td>
+						<td align="center">
+							<img src="../img/arrowUp.gif" width="16" height="16" class="img1" alt="+" onClick="bringUpSite()">&nbsp;
+							<img src="../img/arrow_down.gif" width="16" height="16" class="img1" alt="-" onClick="bringDownSite()">
+						</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>
+							<select name="availableSites" multiple onChange="enableUpdateButton()" style="width:50mm; height:20mm; ">
+							</select>
+						</td>
+						<td align="center">
+							<img src="../img/left_to_right.gif" alt=">>" style="cursor:pointer " onClick="chkAndAddPreferredSite()" /><br><br>
+							<img src="../img/right_to_left.gif" alt="<<" style="cursor:pointer " onClick="chkAndRemovePreferredSite()"/>
+						</td>
+						<td>
+							<select name="affectedSites" multiple onChange="enableUpdateButton()" style="width:50mm; height:20mm; ">
+							</select>
+						</td>
+						<td>
+							<table>
+								<tr valign="top" align="left"><td valign="top"><script>document.write(MultiArray["Most preferred"][lang]);</script></td></tr>
+								<tr><td align="center">&nbsp;</td></tr>
+								<tr><td align="center">&nbsp;</td></tr>
+								<tr valign="bottom" align="left"><td valign="bottom"><script>document.write(MultiArray["Less preferred"][lang]);</script></td></tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	</fieldset>
+</div>
+<div class="tab-page" id="tabSkills">
+	<h2 class="tab"><script>document.write(MultiArray["Skill"][lang]);</script></h2>
+	<script type="text/javascript">
+		rightSkills  = normalizeString(QueryString('rightSkills'));
+		if(agentName != '' && rightSkills != 'false')
+		{
+			document.getElementById("tabSkills").style.visibility="visible";
+			tp1.addTabPage( document.getElementById( "tabSkills" ) );
+		}
+		else
+		{
+			document.getElementById("tabSkills").style.display="none";
+		}
+	</script>
+	<fieldset>
+	<legend><script>document.write(MultiArray["Set agent skills"][lang]);</script></legend>
+	<div id="skills_div" ></div>
+	</fieldset>
+</div>
+<script>document.write("<input disabled name=\"updateInfo\" type=\"button\" value=\""+MultiArray["Update"][lang]+"\" onClick=\"validateInfo()\">");</script>
+<script>document.write("<input name=\"deleteAgt\" type=\"button\" value=\""+MultiArray["Delete"][lang]+"\" onClick=\"askDelete()\">");</script>
+
+</form>
+</div>
+<script language="javascript" type="text/javascript">
+	if(agentName == '')
+		document.agent.deleteAgt.disabled = true;
+	displayAgentInfo();
+	createSliders();
+	fillActivitiesCombo();
+</script>
+</body>
+</html>

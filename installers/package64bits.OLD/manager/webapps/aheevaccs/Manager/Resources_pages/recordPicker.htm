@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Record Picker</title>
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="JavaScript">
+function QueryString(key)
+{
+	var value = null;
+	for (var i=0;i<QueryString.keys.length;i++)
+	{
+		if (QueryString.keys[i]==key)
+		{
+			value = QueryString.values[i];
+			break;
+		}
+	}
+	return value;
+}
+QueryString.keys = new Array();
+QueryString.values = new Array();
+
+function QueryString_Parse()
+{
+	var query = window.location.search.substring(1);
+	var pairs = query.split("&");
+
+	for (var i=0;i<pairs.length;i++)
+	{
+		var pos = pairs[i].indexOf('=');
+		if (pos >= 0)
+		{
+			var argname = pairs[i].substring(0,pos);
+			var value = pairs[i].substring(pos+1);
+			QueryString.keys[QueryString.keys.length] = argname;
+			QueryString.values[QueryString.values.length] = value;
+		}
+	}
+
+}
+function normalizeString(input)
+{
+	while(true)
+	{
+		iPos = input.lastIndexOf("%20");
+		if(iPos != -1)
+			input = input.substr(0,iPos) + " "+input.substr(iPos+3);
+		else
+			break;
+	}
+	return input;
+}
+
+function showFrames()
+{
+	var tdbid       = QueryString('tenant_dbid');
+	var location	= "recordPicker2.htm?";
+        location   		+= "tenant_dbid=";
+	location   		+= tdbid;
+    /*location  		+= "&list_name=";
+	location   		+= listName;*/
+
+	document.write('<frameset rows="100%,*">');
+	document.write('<frame name="top" src=\"'+location+'\">');
+	document.write('<frame name="bottom" src="about:blank">');
+	document.write('</frameset>');
+}
+QueryString_Parse();
+
+</script>
+
+</head>
+
+<body class="bottompagebody" onLoad="showFrames()">
+</body>
+</html>

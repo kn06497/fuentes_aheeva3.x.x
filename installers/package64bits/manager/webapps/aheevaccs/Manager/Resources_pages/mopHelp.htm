@@ -1,0 +1,102 @@
+<html>
+<head>
+
+<title>Methods of Payments - HELP</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+
+
+</head>
+<style>
+html, body {
+/*	background:	ThreeDFace; */
+
+}
+form {
+	margin:		0;
+	padding:	0;
+}
+/* over ride styles from webfxlayout */
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+
+
+</style>
+
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="JavaScript" type="text/javascript" src="jsUtil.js"></script>
+
+
+<script>
+
+
+function UserAgent() {
+	var b=navigator.appName;
+	if (b=="Netscape") this.b="ns";
+	else if (b=="Microsoft Internet Explorer") this.b="ie";
+	else this.b=b;
+	this.version=navigator.appVersion;
+	this.v=parseInt(this.version);
+	this.ns=(this.b=="ns" && this.v>=4);
+	this.ns4=(this.b=="ns" && this.v==4);
+	this.ns5=(this.b=="ns" && this.v==5);
+	this.ie=(this.b=="ie" && this.v>=4);
+	this.ie4=(this.version.indexOf('MSIE 4')>0);
+	this.ie5=(this.version.indexOf('MSIE 5')>0);
+	this.ie55=(this.version.indexOf('MSIE 5.5')>0);
+}
+var at = new UserAgent();
+
+
+var lang;
+//Get the applet object
+if(at.b == 'ie')
+{
+//	appletObj = window.top.comm.myApplet;
+    lang = normalizeString(QueryString("lang"));
+	 
+//	alert(lang);
+//	alert ("IN");
+}
+else
+    lang = parent.frames.comm.lang;
+
+</script>
+
+
+
+<body class="bottompagebody">
+<table>
+	<tr>
+		<td>
+			<b><script>document.write(MultiArray["Help for methods of payment"][lang])</script></b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<br>
+			
+			<b><script>document.write(MultiArray["General"][lang])</script></b><br>
+			<script>document.write(MultiArray["This tab allows you to set a name(mandatory) for your MOP. You can also set a description and a status (active by default) for your MOP."][lang])</script>
+			<br><br>
+			<b><script>document.write(MultiArray["Codes"][lang])</script> </b><br>
+			<script>document.write(MultiArray["This tab allows you to set some codes for different activities. These activities are training, integration, production, commission and continuing training. These codes represent hourly rates(by default) or amount of money."][lang])</script>
+			<br><br>
+			<b><script>document.write(MultiArray["Treatment"][lang])</script> </b><br>
+			<script>document.write(MultiArray["This tab allows you to choose a treatment for your MOP. You cannot choose more than one treatment."][lang])</script> 
+			<br><br>
+			<b><script>document.write(MultiArray["Overtime"][lang])</script> </b><br>
+			<script>document.write(MultiArray["This tab allows you to set a limit from which overtime hours will be counted. You can also set the multiplicative factor for overtime hours."][lang])</script>
+			<br><br>
+		</td>
+	</tr>
+
+</table>
+
+
+</body>
+</html>

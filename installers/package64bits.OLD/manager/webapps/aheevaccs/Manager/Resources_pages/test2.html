@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>AH 2</title>
+<script src="sbr_xReader.js"></script> 
+<script language="javascript" type="text/javascript">
+	inputat = '<RequiredSkills op="OR"><RequiredSkills op="AND"><RequiredSkills op="OR"><skill dbid="X" rel="eq" value="3" /><RequiredSkills op="AND"><skill dbid="X1" rel="eq" value="2" /><RequiredSkills op="OR"><skill dbid="Y" rel="inf" value="4" /><RequiredSkills op="OR"><skill dbid="Z" rel="sup" value="5" /><skill dbid="K" rel="eq" value="123" /></RequiredSkills></RequiredSkills></RequiredSkills></RequiredSkills><skill dbid="W" rel="inf" value="10" /></RequiredSkills><skill dbid="I" rel="eq" value="1" /></RequiredSkills>';
+	//alert('inputat = \n'+inputat);
+	
+	var bigEXP = new xmlStr();
+	bigEXP.xmlText = inputat;
+
+	//alert('ici');
+	
+	
+</script>
+</head>
+
+<body>
+	<div id="icite" name="icite"></div>
+	
+<script language="javascript" type="text/javascript">
+
+	icite.innerText=bigEXP.parseThis("");
+	//icite.innerText=XMLtoExpression(bigEXP.translate());
+</script>
+</body>
+</html>

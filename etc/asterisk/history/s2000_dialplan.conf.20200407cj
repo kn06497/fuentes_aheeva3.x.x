@@ -1,0 +1,236 @@
+
+; -------------------------------------------------------------------------------------
+; -------------------------------------------------------------------------------------
+; ----------------------------< ACC DIALPLAN SECTION >---------------------------------
+; -------------------------------------------------------------------------------------
+; -------------------------------------------------------------------------------------
+
+; **********************************
+;
+;         Agents context's
+;
+; **********************************
+
+[agent_sipauto]
+; Requests coming from the StarPhone
+exten => _AH.,1,Set(AH_UNIQUEID=DUMMYID)
+exten => _AH.,2,AgentLogin(${EXTEN:2},s)
+
+
+exten => _AGTCALL.,1,NoOp(Consult Call for ${EXTEN:7})
+exten => _AGTCALL.,n,AhConsultCallDistribute(${EXTEN:7}|30|1)
+exten => _AGTCALL.,n,Hangup
+
+exten => _MCALL.,1,Set(AH_TEMP=${EXTEN:5})
+exten => _MCALL.,2,Noop([${AH_TEMP}])
+exten => _MCALL.,3,Set(AH_EXTEN=${CUT(AH_TEMP,^,1)})
+exten => _MCALL.,4,Set(AHEEVA_TRACKNUM=${CUT(AH_TEMP,^,2)})
+exten => _MCALL.,5,Goto(agent_sipauto,${AH_EXTEN},1)
+
+exten => h,1,GotoIf($["${DIALSTATUS}" = "ANSWER"]?3:2)
+exten => h,2,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => h,3,Hangup
+
+exten => _X.,1,Dial(IAX2/iax_sipout_peer/${EXTEN})
+exten => _X.,5,Dial(IAX2/iax_sipout_peer/${EXTEN})
+
+[agent_sip_entrada]
+; Requests coming from the StarPhone
+exten => _AH.,1,Set(AH_UNIQUEID=DUMMYID)
+exten => _AH.,2,AgentLogin(${EXTEN:2},s)
+
+
+exten => _AGTCALL.,1,NoOp(Consult Call for ${EXTEN:7})
+exten => _AGTCALL.,n,AhConsultCallDistribute(${EXTEN:7}|30|1)
+exten => _AGTCALL.,n,Hangup
+
+exten => _MCALL.,1,Set(AH_TEMP=${EXTEN:5})
+exten => _MCALL.,2,Noop([${AH_TEMP}])
+exten => _MCALL.,3,Set(AH_EXTEN=${CUT(AH_TEMP,^,1)})
+exten => _MCALL.,4,Set(AHEEVA_TRACKNUM=${CUT(AH_TEMP,^,2)})
+exten => _MCALL.,5,Goto(agent_sip_entrada,${AH_EXTEN},1)
+
+exten => h,1,GotoIf($["${DIALSTATUS}" = "ANSWER"]?3:2)
+exten => h,2,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => h,3,Hangup
+
+
+[agent-pap]
+; Requests coming from the StarPhone
+exten => _AH.,1,NoCDR()
+exten => _AH.,n,SetVar(AH_UNIQUEID=DUMMYID)
+exten => _AH.,n,AgentLogin(${EXTEN:2},s)
+
+; Requests coming from the StarPhone (Backward compatibility)
+exten => _AK.,1,NoCDR()
+exten => _AK.,n,SetVar(AH_UNIQUEID=DUMMYID)
+exten => _AK.,n,AgentLogin(${EXTEN:2},s)
+
+include => ext-test
+; Allow agents to dial some especific exts.
+exten => 5117,1,NoCDR()
+exten => 5117,2,Dial(SIP/${EXTEN},60,tTr)
+exten => 5117,3,Congestion()
+
+exten => i,1,Hangup()
+exten => h,1,Hangup()
+
+
+[agent-tesalia]
+
+; Requests coming from the StarPhone
+exten => _AH.,1,NoCDR()
+exten => _AH.,n,SetVar(AH_UNIQUEID=DUMMYID)
+exten => _AH.,n,AgentLogin(${EXTEN:2},s)
+
+; Requests coming from the StarPhone (Backward compatibility)
+exten => _AK.,1,NoCDR()
+exten => _AK.,n,SetVar(AH_UNIQUEID=DUMMYID)
+exten => _AK.,n,AgentLogin(${EXTEN:2},s)
+
+
+include => ext-test
+
+exten => i,1,Hangup()
+exten => h,1,Hangup()
+
+; **********************************
+;
+;      End of Agents context's
+;
+; **********************************
+
+;-------------------------------------------------------------------------------
+
+[ext-test]
+;exten => 7777,1,Goto(from-pstn,s,1)
+exten => s,1,Answer
+exten => s,n,Hangup
+exten => h,1,Hangup
+
+;echo test
+exten => *43,1,NoCDR()
+exten => *43,n,Answer
+exten => *43,n,Wait(2)
+exten => *43,n,Playback(demo-echotest)
+exten => *43,n,Echo
+exten => *43,n,Playback(demo-echodone)
+exten => *43,n,Hangup
+
+
+[s2000Special]
+exten => _XXXX,1,Playback(demo-echotest)
+
+exten => _55.,1,Dial(SIP/${EXTEN}@200.124.238.203,30,tT)
+exten => _88XX.,1,Dial(Zap/${EXTEN:2:2}/${EXTEN:4})
+
+exten => _s,1,NoOp("ingreso")
+exten => _s,n,Playback(demo-echotest)
+
+exten => _66.,1,Dial(IAX2/iax_sipout_peer/${EXTEN})
+;exten => _66.,1,Dial(${TRUNK_SIPOUT}/${EXTEN})
+
+exten => _66042240380,1,Dial(IAX2/iax_sipout_peer/${EXTEN})
+
+
+;-------------------------------------------------------------------------------
+
+; Calidad SIP and IAX (Control de Calidad desde XTen & Firefly
+;
+[ccalidad_sip]
+include = agentbarge
+;include = acc_inbound
+
+;-------------------------------------------------------------------------------
+
+[from-pap-in]
+include => from-pap|07:00-19:00|mon-fri|*|*
+include => from-pap|07:00-19:00|sat-mon|*|*
+;include => from-pap
+include => from-pap-after-hours
+
+[from-pap]
+;exten = s,1,SetVar(DNIS=2510353)
+exten = s,1,SetMusicOnHold(pap)
+exten = s,n,NoOp('from-pap')
+;exten = s,n,SetVar(ACCQueue=PAP)
+;exten = s,n,Goto(aheeva-queue-general,s,1)
+exten = s,n,Goto(aheeva_sbr,s^QUITO=8888^DNID=8888^RDNIS=8888,1)
+exten = s,n,Hangup
+
+
+
+[from-tesalia-in]
+exten = s,1,NoOp('TESALIA ROUTING SCRIPT')
+exten = s,2,GotoIfTime(07:30-19:00|mon-fri|*|*?6:)
+exten = s,3,GotoIfTime(07:30-12:30|sat-sat|*|*?6:)
+exten = s,4,Playback(tesalia/horario)
+exten = s,5,Hangup
+exten = s,6,Goto(aheeva_sbr,s^DNID=8889^RDNIS=8889^DNIS=${EXTEN},1)
+
+
+
+[from-tesalia]
+;exten = s,1,SetVar(DNIS=2510353)
+exten = s,1,SetMusicOnHold(tesalia)
+exten = s,n,NoOp('from-tesalia')
+;exten = s,n,SetVar(ACCQueue=TESALIA)
+;exten = s,n,Goto(aheeva-queue-general,s,1)
+exten = s,n,Goto(aheeva_sbr,s^DNID=8889^RDNIS=8889,1)
+
+
+[from-pstn-analog]
+exten = s,1,SetVar(DNIS=${EXTEN})
+exten = s,n,SetMusicOnHold(default)
+exten = s,n,NoOp('from-pstn-analog')
+exten = s,n,SetVar(ACCQueue=default)
+exten = s,n,Goto(aheeva-queue-general,s,1)
+
+;-------------------------------------------------------------------------------
+
+;
+; This context is used to send the call to the apropriated Queue
+;
+[aheeva-queue-general]
+exten => s,1,Answer
+exten => s,n,AHEventsProxy(MSG_TYPE_GET_AHEEVA_TRACKNUM)
+exten => s,n,AhAgentDistribute(${ACCQueue}|${EPOCH}|${CALLERIDNUM}|${DNIS}|${AHEEVA_TRACKNUM}|||1|data:TEL=${CALLERIDNUM})
+
+exten => h,1,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:${CALLERIDNUM}:${AH_RECORDID}:${EPOCH})
+exten => h,n,Hangup
+
+;-------------------------------------------------------------------------------
+
+;
+; Voicemail para campanas...
+;
+[from-xxxx-after-hours]
+exten => s,1,Wait,1
+exten => s,n,Answer
+;exten => s,n,playback(afthours-xxxx)
+exten => s,n,Hangup
+exten => h,1,Hangup
+exten => t,1,Hangup
+
+[from-pap-after-hours]
+;exten => s,1,VoiceMail(u5500@default)
+exten => s,1,Answer
+exten => s,2,Playback(pap/horario)
+exten => s,n,Wait,1
+exten => s,n,Hangup
+exten => h,1,Hangup
+exten => t,1,Hangup
+
+[from-tesalia-after-hours]
+;exten => s,1,VoiceMail(u5500@default)
+exten => s,1,Answer
+;exten => s,2,Playback(tesalia/horario)
+exten => s,n,Wait,1
+exten => s,n,Hangup
+exten => h,1,Hangup
+exten => t,1,Hangup
+
+[sip_ventas]
+exten => _045001305,1,NoOp("in ventas")
+exten => _045001305,n,Goto(aheeva_sbr,s^DNID=${EXTEN}^RDNIS=${EXTEN},1)
+exten => _045001305,n,Hangup

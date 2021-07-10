@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<title>Atelka CTI Manager</title>
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<script language="JavaScript" src="../Resources_pages/jsUtil.js"> </script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript">
+var record='';
+
+function setConfig()
+ {
+	while(window.top.rplayer.myPlayer.getStatus() != true)
+	{
+	}
+	var tenants = appletObj.getTenantInfo();
+ }
+</script>
+
+</head>
+<body class="bottompagebody" >
+<script language="javascript" type="text/javascript">
+  	record  = normalizeString(QueryString('record_id'));
+    document.write("<frameset rows=\"35%,*\">");
+	document.write(" <frame name=\"rplayer\" src=\"./player.htm?record="+ record+ \" >");
+</script>
+
+<APPLET CODE="Manager.java.SoundApplet.class"
+		ARCHIVE="sManager.jar"
+        NAME="Player"
+        HEIGHT=-1 WIDTH=-1 hspace=0 align="top" style="margin-top: 0; margin-bottom: 0">
+ 		<PARAM NAME="host" VALUE="localhost"> 
+</APPLET>
+<script language="javascript" type="text/javascript">
+	document.write(" <frame name=\"rform\" src=\"./formulaire.htm?record="+ record+ \" >");
+    document.write("</frameset>");
+</script>
+
+</body>
+</html>

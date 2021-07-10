@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<AsteriskCTI>
+	<log level = "trace"/>
+	<nbThreadsInPool value="100"/>
+	<databaseInfo>
+		<host name ="192.168.XXX.XXX"/>
+		<db name="aheevaccs"/>
+		<db username="aheevaccs"/>
+		<db password= "aheevaccs"/>
+	</databaseInfo>
+	<slaveDBInfo>
+		<host name ="192.168.XXX.XXX"/>
+		<db name="aheevaccs"/>
+		<db username="aheevaccs"/>
+		<db password= "aheevaccs"/>
+	</slaveDBInfo>
+	<emailSender>
+		<deamon value="/usr/sbin/sendmail -t -i" />
+		<adminEmail value="sendto@aheeva.com"/>
+		<sendFrom value="from@aheeva.com"/>
+	</emailSender> 
+</AsteriskCTI>

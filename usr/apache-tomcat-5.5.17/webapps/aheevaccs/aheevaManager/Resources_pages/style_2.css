@@ -1,0 +1,1094 @@
+/*************************************************************
+GENERAL
+*************************************************************/
+
+
+body, td, input, select, option, textarea, button {
+	font-family:verdana, tahoma, arial;
+	font-size:11px;
+}
+
+#container {
+	width:1200px;
+	height:100%;
+}
+
+a {
+	color:#003366;	
+	text-decoration:none;
+}
+
+/*a:visited {
+	color:#003366;	
+	text-decoration:none;
+}*/
+
+/*
+a:hover {
+	background-color:#FFCC00;
+}
+
+a:active {
+	background-color:#FFCC00;
+}
+*/
+.callout{
+	color:black;
+	font-weight:bold;
+}
+
+.filtercolor{
+	color:red;
+}
+
+.userdefined{
+	color:blue;
+}
+
+/************************************************************
+USED FOR REPORTS PURPOSE
+*************************************************************/
+.reportsID{
+	/*background-color:#FFFFFF;*/
+	color:#003366;
+	font-family:verdana, tahoma, arial;
+	font-size:11px;
+}
+.reportsTab{
+    background-color:#c4e0f0;
+	color: #000000;
+	
+}
+
+.reportsTabName{
+    color: #000000;
+	background-color:#DDDDEE
+	
+}
+
+.horairesTabName{
+    	color: #000000;
+	font-size:11px;
+	background-color:#DDDDEE
+	
+}
+
+
+
+.reportsNRRCol{
+    color: #000000;
+	background-color:#D5EAEA
+}
+
+.reportsQueueRow{
+    color: #000000;
+	background-color:#F8F8F8
+}
+
+
+.reportsTabValues{
+	color: #000000;
+	/*background:#EBEBEB; */
+	background:#F4F4F4
+	font-family:verdana, tahoma, arial;
+	font-size:11px;
+	
+}
+.reportsRowUnPair{
+	 background-color:#ffffff;
+}
+
+.reportsRowPair{
+	 background-color:#eeeeee;
+}
+
+.reportsRowError{
+	background-color:#FF9D9D
+}
+
+.reportsRowDone{
+	background-color:#A5D59F
+}
+
+.conversationRowPair{
+	 background-color:#fdfde0;
+}
+
+/*************************************************************
+
+*************************************************************/
+.default_Backgroud{
+	BACKGROUND-COLOR: #FFFFFF;
+}
+
+
+/*************************************************************
+MULTI-LEVEL MENU
+*************************************************************/
+.multiLevelMenu_Background{
+	BACKGROUND-COLOR : lightgrey;	
+}
+
+#mainfoldheader
+{
+	list-style-image:url('../img/fold.gif');
+	margin-bottom:0px;
+	margin-top:0px;
+	/*margin-right:0px;
+	
+	margin-left:0px;*/
+}
+
+#foldheaderconfig
+{
+	cursor:pointer;	
+	font-size:8pt;
+	text-align: left;
+	color:#003366;
+	list-style-image:url('../img/foldcf.gif');
+	margin-bottom:0px;
+	margin-top:0px;
+	margin-right:0px;
+	margin-left:-20px;
+}
+
+#foldheader{
+	cursor:pointer;	
+	font-size:8pt;
+	text-align: left;
+	color:#003366;
+	list-style-image:url('../img/fold.gif');
+	margin-bottom:0px;
+	margin-top:0px;
+	margin-right:0px;
+	margin-left:-20px;
+}
+
+
+#foldinglist{
+	list-style-image:url('../img/check.gif');
+	font-size:8pt;
+	color:#003366;
+	margin-bottom:0px;
+	margin-top:0px;
+	/*
+	margin-right:0px;
+	margin-left:0px;*/
+}
+
+#menuli
+{
+	margin-bottom:0px;
+	margin-top:0px;
+	/*margin-right:0px;*/
+	margin-left:-20px;
+}
+
+
+/*************************************************************
+TABS MENU WITH GREY COLOR
+*************************************************************/
+.tabFrame
+{
+	BORDER: 0;
+	HEIGHT:90%;
+	WIDTH: 100%;
+    BORDER-TOP: #A6A6A6 5PX SOLID;
+	BORDER-BOTTOM: #A6A6A6 5PX SOLID;
+	BORDER-LEFT: #A6A6A6 5PX SOLID;
+	BORDER-RIGHT: #A6A6A6 5PX SOLID;
+	SCROLLBAR-FACE-COLOR:#6699CC;
+	SCROLLBAR-HIGHLIGHT-COLOR:#FFFFFF;
+	SCROLLBAR-SHADOW-COLOR:#6699CC;
+	SCROLLBAR-ARROW-COLOR:#FFFFFF;
+	SCROLLBAR-DARKSHADOW-COLOR:#6699CC;
+}
+
+.tabOff
+{
+    BORDER: 0px;
+	padding-right:0px;
+	padding-left:0px;
+	FONT-FAMILY: Verdana;
+	FONT-SIZE: 11;
+	FONT-WEIGHT: 700;
+	TEXT-ALIGN: CENTER;
+	COLOR: #003366;
+	background-color:#FFFFFF;
+	background-repeat:no-repeat;
+	BORDER-BOTTOM: lightgrey  0PX SOLID;
+	HEIGHT: 20;
+	CURSOR: pointer;
+}
+
+
+.tabOn
+{
+    BORDER: 0;
+	FONT-FAMILY: Verdana;
+	FONT-SIZE: 11;
+	FONT-WEIGHT: 700;
+	TEXT-ALIGN: CENTER;
+	COLOR: #ffffcc;
+	background-color:#FFFFFF;
+	BORDER-BOTTOM: #999999 1PX SOLID;
+	HEIGHT: 20;
+	CURSOR: pointer;
+}
+
+/*************************************************************
+TABS MENU WITH BLUE COLOR
+*************************************************************/
+.tabFrameBlue
+{
+	BORDER: 0;
+	HEIGHT:98%;
+	WIDTH: 100%;
+	BORDER-TOP: #93BEE2 5PX SOLID;
+	BORDER-BOTTOM: #93BEE2 5PX SOLID;
+	BORDER-LEFT: #93BEE2 5PX SOLID;
+	BORDER-RIGHT: #93BEE2 5PX SOLID;
+	SCROLLBAR-FACE-COLOR:#6699CC;
+	SCROLLBAR-HIGHLIGHT-COLOR:#FFFFFF;
+	SCROLLBAR-SHADOW-COLOR:#6699CC;
+	SCROLLBAR-ARROW-COLOR:#FFFFFF;
+	SCROLLBAR-DARKSHADOW-COLOR:#6699CC;
+}
+
+.tabOffBlue
+{
+	FONT-FAMILY: Verdana;
+	FONT-SIZE: 11;
+	FONT-WEIGHT: 700;
+	TEXT-ALIGN: CENTER;
+	COLOR: #003399;
+	BACKGROUND-COLOR: #c4e0f0;
+	BORDER-BOTTOM: #c4e0f0 1PX SOLID;
+	HEIGHT: 17;
+	CURSOR: pointer;
+}
+
+.tabOnBlue
+{
+	FONT-FAMILY: Verdana;
+	FONT-SIZE: 11;
+	FONT-WEIGHT: 700;
+	TEXT-ALIGN: CENTER;
+	COLOR: #003399;
+	BACKGROUND-COLOR: #93BEE2;
+	BORDER-BOTTOM: #93BEE2 1PX SOLID;
+	HEIGHT: 20;
+	CURSOR: pointer;
+}
+
+
+.textwhite 	{color:white; font-style:bold;}
+.textgreen 	{color:green;}
+.textred	{color:red;}
+.textyellow {color:yellow;}
+.textblack {color:black;font-style:bold;}
+.textblue  {color:blue; font-style:bold;}
+
+.bluetab { BACKGROUND-COLOR: #c4e0f0;}
+.blueTR { bgcolor="#336699";}
+
+
+.contentPageTable {
+background-color:#FFFFFF;
+}
+
+.contentPageTD {
+font-family:verdana;
+font-size:11px;
+background-color:#FFFFFF;
+}
+.contentPageTD1 {
+font-family:verdana;
+font-size:11px;
+background-color: #C4E0F0;
+border:1px solid #000000;
+}
+
+.contentPageTR {
+border:1px solid #C4E0F0;
+
+}
+
+/*******************************************************
+TABS LIVE STATISTICS
+*******************************************************/
+
+.statTable {
+border:1px solid #000000;
+width:750px;
+}
+
+.statTableTitle {
+background-color:#6B8593;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:11px;
+}
+
+.statTableTR {
+background-color:#C4E0F0;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:11px;
+}
+
+.statTableTitleTD {
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:11px;
+text-align:right;
+}
+
+.statTableTD {
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:11px;
+text-align:right;
+}
+
+.skin0{
+position:absolute;
+width:165px;
+border:1px solid black;
+background-color:#FFFFFF;
+font-family:Verdana;
+line-height:20px;
+cursor:default;
+font-size:14px;
+z-index:100;
+visibility:hidden;
+}
+
+.menuitems{
+padding-left:10px;
+padding-right:10px;
+}
+
+.contextMenuInStatsViewItems {
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:10px;
+background-color:#FFFFFF;
+cursor:pointer;
+border-top:1px solid #000000;
+}
+
+.contextMenuInStatsViewTitle {
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:10px;
+background-color:#90ABBA;
+font-weight:bold;
+}
+.rtaTextClass{
+zoom:1.0;
+width:100%;
+height:100%;
+overflow: auto;
+}
+
+.rtaTableClass{
+zoom:1.0;
+width:100%;
+height:100%;
+border-style:none;
+border-width:0px;
+}
+
+.rtaZoomClass{
+background-color:#C2D7D8;
+border: 1;
+}
+
+/**************************************************************
+Agent SKILL
+**************************************************************/
+.agentSkill_1 {
+width:200px;
+background-color:#F5F5F5;
+font-weight:bold;
+text-align:center;
+}
+
+.agentSkill_2 {
+widows:200px;
+font-weight:bold;
+}
+
+.agentSkill_3 {
+border:1px solid #000000;
+text-align:center;
+}
+
+.agentSkill_3_1 {
+border:2px solid #000000;
+text-align:center;
+}
+
+.setAgentDIV_style {
+width:210px;
+border:1px solid #000000;
+position:absolute;
+z-index:20px;
+background-color:#FFFFFF;
+}
+
+/**************************************************
+SKILL_ROUTING ...
+**************************************************/
+.sbrTitle {
+font-family:Verdana, Arial, Helvetica, sans-serif;
+text-align:center;
+font-size:14px;
+color:#003366}
+
+.sbrBigTable {
+font-family:Verdana, Arial, Helvetica, sans-serif;
+border:1px solid #003366;
+width:100%;
+height:100%}
+
+.sbrToolBarTR {
+height:20
+}
+
+.sbrToolBar {
+font-family: Verdana, Helvetica, sans-serif;
+font-size:10px;
+border-bottom:1px solid #839BD6;
+border-right:1px solid #839BD6;
+border-top:1px solid #839BD6;
+border-left:1px solid #839BD6;
+font-weight:bold;
+background-color:#F2F2F2;
+width:10%;
+}
+
+.sbrToolBarOver {
+font-family:Arial, Verdana, Helvetica, sans-serif;
+font-size:11px;
+border-top:2px solid #555555;
+border-left:2px solid #555555;
+border-bottom:1px solid #BBBBBB;
+border-right:1px solid #BBBBBB;
+font-weight:bold;
+background-color:#E2E2E2;
+width:10%;
+cursor:pointer;
+}
+
+.sbrMenu {
+font-family: Verdana, Helvetica, sans-serif;
+font-size:10px;
+border-bottom:2px solid #555555;
+border-right:2px solid #555555;
+border-top:1px solid #839BD6;
+border-left:1px solid #839BD6;
+font-weight:bold;
+background-color:#DDE7F0;
+}
+
+.sbrMenuOver {
+font-family: Verdana, Helvetica, sans-serif;
+font-size:10px;
+border-top:2px solid #555555;
+border-left:2px solid #555555;
+border-bottom:1px solid #839BD6;
+border-right:1px solid #839BD6;
+font-weight:bold;
+background-color:#DDE7F0;
+cursor:pointer;
+}
+
+.sbrMenuPopUp {
+visibility:hidden;
+border:1px solid #000000;
+}
+
+.sbrGrid {
+background-image:url(../img/grid.gif);
+vertical-align:top;
+width:100%;
+height:100%;
+}
+
+.diagramClass{
+border:10px solid #FF0000;
+zoom:1.0;
+width:100%;
+height:100%;
+overflow:scroll;
+position:relative;
+}
+
+.defaultCallCondition{
+width:100px;
+height:100px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultCallEnding{
+width:80px;
+height:80px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultAgentPickUp{
+width:200px;
+height:90px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultSqlQuery{
+width:200px;
+height:90px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultCallProirity
+{
+width:100px;
+height:50px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultGetDtmf
+{
+width:150px;
+height:50px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultPbxExec
+{
+width:175px;
+height:120px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultSwitchCase
+{
+width:100px;
+height:60px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultCounterBox{
+width:100px;
+height:60px;
+background-color:#FFFFFF;
+border:1px solid #000000;
+position:absolute;
+}
+
+.defaultConnection
+{
+position:absolute;
+z-index:-1;
+}
+
+.onsuccedTD{
+background-color:#DFE9D1;
+color:#000000;
+text-align:center
+}
+
+.onfailTD{
+background-color:#999999;
+color:#000000;
+text-align:center}
+
+.entryTD{
+background-color:#FEFDED;
+color:#000000;
+text-align:center}
+
+.setupButton {
+background-color:#FFFFFF;
+width:100%;
+border:1px solid #000000;
+font-weight:bold;
+height:50px;}
+
+.setupButton2 {
+background-color:#FFFFFF;
+width:100%;
+border:1px solid #000000;
+font-weight:bold;
+height:25px;}
+
+.setupButton3 {
+background-color:#FFFFFF;
+width:100%;
+border:1px solid #000000;
+font-weight:bold;
+height:75px;}
+
+.CounterTrack{
+text-align:right;
+color:#000000;
+background-color:#FFFFFF;}
+
+.CCSetupDialog {
+visibility:hidden;
+border:2px solid #000000;
+background-color:#FFFFFF;
+width:200px;
+position:absolute;
+z-index:500;
+top:0px;
+left:0px;
+
+}
+
+.PMSetupDialog {
+visibility:hidden;
+border:2px solid #000000;
+background-color:#FFFFFF;
+width:350px;
+position:absolute;
+z-index:500;
+top:0px;
+left:0px;
+}
+
+.SQSetupDialog {
+visibility:hidden;
+border:2px solid #000000;
+background-color:#FFFFFF;
+width:250px;
+position:absolute;
+z-index:500;
+top:0px;
+left:0px;
+}
+
+.CESetupDialog {
+visibility:hidden;
+border:2px solid #000000;
+background-color:#FFFFFF;
+width:202px;
+position:absolute;
+z-index:500;
+top:0px;
+left:0px;
+}
+
+.PISetupDialog {
+visibility:hidden;
+border:2px solid #000000;
+background-color:#FFFFFF;
+width:200px;
+position:absolute;
+z-index:500;
+top:0px;
+left:0px;
+}
+
+.PESetupDialog {
+visibility:hidden;
+border:2px solid #000000;
+background-color:#FFFFFF;
+width:350px;
+position:absolute;
+z-index:500;
+top:0px;
+left:0px;
+}
+
+.DTSetupDialog {
+visibility:hidden;
+border:2px solid #000000;
+background-color:#FFFFFF;
+width:250px;
+position:absolute;
+z-index:500;
+top:0px;
+left:0px;
+}
+
+.SCSetupDialog 
+{
+	visibility:hidden;
+	border:2px solid #000000;
+	background-color:#FFFFFF;
+	width:275px;
+	position:absolute;
+	z-index:500;
+	top:0px;
+	left:0px;
+}
+
+.COSetupDialog {
+visibility:hidden;
+border:2px solid #000000;
+background-color:#FFFFFF;
+width:250px;
+position:absolute;
+z-index:500;
+top:0px;
+left:0px;
+}
+
+.OpenScript
+{
+	visibility:hidden;
+	width:300px;
+	height:100px;
+	position:absolute;
+	border:2px solid #000000;
+	background-color:#FFFFFF;
+	z-index:500;
+	top:0px;
+	left:0px;	
+}
+
+.SaveScriptAs
+{
+	visibility:hidden;
+	width:300px;
+	height:75px;
+	position:absolute;
+	border:2px solid #000000;
+	background-color:#FFFFFF;
+	z-index:500;
+	top:0px;
+	left:0px;	
+}
+
+.TempMessages {
+visibility:hidden;
+border:5px solid #3366CC;
+background-color:#FFFFFF;
+width:200px;
+height:75px;
+position:absolute;
+z-index:700;
+top:0px;
+left:0px;
+}
+
+.ScriptStats {
+visibility:hidden;
+border:1px solid #3366CC;
+background-color:#FFFFFF;
+width:150px;
+height:250px;
+position:absolute;
+z-index:700;
+top:0px;
+left:0px;
+}
+
+.ScriptStats_title
+{
+background-color:#3366CC;
+text-align:left;
+font-weight:bold;
+font-family:Arial, Helvetica, sans-serif;
+color:#FFFFFF;
+font-size:11px;
+}
+
+.extraDataMess
+{
+	visibility:hidden;
+	border:5px solid #3366CC;
+	background-color:#FFFFFF;
+	width:200px;
+	height:75px;
+	position:absolute;
+	z-index:800;
+	top:0px;
+	left:0px;
+}
+
+.TempMsg
+{
+	font-size:13px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	color:#3366CC;
+	font-weight:bold;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.button1
+{
+	border:1px solid #000000;
+	background-color:#F0F0F0;
+	padding:0px 0px 0px 0px;
+}
+
+
+.img1
+{
+	border:1px solid #000000;
+	cursor:pointer;
+}
+
+.PESetupAppDescr
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif; 
+	font-size:9px; 
+	color:#999999 
+}
+
+.CallPropertiesManager
+{
+	height:150px;
+	width:300px;
+	border:2px solid #000000;
+	visibility:hidden;
+	z-index:500;
+	top:0px;
+	left:0px;
+	position:absolute;
+	background-color:#FFFFFF;
+}
+
+.CallPropertiesManager1
+{
+	background-color:#ECEDDC;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:11px;
+	font-weight:bold;
+}
+
+.grayButton
+{
+	background-color:#EEEEEE;
+	border:1px solid #000000;
+}
+
+
+/****************************
+ARCHITECTURE CLASSES
+*****************************/
+.arch_body
+{
+	margin:1px 1px 1px 1px; 
+	padding:1px 1px 1px 1px; 	
+}
+
+.arch_main_table
+{
+	height:100%; 
+	width:100%;
+}
+
+.arch_diagram
+{
+	width:100%;
+	height:100%;	
+	border:1px solid #000000;
+	position:absolute;
+	overflow:scroll;
+}
+
+.CtiServer
+{
+	position:absolute;
+	width:40px;
+	height:60px;	
+}
+
+.NetworkLink
+{
+	position:absolute;
+	width:40px;
+	height:60px;	
+}
+.ArchiPBX
+{
+	position:absolute;
+	width:40px;
+	height:60px;
+}
+
+.ArchiSite
+{
+	position:absolute;
+	width:200px;
+	height:300px;
+	background-color:#FFFFFF;
+	z-index:-2;
+}
+
+.insideSite
+{
+	overflow:auto;
+	width:100%;
+	height:100%;
+}
+
+.archi_input_title
+{
+	width:100px;
+	height:15px;
+	text-align:center;
+	font-size:9px;
+}
+
+.archi_input_title2
+{
+	width:50px;
+	height:15px;
+	text-align:center;
+	font-size:9px;
+}
+
+.archi_title
+{
+	border:1px solid #BBBBBB;
+	font-style:italic;
+	font-size:10px;
+	background-color:#FFFFFF;
+	text-align:center;	
+}
+
+.archi_link
+{
+	position:absolute;
+	z-index:-1;	
+}
+
+.archi_button
+{
+	font:Verdana, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	background-color:#F8F8F8;
+	border:1px solid #000000;
+}
+
+.archi_PbxSetupDialog
+{
+	visibility:hidden;
+	border:2px solid #000000;
+	background-color:#FFFFFF;
+	width:275px;
+	position:absolute;
+	z-index:500;
+	top:0px;
+	left:0px;
+}
+
+.archi_tip 
+{
+font:10px/12px Arial,Helvetica,sans-serif; 
+border:solid 1px #666666; 
+width:150px; 
+padding:1px; position:absolute; 
+z-index:500; 
+visibility:hidden; 
+color:#333333; 
+top:20px; 
+left:90px; 
+background-color:#ffffcc; 
+layer-background-color:#ffffcc;
+}
+
+.archi_siteManager
+{
+	visibility:hidden;
+	border:2px solid #000000;
+	background-color:#FFFFFF;
+	width:275px;
+	position:absolute;
+	z-index:500;
+	top:0px;
+	left:0px;
+}
+
+.archi_inside_sites_html
+{
+	overflow:scroll;
+}
+
+.archi_text2
+{
+	border:1px solid #B2B2B2;
+	font-size:10px;
+	background-color:#B2B2B2;
+	color:#000000;
+	text-align:center;	
+}
+
+.archi_redtd
+{
+	border:1px solid #000000;
+	font-size:10px;
+	background-color:#FF7979;
+	color:#000000;
+	text-align:center;
+}
+
+.grayBut01
+{
+	border:1px solid #000000;
+	background-color:#F2F2F2;
+}
+
+.3d_inside_td
+{	
+	color: white;
+	background-color: red;
+	font-family: Arial, Helvetica;
+	font-size:10pt;
+	font-weight: bold;
+	border-top-color: silver;
+	border-left-color: silver;
+	border-right-color: black;
+	border-bottom-color: black;
+	border-width: 3px;
+	border-style: outset;	
+}
+
+.inbdPopPup{
+	/*background-color:#FFFFFF;*/
+	color:#003366;
+	font-family:verdana, tahoma, arial;
+	font-size:15px;
+}
+
+.reportsForecastShed{
+    color: #000000;
+        background-color:#CCCCCC;
+        font-family:verdana, tahoma, arial;
+        text-align:center
+}
+.reportsForecastActual{
+    color: #000000;
+        background-color:#FFE6F2;
+        font-family:verdana, tahoma, arial;
+        text-align:center
+}
+.reportsForecastVariance{
+    color: #000000;
+        background-color:#FFE6F2;
+        font-family:verdana, tahoma, arial;
+        text-align:center
+}
+
+.reportsForecastReport{
+    color: #000000;
+        background-color:#DDDDEE;
+        font-family:"Times New Roman", Times, serif;
+        font-weight:bold;
+        text-align:center
+}

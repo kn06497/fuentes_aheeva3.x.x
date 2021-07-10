@@ -1,0 +1,445 @@
+<html>
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<!-- Calendrier début -->
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<!-- Calendrier fin -->
+
+<script language="JavaScript" src="jsUtil.js">
+</script>
+<script language="JavaScript">
+
+var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+
+function sortSelect(o)
+{
+	/*var o = new Array();
+	if (obj.options==null) { return; }
+	for (var i=0; i<obj.options.length; i++) {
+		o[o.length] = new Option( obj.options[i].text, obj.options[i].value, obj.options[i].defaultSelected, obj.options[i].selected) ;
+		}*/
+	if (o.length==0) { return; }
+
+	if(document.theForm.viewckbox.checked == false){
+		o = o.sort(
+			function(a,b) {
+				if ((a.text+"") < (b.text+"")) { return -1; }
+				if ((a.text+"") > (b.text+"")) { return 1; }
+				return 0;
+				}
+			);
+	}
+	else{
+		o = o.sort(
+			function(a,b) {
+
+					if (parseInt(a.value) < parseInt(b.value)) { return -1; }
+					if (parseInt(a.value) > parseInt(b.value)) { return 1; }
+					return 0;
+				}
+			);
+	}
+	/*for (var i=0; i<o.length; i++) {
+		obj.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+		}*/
+
+}
+
+function fillObjectCombo()
+{
+		var agents = String( appletObj.getAgentsByName(tenant_dbid) );
+		var o = new Array();
+
+		/*Fill agents combo box with agents name*/
+        var agents = String( appletObj.getAgentsByName(tenant_dbid) );
+        var jsAgents = agents + "";
+    	arrayAgents = jsAgents.split("|");
+    	if(agents.length > 0 ){
+    		for (j = 0; j <arrayAgents.length; j++){
+    			var iStartPos = arrayAgents[j].indexOf('[');
+    			var iEndPos   = arrayAgents[j].indexOf(']');
+    			var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+				var name = login+'['+arrayAgents[j].substr(0,iStartPos)+']';
+				if (document.theForm.viewckbox.checked == false)	  		// show agents name as : firstname, lastname[login]
+      				myOption = new Option(arrayAgents [j],login)
+				else									// show agents name as : login[firstname, lastname]
+					myOption = new Option(name,login)
+				//optionPos = objects.options.length
+				//objects.options[optionPos]=myOption
+				o[o.length]= myOption;
+    		}
+		}
+
+		//Sort the object
+		sortSelect(o);
+		for (var i=0; i<o.length; i++) {
+			document.theForm.objects.options[i+1] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+		}
+
+        /*Fill agents group combo box with agent group name*/
+        var agentGroups = String( appletObj.getAgentGroupByName(tenant_dbid) );
+        var jsAgentGroups = agentGroups + "";
+    	arrayGroups = jsAgentGroups.split("|");
+    	for (j = 0; j <arrayGroups.length; j++){
+    		myOption = new Option(arrayGroups[j],arrayGroups[j])
+			optionPos = document.theForm.agtGrp.options.length
+			document.theForm.agtGrp.options[optionPos]=myOption
+    	}
+		//sortSelect(objects);
+ }
+
+function changeAgentListView(){
+	var agents;
+	var name="";
+	var o = new Array();
+	document.theForm.objects.length = 0;
+    var defaultvalue =  "- All Agents -" ;
+	myOption = new Option(defaultvalue,"AllAgents")
+	//optionPos = document.theForm.objects.options.length
+	o[o.length]=myOption
+
+	if(document.theForm.agtGrp.value == 'AllGroups')
+		agents = String( appletObj.getAgentsByNameActif(tenant_dbid) );
+	else
+		agents = String( appletObj.getAvailableAgentListInGroupByStatus(document.theForm.agtGrp.value,1) );		
+
+    var jsAgents = agents + "";
+    arrayAgents = jsAgents.split("|");
+    for (j = 0; j <arrayAgents.length; j++){
+		  var iStartPos = arrayAgents[j].indexOf('[');
+		  var iEndPos   = arrayAgents[j].indexOf(']');
+		  var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+		  name = login+'['+arrayAgents[j].substr(0,iStartPos)+']'
+		  if (document.theForm.viewckbox.checked == false)  // show agents name as : firstname, lastname[login]
+			myOption = new Option(arrayAgents [j],login);  // show agents name as : login[firstname, lastname]
+		  else
+			myOption = new Option(name,login);
+		  //optionPos = document.theForm.objects.options.length;
+		  o[o.length]=myOption
+
+   }
+
+   sortSelect(o);
+
+	for (var i=0; i<o.length; i++) {
+		document.theForm.objects.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+		}
+
+}
+
+
+
+function getAgentsInGroup()
+{
+	var o = new Array();
+	if(document.theForm.agtGrp.value =='AllGroups')
+	{
+		//Empty the agent group combo box
+		document.theForm.agtGrp.options.length=1;
+		document.theForm.objects.length = 0;
+        var defaultvalue =  "- All Agents -" ;
+		myOption = new Option(defaultvalue,"AllAgents")
+		optionPos = document.theForm.objects.options.length
+		document.theForm.objects.options[optionPos]=myOption
+
+		fillObjectCombo();
+	}
+	else
+	{
+
+		var agents = String( appletObj.getAvailableAgentListInGroupByStatus(document.theForm.agtGrp.value,1) );
+		var jsAgents = agents + "";
+
+		// Remove all agents from agents option field
+		var i=document.theForm.objects.options.length;
+        if (i>0){
+              document.theForm.objects.length = 0;
+        }
+        var defaultvalue =  "- All Agents -" ;
+		myOption = new Option(defaultvalue,"AllAgents")
+		//optionPos = document.theForm.objects.options.length
+		//document.theForm.objects.options[optionPos]=myOption
+		o[o.length]= myOption;
+
+		if(agents.length > 0 ){
+			arrayAgents = jsAgents.split("|");
+    		for (j = 0; j <arrayAgents.length; j++){
+    			var iStartPos = arrayAgents[j].indexOf('[');
+    			var iEndPos   = arrayAgents[j].indexOf(']');
+    			var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+    			//myOption = new Option(arrayAgents [j],login)
+				var name = login+'['+arrayAgents[j].substr(0,iStartPos)+']';
+				if (document.theForm.viewckbox.checked == false)	  		// show agents name as : firstname, lastname[login]
+      				myOption = new Option(arrayAgents [j],login)
+				else									// show agents name as : login[firstname, lastname]
+					myOption = new Option(name,login)
+
+				//optionPos = document.theForm.objects.options.length
+				//document.theForm.objects.options[optionPos]=myOption
+				o[o.length]= myOption;
+
+			}
+         }
+
+	}
+
+	sortSelect(o);
+
+	for (var i=0; i<o.length; i++) {
+		document.theForm.objects.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+	}
+
+	return;
+}
+
+
+function getSelectedObjects()
+{
+	selectedAgents = new Array()
+	for (i=document.theForm.objects.selectedIndex;i<document.theForm.objects.options.length;i++) {
+  		if (document.theForm.objects.options[i].selected) {
+  			selectedAgents[selectedAgents.length]=document.theForm.objects.options[i].value;
+  		}
+  	}
+	var url = '';
+	if (selectedAgents.length > 0)
+	{
+		url= escape(selectedAgents.join('/'))
+	}
+	return url;
+}
+
+function getRequestedReport()
+{
+
+	var destination = '';
+
+	if(dateChecker() == false)
+	{
+		return;
+	}
+
+	var get_listened = '0';
+	var get_not_listened = '0';
+	var get_sales = '0';
+	var get_no_sales ='0';
+	var get_qm ='0';
+	var selectedGroups = document.theForm.agtGrp.value;
+	
+	if(validation(document.theForm.phoneNumber.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !!!");
+		document.theForm.phoneNumber.focus();
+		return;
+	}
+
+	destination = "../jsp/conversationRecording.jsp"
+	destination += "?startingDate="
+	destination += document.theForm.startingDate.value;
+	destination +="&endingDate=";
+	destination += document.theForm.endingDate.value;
+	destination +="&phoneNumber=";
+	destination +=document.theForm.phoneNumber.value;
+	destination +="&agentGrp=";
+
+	if(document.theForm.agtGrp.value == 'AllGroups')
+	{
+	  selectedGroups = selectedGroups + '/';
+	  var i;
+	  for(i=1; i<document.theForm.agtGrp.options.length; i++){
+		 selectedGroups = selectedGroups + document.theForm.agtGrp.options[i].value + '!';
+	   }
+	  if(document.theForm.agtGrp.options.length > 1)
+		 selectedGroups = selectedGroups.substring(0,selectedGroups.length-1);
+	}
+	destination += selectedGroups;
+	destination +="&agents=";
+	destination += getSelectedObjects();
+
+	//if(not_listened.checked)
+	//	get_not_listened ='1'
+	//if(listened.checked)
+	//	get_listened ='1'
+	if(document.theForm.sales.checked)
+		get_sales ='1';
+	if(document.theForm.no_sales.checked)
+		get_no_sales='1';
+	//if(qm.checked)
+	//	get_qm ='1';
+//	alert(destination);
+	destination +="&option_not_listened=";
+	destination += get_not_listened;
+	destination +="&option_listened=";
+	destination += get_listened;
+	destination +="&sales=";
+	destination +=get_sales;
+	destination +="&no_sales=";
+	destination += get_no_sales;
+	destination +="&qm=";
+	destination += get_qm;
+	//alert(destination);
+	//alert(window.top.main.rbottom.bottom.location.href)
+	//window.top.main.rbottom.bottom.location.href = destination;
+	//alert(window.top.bottom.location.href)
+	document.location = destination;
+}
+
+
+function dateChecker()
+{
+var startDate=new Date(document.theForm.startingDate.value);
+var endDate = new Date(document.theForm.endingDate.value);
+
+	if(endDate < startDate)
+	{
+		alert("Your ending date cannnot be smaller than your starting date");
+		return false;
+	}
+return true;
+}
+
+function displayStats()
+{
+ if (document.theForm.statsChk.checked)
+  {
+   //alert(document.location)
+   //alert(document.body.clientWidth+','+document.body.clientHeight)
+   var hh=window.top.main.rtop.document.body.clientHeight
+  // alert(window.top.main.rtop.document.body.clientWidth +','+window.top.main.rtop.document.body.clientHeight )
+   //window.top.main.rbottom.moveTo(0,0);
+	//window.top.main['comm'].window.location.href = "CommPage.htm";
+  }
+  else{
+  	 // window.top.main.rtop.location.href= document.location
+  }
+}
+		</script>
+</head>
+	
+<body class="bottompagebody" onload="fillObjectCombo()">
+<form name="theForm">
+		<table width="88%" border="0">
+			<tr>
+				<td width="71%">
+					<div align="left">
+						<h3>Listening to agent's conversations</h3>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="29%">
+					<input type="checkbox" name="statsChk" value="0" onClick="displayStats()"> <b>Show
+						statistics</b>
+				</td>
+			</tr>
+		</table>
+		<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="650">
+			<tr>
+				<td style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1"
+					colspan="4">&nbsp;</td>
+			</tr>
+			<tr>
+				<td width="136" height="23" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1">
+					<b>Agent groups</b>
+				</td>
+				<td width="201" style="border-top-style: none; border-top-width: 1">
+					<select name="agtGrp" onChange="getAgentsInGroup()">
+						<option value="AllGroups">- All groups -</option>
+					</select>
+				</td>
+				<!--  <td width="158" style="border-top-style: none; border-top-width: 1" >&nbsp;</td>
+    <td width="155" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >&nbsp;</td>-->
+			</tr>
+			<tr>
+				<td width="136" height="23" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1">
+					<b>Agents </b>
+				</td>
+				<td width="201" style="border-top-style: none; border-top-width: 1">
+					<select name="objects">
+						<option value="AllAgents">- All agents -</option>
+					</select>
+				</td>
+				<td valign="top" >
+					<b>Show agent by ID <input type="checkbox" name="viewckbox" onClick="changeAgentListView()" ID="Checkbox2"></b>
+				</td>
+			</tr>
+			<tr>
+				<td width="136" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1">
+					<b>Phone number</b>
+				</td>
+				<td width="201" style="border-top-style: none; border-top-width: 1" colspan="2">
+					<input type="text" name="phoneNumber">
+				</td>
+			</tr>
+			<tr>
+				<td height="26" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1">
+					<b>Call time </b>
+				</td>
+				<td height="26" style="border-top-style: none; border-top-width: 1"><b>From</b> <input id="id_startingDate" type="text" size="20" onFocus="showCalendar('',this,this,'','id_startingDate',0,30,1);this.blur()" name="startingDate" /></td>
+				<td height="26" colspan="2" style="border-top-style: none; border-top-width: 1;border-right-style: none; border-right-width: 1">
+					<b>To</b> <input id="id_endingDate" type="text" size="20" onFocus="showCalendar('',this,this,'','id_endingDate',0,30,1);this.blur()" name="endingDate" />
+				</td>
+			</tr>
+			<!--<tr>
+    </td>
+    <td  style="border-bottom-style: none; border-bottom-width: 1">
+      <input type="checkbox" name="not_listened" value="0">&nbsp;
+      <b>Not listened records only</b>
+    </td>
+    <td  style="border-bottom-style: none; border-bottom-width: 1">&nbsp;</td>
+    <td  style="border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1" >
+  </tr>
+  <tr>
+    <td align="left" style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+      <input type="checkbox" name="listened" value="0">
+      <b>Show listened records</b>
+     </td>
+    <td style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1"></td>
+    <td style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1" ></td>
+  </tr>-->
+			<tr>
+				<td align="left" style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+					<input type="checkbox" name="sales" value="0">&nbsp; <b>Sales</b>
+				</td>
+				<td style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+				</td>
+				<td style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+				</td>
+			</tr>
+			<tr>
+				<td align="left" style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+					<input type="checkbox" name="no_sales" value="0">&nbsp; <b>No sales</b>
+				</td>
+				<td style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1"></td>
+				<td style="border-right-style: none; border-right-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1"
+					align="right">&nbsp;</td>
+				<td style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+				</td>
+			</tr>
+			<!--<tr>
+    <td align="left" style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+     <input type="checkbox" name="qm" value="0">&nbsp;
+     <b>Quality monitoring</b>
+    </td>
+    <td style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1"></td>
+  </tr>-->
+			<tr>
+				<td width="155" height="40" style="border-right-style: none; border-right-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1"
+					align="left">
+					<input type="button" onClick="getRequestedReport()" value="submit">
+				</td>
+				<td style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+				</td>
+				<td style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">
+				</td>
+			</tr>
+		</table>
+		</form>
+	</body>
+</html>

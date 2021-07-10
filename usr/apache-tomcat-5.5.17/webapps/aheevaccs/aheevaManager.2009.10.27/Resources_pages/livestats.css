@@ -1,0 +1,612 @@
+/*************************************************************
+LIVE STATS CSS
+*************************************************************/
+.livestatsTableTBody {
+
+}	
+	
+.livestatsTableTHead  {
+	background-color: #FFEBCC;
+}
+
+/*************************************************************
+SORTING BACKGROUND TD
+*************************************************************/
+
+.sortingbackground_ascending {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  ;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#FF0000; */		
+    BACKGROUND:url('../img/header_bg_sort1.gif');
+	cursor:pointer;
+}
+
+.sortingbackground_descending {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  ;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#FF0000; */
+	BACKGROUND:url('../img/header_bg_sort2.gif');
+	cursor:pointer;
+}
+
+/*************************************************************
+BOTTOM PAGE VISUAL
+*************************************************************/
+
+.bottompagebody {
+    margin: ;
+	BACKGROUND-COLOR:#F7EEE4;
+
+	
+scrollbar-face-color:#EAD8C1;
+scrollbar-arrow-color:#000000;
+scrollbar-track-color:#F7EEE4;
+scrollbar-shadow-color:#DEBA8E;
+scrollbar-highlight-color:#EAD8C1;
+scrollbar-3dlight-color:#F7EEE4;
+scrollbar-darkshadow-Color:#F7EEE4;
+scrollbar-bordercolor:#000000;	
+}
+
+/************************************************************
+AGENTS TAB
+*************************************************************/
+
+.livestatsTableAgents {
+	border:1px solid #98AAE9;
+	background-color: #FFFFF4;
+	border-collapse: collapse;
+	empty-cells: show;
+	
+}
+
+.livestatsTableAgentsHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  ;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#FF0000; */
+	BACKGROUND:url('../img/header_bg.gif');
+	cursor:pointer;
+}
+
+.livestatsTableAgentsGroups {
+    height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1x solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:none;
+	/*background-color:#FF0000; */
+	white-space: nowrap; 
+	BACKGROUND:url('../img/group_bg.gif'); 
+}
+
+.livestatsTableAgentsGroupSummary {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #FFFFF0;
+	border-right:1px solid #999999;
+	border-top:0px solid #999999;
+	border-left:0px solid  #BFBFBF;
+	font-weight:none;
+	white-space: nowrap; 
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/group_summary_bg.gif');
+}
+
+.livestatsTableAgentsList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#FFFFF0; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */
+}
+
+.livestatsTableStatusColumn {
+    text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	
+	
+}
+
+.livestatsTableAgentsGroupSummaryIconTD {
+    text-align: right;
+	border-bottom:1px solid #FFFFF0;
+	border-right:0px solid #999999;
+	border-top:0px solid #999999;
+	border-left:0px solid  #BFBFBF;
+	font-weight:none;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/group_summary_bg.gif');
+
+}
+
+/************************************************************
+AGENTS GROUPS TAB
+*************************************************************/
+
+.livestatsTableAgentGroups {
+	border:1px solid #98AAE9;
+	background-color: #FFFFF4;
+	border-collapse: collapse;
+	empty-cells: show;
+	font-weight:none;	
+}
+
+.livestatsTableAgentsGroupsHeaders {
+	height: 45px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  ;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/header_bg.gif');
+	cursor:pointer;
+	
+}
+
+.livestatsTableAgentsGroupsList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:1px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#FFFFF0; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */
+}
+
+.livestatsTableAgentsGroupsSummary {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #999999;
+	border-right:1px solid #999999;
+	border-top:0px solid #999999;
+	border-left:0px solid  #BFBFBF;
+	font-weight:none;
+	white-space: nowrap; 
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/group_summary_bg.gif');	
+}
+
+/************************************************************
+QUEUES TAB
+*************************************************************/
+
+.livestatsTableQueues {
+	border:1px solid #98AAE9;
+	background-color: #FFFFF4;
+	border-collapse: collapse;
+	empty-cells: show;	
+}
+
+.livestatsTableQueuesHeaders {
+	height: 45px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  ;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/header_bg.gif');	
+	cursor:pointer;
+}
+
+.livestatsTableQueuesList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:1px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#FFFFF0; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */	
+}
+
+.livestatsTableQueuesListRoutingScript {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:1px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#E8FFE6; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */	
+}
+
+
+/************************************************************
+CAMPAIGNS TAB
+*************************************************************/
+
+.livestatsTableCampaigns {
+	border:1px solid #98AAE9;
+	background-color: #FFFFF4;
+	border-collapse: collapse;
+	empty-cells: show;	
+}
+
+.livestatsTableCampaignsHeaders {
+	height: 45px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  ;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/header_bg.gif');	
+}
+
+.livestatsTableCampaignsList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:1px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#FFFFF0; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */	
+}
+
+
+/************************************************************
+CALLING LISTS TAB
+*************************************************************/
+
+.livestatsTableCallingLists {
+	border:1px solid #98AAE9;
+	background-color: #FFFFF4;
+	border-collapse: collapse;
+	empty-cells: show;	
+}
+
+.livestatsTableCallingListsHeaders1 {
+	height: 25px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #FFEBCC;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/header_bg.gif');	
+}
+
+.livestatsTableCallingListsHeaders2 {
+    vertical-align: top; 
+    height: 18px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #CCCCCC;
+	border-right: 1px solid  #CCCCCC;
+	border-top:0px solid #CCCCCC;
+	border-left:1px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/group_bg.gif');	
+}
+
+.livestatsTableCallingListsDetails {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:1px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#FFFFF0; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */	
+}
+
+
+/************************************************************
+PERFORMANCE TAB
+*************************************************************/
+
+.livestatsTablePerformance {
+	border:1px solid #98AAE9;
+	background-color: #FFFFF4;
+	border-collapse: collapse;
+	empty-cells: show;
+	width: 760px;	
+}
+
+.livestatsTablePerformanceTitle {
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:11px;
+	font-weight:bold;
+	border-collapse: collapse;
+	empty-cells: show;
+	border-bottom: 0px solid  #999999;
+	border-right: 1px solid  #98AAE9;
+	border-top:1px solid #98AAE9;
+	border-left:1px solid #98AAE9;
+	width: 760px;
+	BACKGROUND:url('../img/list_bg.gif');
+}
+
+.livestatsTablePerformanceTitleEmpty {
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:11px;
+	font-weight:;
+	border-collapse: collapse;
+	empty-cells: show;
+	border-bottom: 0px solid  #999999;
+	border-right: 1px solid  #98AAE9;
+	border-top:1px solid #98AAE9;
+	border-left:1px solid #98AAE9;
+	width: 760px;
+	BACKGROUND:url('../img/list_bg.gif');
+}
+
+.livestatsTablePerformanceHeaders {
+	height: 45px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #FFEBCC;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/header_bg.gif');
+	cursor:pointer;	
+}
+
+.livestatsTablePerformanceHeadersEmpty {
+	height: 45px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: left;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #FFEBCC;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/header_bg.gif');
+	cursor:pointer;	
+}
+
+
+.livestatsTablePerformanceList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:1px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#FFFFF0; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */	
+}
+
+.livestatsTablePerformanceSummary {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:0px solid #999999;
+	border-right:1px solid #999999;
+	border-top:0px solid #999999;
+	border-left:0px solid  #BFBFBF;
+	font-weight:none;
+	white-space: nowrap; 
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/group_summary_bg.gif');	
+}
+
+/************************************************************
+TEAMS TAB
+*************************************************************/
+
+.livestatsTableTeams {
+	border:1px solid #98AAE9;
+	background-color: #FFFFF4;
+	border-collapse: collapse;
+	empty-cells: show;
+}
+
+.livestatsTeamsHeaders {
+	height: 45px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  ;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/header_bg.gif');
+	cursor:pointer;	
+}
+
+.livestatsTableTeamsGroups {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid  #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:none;
+	/*background-color:#FDFFD5; */
+	white-space: nowrap; 
+	BACKGROUND:url('../img/group_bg.gif'); 
+}
+
+.livestatsTableTeamsGroupsSummary {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #FFFFF0;
+	border-right:1px solid #999999;
+	border-top:0px solid #999999;
+	border-left:0px solid  #BFBFBF;
+	font-weight:none;
+	white-space: nowrap; 
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/group_summary_bg.gif');
+}
+
+
+.livestatsTeamsList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#FFFFF0; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */
+}
+
+.livestatsTableAgentsGroupSummaryTeamIconTD {
+    text-align: right;
+	border-bottom:1px solid #FFFFF0;
+	border-right:0px solid #999999;
+	border-top:0px solid #999999;
+	border-left:0px solid  #BFBFBF;
+	font-weight:none;
+	white-space: nowrap; 
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/group_summary_bg.gif');
+	}
+
+/************************************************************
+LINE MANAGEMENT TAB
+*************************************************************/
+.livestatsTable {
+	border:1px solid #98AAE9;
+	background-color: #FFFFF4;
+	border-collapse: collapse;
+	empty-cells: show;
+	
+}
+
+.livestatsTableHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:10px;
+	text-align: right;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  ;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #CCCCCC;
+	font-weight:bold;
+	/*background-color:#FF0000; */
+	BACKGROUND:url('../img/header_bg.gif');
+	cursor:pointer;
+}
+
+.livestatsTableSummary {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:1px solid #FFFFF0;
+	border-right:1px solid #999999;
+	border-top:0px solid #999999;
+	border-left:0px solid  #BFBFBF;
+	font-weight:none;
+	white-space: nowrap; 
+	/*background-color:#F2F2F2; */
+	BACKGROUND:url('../img/group_summary_bg.gif');
+}
+
+.livestatsTableList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-top:0px solid #CCCCCC;
+	border-left:0px solid #D9E9EA;
+	font-weight:none;	
+	background-color:#FFFFF0; 
+	white-space: nowrap; 
+	/*BACKGROUND:url('../img/list_bg.gif'); */
+}

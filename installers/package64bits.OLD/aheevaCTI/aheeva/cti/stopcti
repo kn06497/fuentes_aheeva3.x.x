@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+
+PID_FILE="pid.txt"
+#CD_CMD_CR="cd /usr/src/dbCruncher"
+CD_CMD_CT="cd /usr/src/cti"
+#CD_CMD_DB="./stopdbCruncher"
+CHECK_CMD="kill -0 `head -1 $PID_FILE`"
+KILL_CMD="kill `head -1 $PID_FILE`"
+
+
+
+#$CD_CMD_CR
+#$CD_CMD_DB
+
+#Stop the CTI 
+
+$CD_CMD_CT
+
+if test ! -f $PID_FILE ; then
+    echo ""
+    echo "Unable to locate the file containing the asteriskCTI's process Id: '$PID_FILE'"
+    echo "Process may not be running."
+    echo ""
+    exit 1
+fi
+
+
+
+echo "PID:" `head -1 $PID_FILE`
+
+$CHECK_CMD >> /dev/null 2>&1
+
+if test $? -ne 0 ; then
+    echo ""
+    echo "asteriskCTI process not running."
+    rm -f $PID_FILE >> /dev/null 2>&1
+    echo ""
+    exit 0
+fi
+
+
+COUNT=0
+
+echo ""
+echo $KILL_CMD
+$KILL_CMD >> /dev/null 2>&1
+
+sleep 1
+
+while true
+do
+    $CHECK_CMD >> /dev/null 2>&1
+    if test $? -eq 0 ; then
+        COUNT=`expr $COUNT + 1`
+        if test $COUNT -eq 10 ; then
+            echo ""
+            echo "asteriskCTI process still running..."
+            $KILL_CMD >> /dev/null 2>&1
+            exit 1
+        fi
+        sleep 1
+    else
+        echo ""
+        echo "asteriskCTI process stopped"
+        rm -f $PID_FILE >> /dev/null 2>&1
+        echo ""
+        exit 0
+    fi
+done
+
+

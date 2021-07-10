@@ -1,0 +1,655 @@
+/*************************************************************
+LIVE STATS CSS
+*************************************************************/
+.livestatsTableTBody {
+
+}	
+	
+.livestatsTableTHead  {
+	background-color: #000000;
+}
+
+/*************************************************************
+SORTING BACKGROUND TD
+*************************************************************/
+
+.sortingbackground_ascending {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 2px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	font-weight:normal;
+	padding-right: 4px;
+	padding-left: 4px;		
+    BACKGROUND:url('../img/header_bg_sort1.gif');
+	cursor:pointer;
+}
+
+.sortingbackground_descending {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 2px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	font-weight:normal;
+	padding-right: 4px;
+	padding-left: 4px;
+	BACKGROUND:url('../img/header_bg_sort2.gif');
+	cursor:pointer;
+}
+
+/*************************************************************
+BOTTOM PAGE VISUAL
+*************************************************************/
+
+.bottompagebody {
+    background-color: #a3c2d9;
+	background-image: url(../img/treat_body.png);
+	background-repeat: repeat-x;
+
+	
+scrollbar-face-color:#EAD8C1;
+scrollbar-arrow-color:#000000;
+scrollbar-track-color:#F7EEE4;
+scrollbar-shadow-color:#DEBA8E;
+scrollbar-highlight-color:#EAD8C1;
+scrollbar-3dlight-color:#F7EEE4;
+scrollbar-darkshadow-Color:#F7EEE4;
+scrollbar-bordercolor:#000000;	
+}
+
+/************************************************************
+AGENTS TAB
+*************************************************************/
+
+.livestatsTableAgents {
+	background-color: #DEF4FA;
+	border-collapse: collapse;
+	empty-cells: show;
+	
+}
+
+.livestatsTableAgentsHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+}
+
+.livestatsTableAgentsGroups {
+    height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:9px;
+	color: #3C5960;
+	text-align: center;
+	border-bottom:1px solid #D9E9EA;
+	
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	
+	font-weight:normal;
+	white-space: nowrap;
+	padding-right: 4px;
+	padding-left: 4px;
+	BACKGROUND:url('../img/group_bg.gif'); 
+}
+
+.livestatsTableAgentsGroupSummary {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #333333;
+	text-align: right;
+	border-bottom:1px solid #999999;
+	border-right:1px solid #999999;
+	border-top:2px solid #999999;
+	border-left:1px solid  #999999;
+	font-weight:none;
+	white-space: nowrap; 
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.livestatsTableAgentsList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:normal;
+	background-color:#DEF4FA;
+	white-space: nowrap;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.livestatsTableStatusColumn {
+    text-align: right;
+	border-bottom:1px solid #D9E9EA;
+	
+	
+}
+
+.livestatsTableAgentsGroupSummaryIconTD {
+    text-align: right;
+	border-bottom:1px solid #999999;
+	border-right:1px solid #9AC7D3;
+	border-top:2px solid #999999;
+	font-weight:none;
+	background-color:#9AC7D3;
+
+}
+
+/************************************************************
+AGENTS GROUPS TAB
+*************************************************************/
+
+.livestatsTableAgentGroups {
+	background-color: #DEF4FA;
+	border-collapse: collapse;
+	empty-cells: show;
+}
+
+.livestatsTableAgentsGroupsHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+	
+}
+
+.livestatsTableAgentsGroupsList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:none;	
+	background-color:#DEF4FA; 
+	white-space: nowrap;
+	padding-right: 4px;
+	padding-left: 4px;
+	
+}
+
+.livestatsTableAgentsGroupsSummary {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #333333;
+	text-align: right;
+	border-bottom:1px solid #999999;
+	border-right:1px solid #999999;
+	border-top:2px solid #999999;
+	border-left:1px solid  #999999;
+	font-weight:none;
+	white-space: nowrap; background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	
+}
+
+/************************************************************
+QUEUES TAB
+*************************************************************/
+
+.livestatsTableQueues {
+	background-color: #DEF4FA;
+	border-collapse: collapse;
+	empty-cells: show;	
+}
+
+.livestatsTableQueuesHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+
+}
+
+.livestatsTableQueuesList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:none;	
+	background-color:#DEF4FA; 
+	white-space: nowrap;
+	padding-right: 4px;
+	padding-left: 4px;
+	
+}
+
+.livestatsTableQueuesListRoutingScript {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:none;	
+	background-color:#E8FFE6; 
+	white-space: nowrap; 
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+
+/************************************************************
+CAMPAIGNS TAB
+*************************************************************/
+
+.livestatsTableCampaigns {
+	background-color: #DEF4FA;
+	border-collapse: collapse;
+	empty-cells: show;
+}
+
+.livestatsTableCampaignsHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+
+}
+
+.livestatsTableCampaignsList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:none;	
+	background-color:#DEF4FA; 
+	white-space: nowrap; 
+	padding-right: 4px;
+	padding-left: 4px;
+
+}
+
+
+/************************************************************
+CALLING LISTS TAB
+*************************************************************/
+
+.livestatsTableCallingLists {
+	background-color: #DEF4FA;
+	border-collapse: collapse;
+	empty-cells: show;	
+}
+
+.livestatsTableCallingListsHeaders1 {
+	height: 25px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+}
+
+.livestatsTableCallingListsHeaders2 {
+    vertical-align: top; 
+    height: 18px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #CCCCCC;
+	border-right: 1px solid  #CCCCCC;
+	border-top:0px solid #CCCCCC;
+	border-left:1px solid #CCCCCC;
+	font-weight:normal;
+	padding-right: 4px;
+	padding-left: 4px;
+	BACKGROUND:url('../img/group_bg.gif');	
+}
+
+.livestatsTableCallingListsDetails {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:none;	
+	background-color:#DEF4FA; 
+	white-space: nowrap;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+
+/************************************************************
+PERFORMANCE TAB
+*************************************************************/
+
+.livestatsTablePerformance {
+	background-color: #DEF4FA;
+	border-collapse: collapse;
+	empty-cells: show;
+	width: 760px;	
+}
+
+.livestatsTablePerformanceTitle {
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:11px;
+	font-weight:bold;
+	border-collapse: collapse;
+	empty-cells: show;
+	border-bottom: 1px solid  #D9E9EA;
+	border-right: 1px solid  #999999;
+	border-left:1px solid #999999;
+	width: 760px;
+	background-color:#DEF4FA;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.livestatsTablePerformanceTitleEmpty {
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:11px;
+	font-weight:;
+	border-collapse: collapse;
+	empty-cells: show;
+	border-bottom: 1px solid  #D9E9EA;
+	border-right: 1px solid  #999999;
+	border-left:1px solid #999999;
+	width: 760px;
+	background-color:#DEF4FA;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.livestatsTablePerformanceHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+}
+
+.livestatsTablePerformanceHeadersEmpty {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+}
+
+
+.livestatsTablePerformanceList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:none;	
+	background-color:#DEF4FA; 
+	white-space: nowrap; 
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.livestatsTablePerformanceSummary {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	text-align: right;
+	border-bottom:0px solid #999999;
+	border-right:1px solid #999999;
+	border-top:0px solid #999999;
+	border-left:0px solid  #BFBFBF;
+	font-weight:none;
+	white-space: nowrap;
+	BACKGROUND:url('../img/group_summary_bg.gif');	
+}
+
+/************************************************************
+TEAMS TAB
+*************************************************************/
+
+.livestatsTableTeams {
+	background-color: #DEF4FA;
+	border-collapse: collapse;
+	empty-cells: show;
+}
+
+.livestatsTeamsHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid #999999;
+	border-right: 1px solid #000000;
+	border-top: 3px solid #000000;
+	border-left: 1px solid #000000;
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+}
+
+.livestatsTableTeamsGroups {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:9px;
+	color: #3C5960;
+	text-align: center;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:none;
+	white-space: nowrap;
+	padding-right: 4px;
+	padding-left: 4px;
+	BACKGROUND:url('../img/group_bg.gif');
+}
+
+.livestatsTeamsList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:normal;
+	background-color:#DEF4FA;
+	white-space: nowrap;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.livestatsTableTeamsGroupsSummary {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #333333;
+	text-align: right;
+	border-bottom:1px solid #999999;
+	border-right:1px solid #999999;
+	border-top:2px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:none;
+	white-space: nowrap;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.livestatsTableAgentsGroupSummaryTeamIconTD {
+    text-align: right;
+	border-bottom:1px solid #999999;
+	border-right:1px solid #9AC7D3;
+	border-top:2px solid #999999;
+	font-weight:none;
+	background-color:#000000;
+}
+
+/************************************************************
+LINE MANAGEMENT TAB
+*************************************************************/
+.livestatsTable {
+	background-color: #DEF4FA;
+	border-collapse: collapse;
+	empty-cells: show;
+	
+}
+
+.livestatsTableHeaders {
+	height: 45px; 	
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #333333;
+	font-size:9px;
+	text-align: center;
+	border-bottom: 1px solid  #999999;
+	border-right: 1px solid  #000000;
+	border-top: 3px solid  #000000;
+	border-left: 1px solid  #000000;
+	
+	font-weight:normal;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor:pointer;
+}
+
+.livestatsTableSummary {
+	height: 16px; 
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #333333;
+	text-align: right;
+	border-bottom:1px solid #999999;
+	border-right:1px solid #999999;
+	border-top:2px solid #999999;
+	border-left:1px solid  #999999;
+	font-weight:none;
+	white-space: nowrap;
+	background-color:#9AC7D3;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.livestatsTableList {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size:10px;
+	color: #698993;
+	text-align: right;
+	valign: middle;
+	border-bottom:1px solid #D9E9EA;
+	border-right:1px solid #999999;
+	border-left:1px solid #999999;
+	font-weight:normal;	
+	background-color:#DEF4FA; 
+	white-space: nowrap; 
+	padding-right: 4px;
+	padding-left: 4px;
+}

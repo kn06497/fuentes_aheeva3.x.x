@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+<CustomServer>
+        <Module name="TestModule">
+        <filename>abcd.so</filename>
+        <functions>
+                <function name="myfunction01" />
+        </functions>
+</Module>
+-->
+</CustomServer>

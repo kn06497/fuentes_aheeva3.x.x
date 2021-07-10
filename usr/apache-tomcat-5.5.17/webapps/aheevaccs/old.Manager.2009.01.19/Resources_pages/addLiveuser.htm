@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<title>Add Live User</title>
+<script language="JavaScript" src="jsUtil.js"> </script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+
+<script language="javascript" type="text/javascript"> 
+
+function enableButtons()
+	{	
+	document.theForm.b_add_group.disabled = false;
+	document.theForm.b_retrieve_group.disabled = true;
+	}
+	
+function disableButtons()
+	{	
+	document.theForm.b_add_group.disabled = true;
+	document.theForm.b_retrieve_group.disabled = false;
+	}
+
+function add_this_group()
+	{
+	//Trouver le option selectionnee
+	for(i=0; i < document.theForm.available_groups.length; i++)	
+		{
+		if(document.theForm.available_groups.options[i].selected )
+			{
+			maPos = i;
+			myOption = new Option(document.theForm.available_groups.options[i].text, document.theForm.available_groups.options[i].value);
+			break;
+			}
+		}
+		
+	// ajouter l option
+	document.theForm.assigned_groups.options[document.theForm.assigned_groups.length] = myOption;
+	
+	//Enlever  l option deja chosiie et remonter les autres
+	
+	for(i=0; i < (document.theForm.available_groups.length-1); i++)
+		{		
+		if(i >= maPos)
+			{
+			uneOption = new Option(document.theForm.available_groups.options[i+1].text, document.theForm.available_groups.options[i+1].value);
+			document.theForm.available_groups.options[i] = uneOption;
+			}
+		}
+	document.theForm.available_groups.length = document.theForm.available_groups.length - 1;	
+	
+	document.theForm.b_add_group.disabled 		= true;
+	document.theForm.b_retrieve_group.disabled 	= true;	
+	}
+	
+	
+	
+function retrive_this_group()
+	{
+	//Trouver le option selectionnee
+	for(i=0; i < document.theForm.assigned_groups.length; i++)	
+		{
+		if(document.theForm.assigned_groups.options[i].selected )
+			{
+			maPos = i;
+			myOption = new Option(document.theForm.assigned_groups.options[i].text, document.theForm.assigned_groups.options[i].value);
+			break;
+			}
+		}
+		
+	// ajouter l option
+	document.theForm.available_groups.options[document.theForm.available_groups.length] = myOption;
+	
+	//Enlever  l option deja chosiie et remonter les autres
+	
+	for(i=0; i < (document.theForm.assigned_groups.length-1); i++)
+		{		
+		if(i >= maPos)
+			{
+			uneOption = new Option(document.theForm.assigned_groups.options[i+1].text, document.theForm.assigned_groups.options[i+1].value);
+			document.theForm.assigned_groups.options[i] = uneOption;
+			}
+		}
+	document.theForm.assigned_groups.length = document.theForm.assigned_groups.length - 1;
+	document.theForm.b_add_group.disabled 		= true;
+	document.theForm.b_retrieve_group.disabled 	= true;
+	}
+	
+function validateInfo()
+	{
+	valide_form = true;
+	if(document.theForm.user_dbid.value == null || document.theForm.user_dbid.value == "")	
+		{
+		alert("Specify User");
+		valide_form = false;
+		} else if(document.theForm.user_num_log.value == "" || !IsNumeric(document.theForm.user_num_log.value))
+			{
+			alert("Specify a numeric login");
+			valide_form = false;
+			} else if(document.theForm.user_num_pass.value == "" || !IsNumeric(document.theForm.user_num_pass.value))
+				{
+				alert("Specify a numeric password");
+				valide_form = false;				
+				} else if(document.theForm.user_num_pass2.value != document.theForm.user_num_pass.value)
+					{
+					alert("Passwords doesn't match.");
+					valide_form = false;				
+					} 
+		
+	var theUsers = String( appletObj.getUsers() );
+	jstheUsersArray = theUsers.split("|");
+	for(i = 0; i < jstheUsersArray.length; i++)
+		{
+		
+		thisUsers = jstheUsersArray[i].split(",");
+		if(thisUsers[5] == document.theForm.user_num_log.value)
+			{
+			alert("This login is already in use.");
+			valide_form = false;
+			break;
+			}
+		}
+		
+		
+	if(valide_form) // si le form est valide		
+		{
+		//Build the group list
+		groups_list = "";
+		for(i = 0; i < document.theForm.assigned_groups.options.length; i++)
+			groups_list += document.theForm.assigned_groups.options[i].value+"|";
+		
+		
+		appletObj.saveLiveUser(document.theForm.user_dbid.value, document.theForm.user_num_log.value, document.theForm.user_num_pass.value, groups_list);
+		document.location.href = "../defaultpage.htm";
+		}
+		
+	}
+</script>
+
+</head>
+
+<body class="bottompagebody" >
+<form name="theForm">
+<table border="0">
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="3"><h3>Add Live User Monitoring</h3></td>
+	</tr>
+	<tr>
+		<td ><b>User Name</b></td>
+		<td colspan="3">
+		<select name="user_dbid" style="width:150px ">
+		<script language="javascript" type="text/javascript">
+		var at_least_one = false;
+		var userList = String( appletObj.getUsers() );
+		jsuserList = userList.split("|");		
+		for(i = 0; i < jsuserList.length; i++)
+			{			
+			theUser = jsuserList[i].split(",");
+			if(theUser[5].length == 0 || theUser[5] == "null" || theUser[5] == "NULL")
+				{
+				at_least_one = true;
+				document.write("<option value=\""+theUser[0]+"\">"+theUser[2]+"</option>");				
+				}
+			}
+			
+		if(!at_least_one)  //si tous les usagers ont deja du live listinning
+			{
+			alert("All users already have a live listenning account.\nAdd a new user before.");
+			document.location.href = "../defaultpage.htm";
+			}
+		</script>
+		</select>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Numeric Login</b></td>
+		<td colspan="3">
+		<input type="text" style="width:150px " name="user_num_log" maxlength="5">
+		</td>
+	</tr>
+	<tr>
+		<td ><b>Numeric Password</b></td>
+		<td colspan="3">
+		<input type="password" style="width:150px " name="user_num_pass" maxlength="5">
+		</td>
+	</tr>
+	<tr>
+		<td><b>Retype password</b></td>
+		<td colspan="3">
+		<input type="password" style="width:150px " name="user_num_pass2" maxlength="5">
+		</td>
+	</tr>
+	<tr>
+		<td valign="top"><b>Groups</b></td>
+		<td valign="top"><b>Available groups</b><br>
+			<select size="10" name="available_groups" style="width:150px " onChange="enableButtons()">
+			<script language="javascript" type="text/javascript">
+			var agentGroups = String( appletObj.getAgentGroupsByStatus("1") );
+			jsagentGroupsArray = agentGroups.split("|");
+			for(i=0; i < jsagentGroupsArray.length; i++)
+				{
+				thisAgentGroup = jsagentGroupsArray[i].split(",");
+				document.write("<option value=\""+thisAgentGroup[0]+"\" >"+thisAgentGroup[1]+"</option>");
+				}
+			</script>		
+			</select>
+		</td>
+	    <td align="center">
+			<input name="b_add_group" type="button" value="&gt;&gt;" disabled onClick="add_this_group()"><br><br>
+			<input name="b_retrieve_group" type="button" value="&lt;&lt;" disabled onClick="retrive_this_group()">
+		</td>
+	    <td valign="top"><b>Assigned groups</b><br>
+			<select size="10" name="assigned_groups" style="width:150px " onChange="disableButtons()">
+				
+			</select></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="3"><input name="submit" type="button" value="Submit" onClick="validateInfo()"></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

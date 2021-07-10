@@ -1,0 +1,480 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/aheevaphone.css">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script type="text/javascript" src="script/scripts.js"></script>
+<script type="text/javascript" src="script/jsXMLParser/xmlsax.js"></script>
+<script type="text/javascript" src="script/ah_js_functions.js"></script>
+<script type="text/javascript" src="script/ah_graph_functions.js"></script>
+<script type="text/javascript" src="script/disablekey.js"></script>
+<title>Agent Login</title>
+<style>
+	body {
+	background-image: url(./images/login_bg.png);
+
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	}
+</style>
+<script>
+
+var hardphone_clicked = 0;
+//var phone_number_str = " ";
+var ok_close_agentlogin = 0;
+var submit_sent = 0;
+var audio_option_toggle = false;
+var audio_name_array = new Array();
+var audio_number_array = new Array();
+var audio_capabilities_array = new Array();
+var audio_input_backup = 0;
+var audio_output_backup = 0;
+var audio_panel_opened = false;
+var iax_format = "ULAW";
+
+function IsNumeric(strString)
+{
+	//  check for valid numeric strings
+	var strValidChars = "0123456789";
+	var strChar;
+	var blnResult = true;
+	
+	if (strString.length == 0) return false;
+	
+	//  test strString consists of valid characters listed above
+	for (i = 0; i < strString.length && blnResult == true; i++)
+	{
+		strChar = strString.charAt(i);
+		if (strValidChars.indexOf(strChar) == -1)
+		{
+			blnResult = false;
+		}
+	}
+	return blnResult;
+}
+
+function selectTextObject(selectObjName, optionTextToSelect)
+{
+	var selectObject = document.getElementById(selectObjName);
+	for(var i = 0; i < selectObject.options.length; i++)
+   	{
+     	if(selectObject.options[i].text == optionTextToSelect)
+       	{
+         	selectObject.options[i].selected = true;
+       	}
+		else
+		{
+			selectObject.options[i].selected = false;
+		}
+   	}
+}
+
+function validateInfo(){
+	isValide = true;
+	errMessage = "";
+
+	if(document.theForm.login_id.value == ""){
+		errMessage  += '-Invalid login ID\n';
+		isValide = false;
+	}
+	if(document.theForm.password.value == ""){
+		errMessage  += '-Invalid password\n';
+		isValide = false;
+	}
+	if(document.theForm.cti_address.value == ""){
+		errMessage  += '-Invalid CTI address\n';
+		isValide = false;
+	}
+	if(hardphone_clicked == 1){
+		if(!IsNumeric(document.theForm.phone_number.value)){
+			
+			errMessage  += '-Invalid Phone Number\n';
+			isValide = false;
+	
+		}
+		if(!softphone_client_enabled()){
+			if(document.theForm.phone_number.value == document.theForm.login_id.value )	{
+				errMessage  += '-IAX SoftPhone client not enabled\n';
+				isValide = false;			
+			}
+		}
+	}
+
+
+	if(isValide){			
+		if(submit_sent == 0){
+			submit_sent = 1;
+			if(hardphone_clicked == 1){
+				sentToOpener(document.theForm.login_id.value, document.theForm.password.value,
+						document.theForm.cti_address.value,
+						"HARD"+document.theForm.phone_number.value);
+			}else{	
+				sentToOpener(document.theForm.login_id.value, document.theForm.password.value,
+						document.theForm.cti_address.value,
+						"SOFT"+document.theForm.login_id.value);
+			}
+		}
+			setCloseAgentLogin();
+			//window.close();
+	}else{
+		alert(errMessage);
+		unsetCloseAgentLogin();
+	}
+}
+
+function sentToOpener(loginid, passwordid, ctiadd, phone_num)
+{
+	window.opener.attempsConnect(loginid, passwordid, ctiadd, phone_num, iax_format);
+	window.opener.writeCookie();
+	//alert(phone_num);
+	setAgentLogin(0);
+	window.close();
+}
+
+function closePopUp()
+{
+	window.close();
+}
+
+function checkCloseAgentLogin() 
+{
+	if(window.opener.closing_applet == 0)
+	{
+		if(ok_close_agentlogin == 0)
+		{
+			if(window.opener)
+			 window.opener.initAppletState();
+		}
+	}
+}
+
+function setCloseAgentLogin() 
+{
+	ok_close_agentlogin = 1;
+}
+
+function unsetCloseAgentLogin() 
+{
+	ok_close_agentlogin = 0;
+}
+
+function fctfocus(msg)
+{
+	setAgentLoginFocus(msg);
+}
+
+function dial_method(method)
+{
+	if(method == 'hardphone')
+	{
+		hardphone_clicked = 1;
+		window.resizeTo(350,250);
+		document.getElementById('dvObjectHolder_AudioPicker').innerHTML = "";
+	}
+	else
+	{
+		if(softphone_client_enabled())
+		{
+			hardphone_clicked = 0;
+		}
+		else
+		{
+			hardphone_clicked = 1;
+			//softphone_str = "<img border=\"0\" src=\"./images/softphone.gif\" title=\"Softphone login\"></img></a>";
+		}
+	}
+	
+	if(softphone_client_enabled())
+	{
+		if(hardphone_clicked == 1)
+		{
+			softphone_str = "<img border=\"0\" src=\"./images/softphone.gif\" title=\"Softphone login\" ></img></a>";
+		}
+		else
+		{
+			softphone_str = "<img border=\"0\" src=\"./images/softphone.gif\" title=\"Softphone login\" ></img></a>"+
+			"&nbsp;&nbsp;<a href=\"javascript:loadAudioConf();\" tabindex=-1>"+
+			"<img border=\"0\" src=\"./images/sound_options.gif\" title=\"Audio options\""+
+			" tabindex=-1></img></a>";
+		}
+	}
+	else
+	{
+		softphone_str = "";
+	}
+
+	if(hardphone_clicked == 1)
+	{
+
+		if( window.opener.s_phonenumber == window.opener.s_user)
+			window.opener.s_phonenumber = "";
+		hdphone_str =
+				"<tr><td width=\"40%\">Phone Number</td>"+
+				"<td width=\"60%\"><input name=\"phone_number\" "+
+				"onfocus=\"fctfocus('PhoneNumber');\" id=\"phone_number\" value='" +
+				window.opener.s_phonenumber +
+				"' class=\"formText3\" tabindex=4></td>"+
+				"</tr>";
+	}
+	else
+	{
+		if(softphone_client_enabled())
+		{
+			hdphone_str = "";
+		}
+		else
+		{
+			hdphone_str =
+				"<tr><td width=\"40%\">Phone Number</td>"+
+				"<td width=\"60%\"><input name=\"phone_number\" "+
+				"onfocus=\"fctfocus('PhoneNumber');\" id=\"phone_number\" value='" + window.opener.s_phonenumber +
+				"'class=\"formText3\" tabindex=4></td>"+
+				"</tr>";
+		}
+	}
+	
+	document.getElementById('dvObjectHolder_AgentLogin').innerHTML = "" +
+			"<form name=\"theForm\">" +
+		"<table style=\"height:100%; width:100% \"><tr><td width=\"100%\" valign=\"middle\">" +
+			"<table width=\"90%\" align=\"center\">" +
+				"<tr><td align=\"left\"><a href=\"javascript:dial_method('hardphone');\" tabindex=-1>"+
+				"<img border=\"0\" src=\"./images/hardphone.gif\" title=\"Hardphone login\""+
+				" tabindex=-1></img></a>&nbsp;&nbsp;<a href=\"javascript:dial_method('softphone');\" tabindex=-1>" +
+				softphone_str +
+				"</td></tr>" +
+				"<tr><td colspan=\"2\">&nbsp;</td></tr>" +
+				"<tr><td width=\"40%\">Login ID</td><td width=\"60%\"><input name=\"login_id\""+
+				" onfocus=\"fctfocus('Login'); \" value='" + window.opener.s_user +
+				"'id=\"login_id\" maxlength=\"10\" "+
+				"type=\"text\" class=\"formText1\" tabindex=1></td></tr>"+
+				"<tr><td width=\"40%\">Password</td><td width=\"60%\"><input name=\"password\" value='" +
+				'' + "' id=\"password\" maxlength=\"10\"  onfocus=\"fctfocus('Password');\" "+
+				"type=\"password\" class=\"formText1\" tabindex=2></td></tr>"+
+				"<tr><td width=\"40%\">CTI Address</td>"+
+				"<td width=\"60%\"><input id=\"cti_address\" name=\"cti_address\" "+
+				"value='" + window.opener.s_aheevaccs_ip +
+				"' onfocus=\"fctfocus('CTI');\" class=\"formText3\" tabindex=3>"+
+				"</td></tr>"
+				+
+					hdphone_str
+				+
+				"<tr tabindex=-1><td width=\"40%\">&nbsp;</td><td width=\"60%\" tabindex=-1>"+
+				"<input type=\"button\" value=\"Submit\" class=\"button_accept\" "+
+				"onClick=\"validateInfo();\"  tabindex=5 onfocus=\"fctfocus('Submit');\" >"+
+				" &nbsp; "+
+				"<input type=\"button\" value=\"Cancel\" class=\"button_accept\" "+
+				" onClick=\"window.close();\" onfocus=\"fctfocus('Cancel');\" tabindex=6></td></tr>"+
+			"</table>"+
+		"</td></tr></table></form>";
+}
+
+function onChangeAudioInputOption(selected)
+{
+	var myindex  = selected.selectedIndex;
+	var option_value = selected.options[myindex].value;
+	var option_text = selected.options[myindex].text;
+	//alert("set input: "+option_text+" "+ option_value);
+	window.opener.set_audio_input_device(option_text, option_value);
+	//alert("get input: "+window.opener.get_audio_input_device().text+" "+window.opener.get_audio_input_device().value);
+	document.getElementById('dvObjectHolder_Audio_device_selected').innerHTML =
+	"<fieldset><legend> Current devices selected </legend><table class=\"ctable\">" +
+	"<tr><td>input: </td><td>"+
+		window.opener.get_audio_input_device().text +
+	"</td></tr>"+
+	"<tr><td>output:</td><td>"+
+		window.opener.get_audio_output_device().text +
+	"</td></tr>"+
+	"</table></fieldset>";
+}
+
+function onChangeAudioOutputOption(selected)
+{
+	var myindex  = selected.selectedIndex;
+	var option_value = selected.options[myindex].value;
+	var option_text = selected.options[myindex].text;
+	window.opener.set_audio_output_device(option_text, option_value);
+	document.getElementById('dvObjectHolder_Audio_device_selected').innerHTML =
+	"<fieldset><legend> Current devices selected </legend><table class=\"ctable\">" +
+	"<tr><td>input: </td><td>"+
+		window.opener.get_audio_input_device().text +
+	"</td></tr>"+
+	"<tr><td>output:</td><td>"+
+		window.opener.get_audio_output_device().text +
+	"</td></tr>"+
+	"</table></fieldset>";
+}
+
+function addAudioInputOption(text, id)
+{
+	var audio_input_obj = document.getElementById("audio_input_select");
+	var newOption = new Option(text, id);
+	if(audio_input_obj)
+		audio_input_obj.options.add(newOption);
+}
+
+function addAudioOutputOption(text, id)
+{
+	var audio_output_obj = document.getElementById("audio_output_select");
+	var newOption = new Option(text, id);
+	if(audio_output_obj)
+		audio_output_obj.options.add(newOption);
+}
+
+function cancelButtontOption()
+{
+	window.opener.set_audio_input_device("", audio_input_backup);
+	window.opener.set_audio_output_device("", audio_output_backup);
+	window.close();
+}
+
+function getAudioConf()
+{
+	if(window.opener.initiax == 0)
+	{
+		window.opener.document.ahPhoneIaxClient.initvoip_client(iax_format);
+		window.opener.document.ahPhoneIaxClient.getTheAudioDevices();
+		window.opener.initiax = 1;	
+	}
+	
+	audio_name_array = window.opener.get_audio_device_name();
+	audio_number_array = window.opener.get_audio_device_number();
+	audio_capabilities_array = window.opener.get_audio_device_capabilities();
+
+	for(var j=0;j<audio_name_array.length;j++)
+	{
+		//check if input device is an output device and if its the selected one
+		if(audio_capabilities_array[j] == "input")
+		{
+			window.opener.document.ahPhoneIaxClient.initvoip_client(iax_format);
+			window.opener.document.ahPhoneIaxClient.getTheAudioDevices();
+			window.opener.initiax = 1;
+
+			if( (window.opener.get_audio_input_device().text).indexOf(audio_name_array[j]) !=-1 )
+			{
+				//alert("input: "+audio_name_array[j]+" "+audio_number_array[j]);
+				window.opener.set_audio_input_device(audio_name_array[j], audio_number_array[j]);
+			}
+
+		}
+		//check if audio device is an output device and if its the selected one
+		if(audio_capabilities_array[j] == "output")
+		{
+			//alert(window.opener.get_audio_output_device().text);
+			if( (window.opener.get_audio_output_device().text).indexOf(audio_name_array[j]) !=-1 )
+			{
+				//alert("output: "+audio_name_array[j]+" "+audio_number_array[j]);
+				window.opener.set_audio_output_device(audio_name_array[j], audio_number_array[j]);
+			}
+			else
+			{
+				//addAudioOutputOption(audio_name_array[j], audio_number_array[j],0);
+			}
+		}
+	}
+}
+
+function loadAudioConf()
+{
+	if(audio_option_toggle == true)
+	{
+
+		audio_panel_opened == true;
+		audio_option_toggle = false;
+		window.resizeTo(350, 400);
+		if(window.opener.initiax == 0)
+		{
+			window.opener.document.ahPhoneIaxClient.initvoip_client(iax_format);
+			window.opener.document.ahPhoneIaxClient.getTheAudioDevices();
+			window.opener.initiax = 1;
+		}
+		//window.opener.document.ahPhoneIaxClient.getTheAudioDevices();
+		document.getElementById('dvObjectHolder_AudioPicker').innerHTML = 
+		"<p><fieldset width=\"90%\"><legend> Select audio device </legend>"+
+		"<table width=\"90%\" class=\"ctable\" border=0><tr><td align=\"left\">"+
+		"Audio Input : </td>"+
+		"<td align=\"left\"><select id=\"audio_input_select\" "+
+		"onChange=\"onChangeAudioInputOption(this);\" width=150 >"+
+		"</select></td></tr><tr><td align=\"left\">Audio Output : </td><td align=\"left\"> "+
+		"<select id=\"audio_output_select\" "+
+		"onChange=\"onChangeAudioOutputOption(this);\" width=150 ></select></td></tr></table></fieldset>";
+		document.getElementById('dvObjectHolder_Audio_device_selected').innerHTML =
+		"<fieldset width=\"90%\"><legend> Current devices selected </legend><table  width=\"90%\" class=\"ctable\">" +
+		"<tr><td>input: </td><td>"+
+		window.opener.get_audio_input_device().text +
+		"</td></tr>"+
+		"<tr><td>output:</td><td>"+
+		window.opener.get_audio_output_device().text +
+		"</td></tr>"+
+		"</table></fieldset>";
+		audio_name_array = window.opener.get_audio_device_name();
+		audio_number_array = window.opener.get_audio_device_number();
+		audio_capabilities_array = window.opener.get_audio_device_capabilities();
+		var inputSelectedDevice = "";
+		var outputSelectedDevice = "";
+		
+	
+		for(var j=0;j<audio_name_array.length;j++)
+		{
+			//check if device is an input device and if its the selected one
+			if(audio_capabilities_array[j] == "input")
+			{
+				if( (window.opener.get_audio_input_device().text).indexOf(audio_name_array[j]) !=-1 )
+				{
+					window.opener.set_audio_input_device(audio_name_array[j], audio_number_array[j]);
+					inputSelectedDevice = audio_name_array[j];
+				}
+				addAudioInputOption(audio_name_array[j], audio_number_array[j]);
+			}
+			//check if audio device is an output device and if its the selected one
+			if(audio_capabilities_array[j] == "output")
+			{
+				if( (window.opener.get_audio_output_device().text).indexOf(audio_name_array[j]) != -1)
+				{
+					window.opener.set_audio_output_device(audio_name_array[j], audio_number_array[j]);
+					outputSelectedDevice = audio_name_array[j];
+				}
+				addAudioOutputOption(audio_name_array[j], audio_number_array[j]);
+			}
+		}
+		selectTextObject("audio_input_select", inputSelectedDevice);
+		selectTextObject("audio_output_select", outputSelectedDevice);
+	}
+	else
+	{
+		window.resizeTo(350,250);
+		audio_option_toggle = true;
+		document.getElementById('dvObjectHolder_AudioPicker').innerHTML = "";
+		document.getElementById('dvObjectHolder_Audio_device_selected').innerHTML = "";
+	}
+}
+
+	
+</script>
+</head>
+
+<body onUnload="checkCloseAgentLogin()" leftmargin="5" rightmargin="5" topmargin="5" bottommargin="5">
+
+		<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_AgentLogin"></DIV>
+		<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_AudioPicker"></DIV>
+		<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_Audio_device_selection"></DIV>
+		<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_Audio_device_selected"></DIV>
+		
+<script>
+
+if(window.opener.s_client_mode == "softphone")
+{
+	hardphone_clicked = 0;
+	dial_method("softphone");
+}
+else
+{
+	hardphone_clicked = 1;
+	dial_method("hardphone")
+}
+setAgentLogin(1);
+loadAudioConf();
+</script>
+</body>
+</html>

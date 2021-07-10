@@ -1,0 +1,496 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language=JavaScript src="jsUtil.js"></script>
+<script language=javascript src="Browser.js" type=text/javascript></script>
+<script language=javascript src="AnchorPosition.js" type=text/javascript></script>
+<script language=javascript src="ColorPicker2.js" type=text/javascript></script>
+<script language=javascript src="PopupWindow.js" type=text/javascript></script>
+
+<title>modifyManagerSchedule</title>
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="tab_luna.css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="style_2.css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<style type="text/css">
+
+.dynamic-tab-pane-control .tab-page {
+	height:		200px;
+}
+
+.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page {
+	height:		100px;
+}
+
+html, body {
+/*	background:	ThreeDFace; */
+
+}
+
+form {
+	margin:		0;
+	padding:	0;
+}
+
+/* over ride styles from webfxlayout */
+
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+</style>
+<script language="javascript" type="text/javascript" src="alert_tabpane.js"></script>
+
+<script language="javascript" type="text/javascript" >
+/***********************************************************************
+************************************************************************/
+
+var tenant_dbid = QueryString('tenant_dbid') ? normalizeString(QueryString('tenant_dbid')) : "";
+var schedule_name = QueryString('schedule_name') ? normalizeString(QueryString('schedule_name')) : "";
+var schedule_dbid ='';
+var client_id='Manager';
+var tabIndex;
+var statistics_color='';
+
+var nbRows = 0;
+var maxRow = 0;
+
+
+/***********************************************************************
+************************************************************************/
+
+function enabledUpdateButton(client)
+{
+	var updateInfo='updateInfo'+client;
+	document.getElementById(updateInfo).disabled = false;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function enableReload( client)
+{
+   appletObj.fReloadMenu = true;
+}
+
+/***********************************************************************
+************************************************************************/
+// cette fonction est appelee quand on change de tab
+function setTabIndex(index)
+{
+	tabIndex=index;
+	if(tabIndex==0)
+		client_id = 'Manager';
+}
+
+/***********************************************************************
+************************************************************************/
+// cette fonction est appelee a chaque fois on click sur le titre de la page
+function changeTabPage()
+{
+	var alertName = 'alertName' + client_id;
+	//document.getElementById(alertName).focus();
+}
+
+/***********************************************************************
+************************************************************************/
+
+function pickColor(color) 
+{
+	statistics_color=color;
+	document.getElementById('statisticsColor').style.backgroundColor = color;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function updateAlertsColor(client)
+{
+	var color1 ='#b4cfff';
+	var color2 ='#e6eff4';
+	var color=color1;
+	var trRow='';
+
+	for (var i=1; i<=maxRow ; i++)
+	{
+		trRow ='tr'+ client + i;
+		if ( document.getElementById(trRow) !=null)
+		{
+			document.getElementById(trRow).bgColor=color;
+			if(color==color1)
+				color=color2;
+			else if(color==color2)
+				color=color1;
+		}
+	}
+}
+
+/***********************************************************************
+************************************************************************/
+
+function displayGroupScheduleInfo()
+{
+	document.getElementById('scheduleNameManager').value = schedule_name ;
+	var scheduleDetails  =  String( appletObj.getManagerScheduleInfo(schedule_name));
+	// parse info received
+	var jsDetails = scheduleDetails + "";
+	arrayDetails = jsDetails.split("|");
+	
+	for (i = 0; i <arrayDetails.length; i++)
+	{
+		if(i == 0) // DBID
+		{
+			schedule_dbid = arrayDetails[i];
+		}
+		if (i == 1) // State
+		{
+			if(arrayDetails[i] == '1')
+				document.getElementById('scheduleStateManager').checked = true;
+			else
+				document.getElementById('scheduleStateManager').checked = false;
+		}
+		if(i == 2) //Agent group
+		{
+			document.getElementById('timeAlertsManager').value = arrayDetails[i];
+		}
+	}
+	AlertsList = String (appletObj.getManagerAlertsListForSchedule(schedule_name) );
+	//alert(NRRList);
+
+	// afficher les reasons *************************************
+	
+	var jsAlertsList = AlertsList+ "";
+	arrayAlertsList = jsAlertsList.split("|");
+	nbRows =0;
+	maxRow =0;
+	var row='rowManager';
+	if(jsAlertsList.length > 0)
+	{
+	var myRow ;
+	var alertName='';
+		for (j = 0; j <arrayAlertsList.length; j++)
+		{
+			alertName = arrayAlertsList[j];
+			addMyRow('Manager');
+			myRow =document.getElementById(row+(j+1));
+			if(myRow != null)
+			for(var m=0; m < myRow.options.length; m++)
+			{
+				if(myRow.options[m].value == alertName)
+				{
+					myRow.options[m].selected= true;break;
+				}
+			}
+		}
+	}
+	changeTabPage();
+}
+/***********************************************************************
+************************************************************************/
+
+
+function addMyRow(client)
+{
+	nbRows++;
+	maxRow++;
+	lyr=document.createElement("DIV");
+ 	lyr.id ='child'+ client+ maxRow;  
+	var nom = 'row'+ client+ maxRow; 
+	var nom2 = 'tr'+ client + maxRow; 
+	var alertName;
+	var code='';
+	var alertsItems ='alertsItems'+client;
+	
+    code ="<table width='300'><tr id='"+nom2+"' ><TD width='200' align='left'><select style='WIDTH: 150px' id='"+nom+"' name= '"+nom+"' onChange=\"enabledUpdateButton('"+client+"')\">";
+
+	if(client=='Manager')
+		var availableAlerts = String( appletObj.getNonConfiguredGroupListForMC(tenant_dbid) );
+	arrayAvailableAlerts = availableAlerts.split('|');
+ 
+    for (j = 0; j <arrayAvailableAlerts.length; j++){
+   		 alertName = arrayAvailableAlerts[j];
+   		 code +=" <option value='"+ alertName +"'>"+alertName+"</option>";
+   	}   
+
+   	code +="</select>  </TD><td align='left'> &nbsp; &nbsp; <a href=\"javascript:deleteMyRow('"+maxRow+"','"+client+"')\">delete</a></td></TR></table>";
+   	lyr.innerHTML = code;
+  	document.getElementById(alertsItems).appendChild(lyr); 
+	updateAlertsColor(client);
+}
+
+/***********************************************************************
+************************************************************************/
+
+function deleteMyRow( nbRow,client)
+{
+	var child = 'child'+ client + nbRow;
+	var alertsItems ='alertsItems'+client;
+	document.getElementById(alertsItems).removeChild(document.getElementById(child));
+	
+	nbRows--;
+	enabledUpdateButton(client);
+	updateAlertsColor(client);
+}
+
+/***********************************************************************
+************************************************************************/
+
+function getAlerts (client)
+{
+	alertsToReturn ='';
+	row='row'+client;
+	for (var i=1; i<=maxRow ; i++)
+	{
+		if ( document.getElementById(row+i) !=null)
+			alertsToReturn += document.getElementById(row+i).value  +'^' ;
+	}
+	alertsToReturn = alertsToReturn.substring(0, alertsToReturn.length - 1);
+	return alertsToReturn;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function validateAlerts(client)
+{
+	var row='row'+client;
+	
+	for (var i=1; i<maxRow ; i++)
+	{
+		if ( document.getElementById(row+i) !=null)
+		{
+			for (var j=i+1; j<=maxRow ; j++)
+			{
+				if ( document.getElementById(row+j) !=null)
+				{
+					if(document.getElementById(row+i).value== document.getElementById(row+j).value && document.getElementById(row+i).value!='')
+					{
+						alert(MultiArray["You cannot select an alert several times"][lang]);	
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function validateInfo( client)
+{
+	if (validateAlerts(client))
+	{
+		var alertsDefined = getAlerts(client);
+		var timeAlerts = 'timeAlerts' + client ;
+		var updateInfo = 'updateInfo' + client;
+		var	scheduleName = 'scheduleName' + client;
+		var scheduleState = 'scheduleState' + client;
+		
+		if (document.getElementById(scheduleName).value =='')
+		{
+			alert(MultiArray["You must enter a SCHEDULE NAME"][lang]);			
+		}
+		else if(validation(document.getElementById(scheduleName).value)==0)
+		{
+			alert(MultiArray["Invalid use of character"][lang]);
+			document.getElementById(scheduleName).focus();
+		}
+		else 
+		{
+			var alReadyExist = false;
+			var schedules = String( appletObj.getAllManagerSchedules() );
+			jsSchedules = schedules.split("|");
+	
+				for(q = 0; q < jsSchedules.length; q++)
+				{
+					thisSchedule = jsSchedules[q];
+					thisScheduleArray = thisSchedule.split(",");
+					if( document.getElementById(scheduleName).value == thisScheduleArray[1] && schedule_name != document.getElementById(scheduleName).value ) //le groupe existe deja
+					{
+						alReadyExist = true;
+						break;
+					}
+				}
+			if(alReadyExist)
+				alert(MultiArray["Schedule already exists"][lang]);
+			else
+			{
+				if(client=='Manager')
+				{
+					appletObj.modifyScheduleForManager(
+														schedule_dbid,
+														tenant_dbid,
+														document.getElementById(scheduleName).value,
+														document.getElementById(scheduleState).checked == true ? '1':'0',
+														document.getElementById(timeAlerts).value,
+														alertsDefined);
+				}
+				document.getElementById(updateInfo).disabled=true;	// reset the button to disabled
+			}
+		}
+	}
+}
+
+/***********************************************************************
+************************************************************************/
+
+function toggleLayer(whichLayer)
+{
+	if (document.getElementById)
+	{
+		// this is the way the standards work
+		var style2 = document.getElementById(whichLayer).style;
+		style2.display = style2.display? "":"none";
+	}
+	else if (document.all)
+	{
+		// this is the way old msie versions work
+		var style2 = document.all[whichLayer].style;
+		style2.display = style2.display? "":"none";
+	}
+	else if (document.layers)
+	{
+		// this is the way nn4 works
+		var style2 = document.layers[whichLayer].style;
+		style2.display = style2.display? "":"none";
+	}
+	
+}
+
+/***********************************************************************
+************************************************************************/
+
+function askDelete()
+{
+		answer = confirm(MultiArray["Are you sure you wish to delete this schedule?"][lang])
+		if(answer)
+		{
+			appletObj.deleteManagerSchedule(schedule_dbid);
+			// refresh the current page
+			document.location = "../defaultpage.htm";
+		}
+}
+/***********************************************************************
+************************************************************************/
+</script>
+
+</head>
+<body class="bottompagebody" onLoad="displayGroupScheduleInfo()">
+<div class="tab-pane" id="tabPane1">
+
+<script type="text/javascript">
+	tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+	var cp = new ColorPicker('window');
+</script>
+
+
+<!-- *********************************************   MANAGER   **********************************************-->
+	
+	<form id="formManager" name="formManager">
+		<div class="tab-page" id="pageManager">
+			<h2 class="tab"><script>document.write(MultiArray["Manager"][lang])</script></h2 >
+		<script type="text/javascript">tp1.addTabPage( document.getElementById( "pageManager" ) );</script>
+		
+			<fieldset  >
+				<legend><script>document.write(MultiArray["Add schedule for manager"][lang])</script></legend>
+				
+				<table border="0" width="100%" cellspacing="0" cellpadding=""="0">
+					<tr height="5"><td  colspan="2"  ></td></tr>
+					<tr>
+						<td  valign="center" align="center"  colspan="2" height=25 bgcolor="#6AA5D7"><b><script>document.write(MultiArray["Schedule definition"][lang])</script></b></td>
+					</tr>
+					
+					<tr><td height=20 colspan="2" ></td></tr>
+					
+					<tr>
+						<td  width="120" height=25 ><script>document.write(MultiArray["Schedule name"][lang])</script></td>
+						<td  height=25 align= left>
+							<input id="scheduleNameManager" type="text" onchange= "enabledUpdateButton('Manager') " name="scheduleNameManager">
+						</td> 
+					</tr>
+					<tr>
+						<td  width=120 height=25><script>document.write(MultiArray["Active"][lang])</script></td>
+						<td  align= left height=25>
+							<input id="scheduleStateManager"  align="center" onclick="enableReload('Manager'); enabledUpdateButton('Manager')" type=checkbox CHECKED value=ON name="scheduleStateManager">
+						</td> 
+					</tr>
+						<tr><td height=20 colspan="2" ></td></tr>
+				</table>
+
+				<tr>
+         			<TD colSpan=4 >
+	     			<a   style="text-decoration:underline "id=alertsOptionsManager href="javascript:toggleLayer('alertsDivManager')" title="AlertsOptionsManager"><script>document.write(MultiArray["Alerts options"][lang])</script></a>	
+         			<div  id="alertsDivManager" style="margin: 0px 20px 0px 20px;display: none;">
+          				<FIELDSET id="alertsFieldsetManager"  > 
+          			 		<TABLE width="425">
+            					<TR>
+             						<td width="200">
+									<script>document.write("<input  id=\"addAlertStarPhone\"   name=\"addAlertManager\" type=\"button\" value=\""+MultiArray["Add alert"][lang]+"\" onClick=\"addMyRow('Manager');enabledUpdateButton('Manager')\">")</script>
+									</TD>
+            					</TR>
+          	 				</TABLE> 
+         					<DIV id=alertsItemsManager style="MARGIN: 0px 5px">
+								<table><p> </p>
+								</table>
+							</DIV>
+							<table border="0" style="border-collapse:collapse " >
+								<tr >
+									<td  colspan="2" height="20" > </td>
+								</tr>
+								<tr >
+									<td  vAlign=top width="200" bgcolor=#d4d0c8 > 
+										<script>document.write(MultiArray["Broadcast period (min)"][lang])</script>&nbsp;</td>
+									<td bgcolor="#CCCCCC" width="100">
+										<SELECT id="timeAlertsManager" onchange="enabledUpdateButton('Manager')" name="timeAlertsManager"> 
+											<OPTION value=1>1</OPTION> 
+											<OPTION value=5>5</OPTION> 
+											<OPTION value=15>15</OPTION> 
+											<OPTION value=30 selected>30</OPTION>
+											<OPTION value=1h>1h</OPTION> 
+											<OPTION value=2h>2h</OPTION> </SELECT> </td>
+								</tr>
+							</table>
+		 				</FIELDSET> 
+					</DIV> 
+					</TD>
+       			</tr>
+				
+				<table width="75%" cellpadding="0" cellspacing="0">
+					<tr>
+						<td height=25><br></td>
+					</tr>
+					<tr height=25 valign="bottom"  align="right">
+						<td >
+							<button id="updateInfoManager" style=" HEIGHT: 25px" disabled onclick="validateInfo('Manager')" name="updateInfoManager" type=button>&nbsp;<script>document.write(MultiArray["Update"][lang])</script>&nbsp;</button>
+							<button style="WIDTH: 59px; HEIGHT: 26px" onclick="askDelete()" name="deleteButton" id="deleteButton" type=button ><script>document.write(MultiArray["Delete"][lang])</script></button> </td>
+					</tr>
+				</table>
+				
+			</fieldset>
+		</div>
+	</form> 
+
+</div>
+</body>
+</html>

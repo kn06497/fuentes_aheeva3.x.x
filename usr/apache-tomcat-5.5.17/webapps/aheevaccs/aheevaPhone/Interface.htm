@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+
+
+<title>AheevaPhone</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<link rel="stylesheet" type="text/css" href="css/aheevaphone.css">
+<link rel="stylesheet" type="text/css" href="script/grid/css/dhtmlXGrid.css">
+<script type="text/javascript" src="script/grid/js/dhtmlXCommon.js"></script>
+<script type="text/javascript" src="script/grid/js/dhtmlXGrid.js"></script>		
+<script type="text/javascript" src="script/grid/js/dhtmlXGridCell.js"></script>
+<script type="text/javascript" src="script/grid/js/dhtmlXGrid_srnd.js"></script>	
+<script type="text/javascript" src="script/scripts.js"></script>
+<script type="text/javascript" src="script/jsXMLParser/xmlsax.js"></script>
+<script type="text/javascript" src="script/ah_js_functions.js"></script>
+<script type="text/javascript" src="script/ah_graph_functions.js"></script>
+<script type="text/javascript" src="script/disablekey.js"></script>
+<style>  
+.even{ background-color:#E6E6FA; } 
+.uneven{ background-color:#F0F8FF; }
+</style>
+
+</head>
+
+<body border="0" frameborder="0" framespacing="0" topmargin="0" marginheight="0" leftmargin="0" rightmargin="0" marginwidth="0" onResize="resizeWindowToDesiredHeight();">
+<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_AhPhoneIaxClient"></DIV>
+<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_AhPhoneClient"></DIV>
+<table width="318px" border=0>
+   <tr height="0" frameborder="0" framespacing="0" topmargin="0" marginheight="0" leftmargin="0" rightmargin="0" marginwidth="0">
+    <td><DIV bgcolor='#eeeeee' class="div" id="dvObjectHolder_AhPhoneJSCommander_status">Status : LOGOUT</DIV></td>
+    <td width="28px"  align="right"><DIV class="div" id="dvObjectHolder_AhPhoneJSCommander_timer">00:00:00</DIV></td>
+	<td width="20px" align="left"><DIV class="div" id="dvObjectHolder_AhPhoneJSCommander_extraData"></DIV></td>
+  </tr>
+</table>
+
+
+<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 class="div" id="dvObjectHolder_AhPhoneJSCommander">
+<!-- This div holds the command buttons -->
+</DIV>
+<div id="extraDataBlock" style="display:none">
+	<table width="97%" align="center" background="white" style="border: 1px solid rgb(116, 177, 209);">
+		<tr>
+		<td><div id="outer_exdatadiv" style="display:none"></div>
+			<div style="background-color:transparent; overflow:hidden" height="105px" class="div" id="dvExtraData" ></div>
+		</td></tr>
+	</table>
+	
+	<table width="70%" align="center">
+		<tr>
+			<td><input id="add" type="image" src="./images/adddis.gif" title="Add new line"></td>
+			<td><input id="remove" type="image" src="./images/delonedis.gif" title="Remove selected line" /></td>
+			<!--<td><input id="remove_all_dis" type="image" src="./images/remalldis.gif" /></td>-->
+			<!--<td><input id="info" type="image" src="./images/infodis.gif" title="Get info on selected line"  /></td>-->
+			<td><input id="attach" type="image" src="./images/attachdis.gif" title="Attach infos" /></td>
+		</tr>
+	</table> 
+</div>
+<div class="div" align="left" id="version">Version:</div>
+
+<script>
+// //8765 using xhtml works but javascript to java doesn't work anymore so here is the scripted version on how
+// to set the object tag height=\"36\" width=\"800\"
+
+if(softphone_client_enabled()){
+	if(window.navigator.appName.toLowerCase().indexOf("netscape")!=-1){ // set object for Netscape:
+		document.getElementById('dvObjectHolder_AhPhoneIaxClient').innerHTML = "<object ID='ahPhoneIaxClient'" +
+		"classid=\"java:ahPhoneClient.IAXPhone.class\"" +
+					"height=\"0\" width=\"0\" />" +
+					"  <param name=\"archive\" value=\"sjiaxclient.jar\" />" +
+					" <PARAM NAME = \"type\" VALUE = \"application/x-java-applet;version=1.4\" />" +
+					"  <param name=\"mayscript\" VALUE=\"true\" />" +
+			"</object>";
+	}else if(window.navigator.appName.toLowerCase().indexOf('internet explorer')!=-1){ //set object for IE
+		document.getElementById('dvObjectHolder_AhPhoneIaxClient').innerHTML = "<object ID='ahPhoneIaxClient'" +
+		"classid=\"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"" +
+				 " height=\"0\" width=\"0\" >" +
+				 "  <param name=\"code\" value=\"ahPhoneClient.IAXPhone.class\" />" +
+				  " <PARAM NAME = \"type\" VALUE = \"application/x-java-applet;version=1.4\" />" +
+				 "  <param name=\"archive\" value=\"sjiaxclient.jar\" />" +
+				 " <PARAM NAME=\"MAYSCRIPT\" VALUE=\"true\" />" +
+				 " </object>";
+	}
+}
+
+
+if(window.navigator.appName.toLowerCase().indexOf("netscape")!=-1){ // set object for Netscape:
+	document.getElementById('dvObjectHolder_AhPhoneClient').innerHTML = "<object ID='ahPhoneClient' classid=\"java:commander.Interface.class\"" +
+                "height=\"0\" width=\"0\" />" +
+				"  <param name=\"archive\" value=\"scommander.jar\" />" +
+				"  <param name=\"mayscript\" VALUE=\"true\" />" +
+				"  <param name=\"serverPort\" VALUE=\"8989\" />" +
+        "</object>";
+}else if(window.navigator.appName.toLowerCase().indexOf('internet explorer')!=-1){ //set object for IE
+	document.getElementById('dvObjectHolder_AhPhoneClient').innerHTML = "<object ID='ahPhoneClient' classid=\"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"" +
+		     " height=\"0\" width=\"0\" >" +
+		     "  <param name=\"code\" value=\"commander.Interface.class\" />" +
+			 "  <param name=\"archive\" value=\"scommander.jar\" />" +
+			 " <PARAM NAME=\"MAYSCRIPT\" VALUE=\"true\" />" +
+			 " <PARAM NAME=\"serverPort\" VALUE=\"8989\" />" +
+		     " </object>";
+}
+
+
+
+var timer_str = "";
+var data_str = " ";
+var line_status_str = " ";
+var str=
+	"<tr>"+
+		"<td class=\"collapsediv\"><DIV class=\"div\" id=\"dvObjectHolder_AhPhoneJSCommander_data\"></DIV></td>"+
+	"</tr>"+
+	
+	"<tr>"+
+		"<td collspan=2 class=\"collapsediv\"><DIV class=\"div\" id=\"dvObjectHolder_AhPhoneJSCommander_line_status\"></DIV></td>"+
+	"</tr>";
+
+
+document.getElementById('dvObjectHolder_AhPhoneJSCommander_extraData').innerHTML = att_data_table_str;
+
+document.getElementById('dvObjectHolder_AhPhoneJSCommander').innerHTML =
+"<table class=\"ctable\">" +
+	"<tr>"+
+		login_td_enable_str +
+		ready_td_disable_str +
+		notready_reason_td_disable_str +
+		dial_td_disable_str +
+		dialpad_td_disable_str +
+		hangup_td_disable_str +
+		transfer_td_disable_str +
+		unhold_td_disable_str +
+		conference_td_disable_str +		
+	"</tr>" +	
+"</table>"+
+""+
+"<table class=\"ctable\">" +
+str +
+"</table>"+
+"<div id='messageBar' style='position:absolute; top:60px; left:0px;'></div>"+
+"<DIV class='not_ready_reason_div' bgcolor='#FFFFFF' id=\"not_ready_reasons_div\" style='position:absolute; top:40; left:40;'>"+
+"<select id=\"not_ready_reasons_select\" onChange=\"onChangeNrrOption(this.value);\" onBlur='hideNotReadyReason();'></select></DIV>";
+hideNotReadyReason();
+if (navigator.appName.indexOf('Microsoft') != -1){
+	document.getElementById("dvExtraData").height="125px";
+}
+
+document.ahPhoneIaxClient.installvoip_lib();
+
+postJavaEvent('notready_reason','');
+
+</script>
+<!--input type=button value="New JavaScripts" onClick="document.ahPhoneIaxClient.initvoip_client()"-->
+</body>
+</html>

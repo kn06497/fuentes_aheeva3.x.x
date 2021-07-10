@@ -1,0 +1,1 @@
+jarsigner -keystore aheevastore  -keypass aheeva -storepass merlin -signedjar siaxPhone.jar iaxPhone.jar signFiles -verify

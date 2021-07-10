@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Modify skill</title>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript">
+var tenant_id =  normalizeString(QueryString('tenantDBID'));
+var skill_id  =  normalizeString(QueryString('skill_id'));
+var skill_name = normalizeString(QueryString('skill_name'));
+
+function setAgentSkill(skill_id, tenant_id)
+{
+	document.location.href = 'setAgentSkill.htm?step=1&skill_id='+skill_id+'&skill_name='+skill_name+'&tenantDBID='+tenant_id;
+}
+
+function validateInfo()
+{
+	if(document.modifyForm.n_skillName.value == "")
+		alert(MultiArray["Please enter skill name"][lang]);
+	else if(validation(document.modifyForm.n_skillName.value)==0)
+	{
+		alert(MultiArray["Invalid use of character"][lang]);
+		document.modifyForm.n_skillName.focus();
+	}
+	else
+	{
+		already_use = false;
+		var skills 	= String( appletObj.getAllSkills(tenant_id) );
+		var jsSkills	= skills + "";
+		arraySkills	= jsSkills .split("|")
+		for(h=0; h < arraySkills.length && !already_use; h++)
+			{
+			thisSkillInfos = arraySkills[h].split(",");			
+			if(document.modifyForm.n_skillName.value != skill_name)
+				if(thisSkillInfos[1] == document.modifyForm.n_skillName.value)
+					{
+					alert(""+MultiArray["Skill"][lang]+""+document.modifyForm.n_skillName.value+" "+MultiArray["already exists"][lang]+" \n !");
+					already_use = true;
+					}			
+			}
+		if(!already_use)
+			{			
+			appletObj.modifySkill(document.modifyForm.skill_id.value, document.modifyForm.n_skillName.value);
+			document.location.href = "../defaultpage.htm";
+			}
+	}
+}
+
+function askDelete()
+{
+	var yesno = confirm(MultiArray["You are about to delete this skill.\nDo you want to continue ?"][lang]);
+	if(yesno)
+		{
+		appletObj.deleteSkill(skill_id);
+		document.location.href = "../defaultpage.htm";
+		}
+}
+</script>
+</head>
+
+<body class="bottompagebody" TEXT="#000000" LINK="#000066" VLINK="#666666" >
+<table border="0">
+	<script language="javascript" type="text/javascript">
+		document.write('<form name="modifyForm" method="get">');	
+				document.write('<tr>');
+					document.write('<td>&nbsp;</td><td><font class="contentTitles">'+MultiArray["Modify skill name"][lang]+'</font></td>');
+				document.write('</tr>');
+				document.write('<tr>');
+					document.write('<td>'+MultiArray["Skill ID"][lang]+'</td><td><input name="skill_id" type="text" disabled value="'+skill_id+'"></td>');
+				document.write('</tr>');
+				document.write('<tr>');
+					document.write('<td>'+MultiArray["Skill Name"][lang]+'</td><td><input name="n_skillName" type="text" value="'+skill_name+'"></td>');
+				document.write('</tr>');
+				document.write('<tr>');
+				document.write('<td>&nbsp;</td><td>');				
+				document.write('<input name="submit" type="button" value=" '+MultiArray["Update"][lang]+' " onClick="validateInfo()">&nbsp;&nbsp;');
+				document.write('<input name="detele_b" type="button" value=" '+MultiArray["Delete"][lang]+' " onClick="askDelete()">&nbsp;&nbsp;');
+				//document.write('<input name="setSkill_b" type="button" value=" Set Agents Skills &gt;&gt;" onClick="setAgentSkill('+skill_id+', '+tenant_id+')">');
+				document.write('</td>');
+				document.write('</tr>');			
+		document.write('</form>');
+	</script>
+	</table>	
+	
+</body>
+</html>

@@ -1,0 +1,740 @@
+<html>
+
+<%@page contentType="text/html"%>
+<%@page language = "java" %>
+<%@page import ="java.util.*"%>
+<%@page import ="Manager.wfm_schedule.*"%>
+
+<head>
+<LINK href="../Resources_pages/style.css" rel="stylesheet" type="text/css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="../Resources_pages/tab_luna.css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="../Resources_pages/style_2.css" />
+<style type="text/css">
+
+.dynamic-tab-pane-control .tab-page {
+	height:		auto;
+	/*width:      550px;*/
+}
+
+html, body {
+	background:	#E1F4FF;
+}
+
+form {
+	margin:		0;
+	padding:	0;
+}
+
+/* over ride styles from webfxlayout */
+
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+.imgControl {
+	top: 1;
+	position:		relative;
+}
+</style>
+
+<script language="javascript" type="text/javascript" src="../language_reports.js"></script>
+<script language="javascript" type="text/javascript" src="../Resources_pages/jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="../Resources_pages/tabpane.js"></script>
+<script language="JavaScript">
+var lang =normalizeString(QueryString('lang'));
+</script>
+<jsp:useBean id="sc" scope="request" class="Manager.wfm_schedule.beanSchedule"/>
+<%@ page session="false" buffer="400kb" %>
+
+
+</head>
+
+<body>
+<script language="javascript" type="text/javascript" src="../Resources_pages/tabpane.js"></script>
+<script language="JavaScript"  src="../Resources_pages/jsUtil.js"></script>
+<%
+    String startingDateDaily = request.getParameter("startingDateDaily");
+    String endingDateDaily   = request.getParameter("endingDateDaily");
+    String lang = request.getParameter("lang");
+    String startingDate="", endingDate="";
+    String sRet="",ssRet="";
+    int i,j,k,l;
+    long tLoginTime,next_day_off=0,regular_shift=0;
+    String agents = "",myagt="";
+    String nextDayOff="";
+
+    String agentGroups  = request.getParameter("group");
+    StringTokenizer tok = null, tokGrp=null,  tokn = null;
+    String agentGroupName ="", agentGroup ="", aPeriod="";
+
+    if(agentGroups != null){
+        tok = new java.util.StringTokenizer(agentGroups,"/");
+    }else{
+        tok = new java.util.StringTokenizer("","/");
+    }
+
+    int numCampaigns = tok.countTokens();
+    for( k = 0; k <numCampaigns; k++ ) {
+        String agentGroupTemp = tok.nextToken();
+        tokGrp = new java.util.StringTokenizer(agentGroupTemp,",");
+        agentGroupName =tokGrp.nextToken();
+        agentGroup = tokGrp.nextToken();
+    }
+
+//get the global parameters
+
+try{
+    sc.getGlobalParams();
+    } catch(Exception e){
+    }
+   for (int b = 0; b < sc.m_globalParams.size(); b++) {
+      parameter prm = (parameter)sc.m_globalParams.elementAt(b);
+      if (prm.m_param_name.equalsIgnoreCase("regular_shift")){
+         regular_shift = Long.parseLong(prm.m_param_value);
+      }
+      if (prm.m_param_name.equalsIgnoreCase("next_day_off")){
+          next_day_off = Long.parseLong(prm.m_param_value);
+      }
+   }
+
+ %>
+
+<br><br>
+<form  method="post" action='/aheevaccs/servlet/PublishServlet?start_date=<%=startingDateDaily%>&end_date=<%=endingDateDaily%>&group_dbid=<%=agentGroup%>&lang=<%=lang%>' >
+<div class="tab-pane" id="tabPane1" >
+ <script type="text/javascript">
+  tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+ </script>
+
+
+ <div class="tab-page" id="tabPage1"  align="center">
+  <h2 class="tab"><script>document.write(MultiArray["Shifts"][lang])</script></h2>
+   <script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage1" ) );
+   </script>
+  <fieldset>
+
+<table width="100%" cellpadding="0" cellspacing="0" align="center">
+ <tr>
+  <td width="100%" align="center">
+   <table  border="0" align="center">
+    <tr>
+     <td class="reportsID"><b>
+        <script>document.write(MultiArray["Available shifts"][lang])</script>&nbsp; <script>document.write(MultiArray["From"][lang])</script>:
+        <%out.write(startingDateDaily);	%>
+        <script>document.write(MultiArray["To"][lang])</script>
+        <%out.write(endingDateDaily);	%>
+        </b>
+     </td>
+    </tr>
+   </table>
+  </td>
+ </tr>
+ <tr>
+  <td>
+   <br><br>
+  </td>
+ </tr>
+
+   <%  try{
+
+//Temporary patch to allow us to add schedules to the saint john's agents
+if (agentGroup.equalsIgnoreCase("79") ){
+       sRet=sc.buildScheduleForPeriod(startingDateDaily,endingDateDaily,"34","");
+}else{
+       sRet=sc.buildScheduleForPeriod(startingDateDaily,endingDateDaily,agentGroup,"");
+}
+       } catch(Exception e){
+    }
+ %>
+
+<tr>
+ <td align="center">
+  <table align="center" border='1'> <!--Tableau de schedule-->
+   <tr  bgcolor='0099FF'>
+    <td align="center"> <script>document.write(MultiArray["Shift"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Sunday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Monday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Tuesday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Wednesday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Thursday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Friday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Saturday"][lang])</script> </td>
+   </tr>
+   <%
+   long tot_sun=0,tot_mon=0,tot_tue=0,tot_wed=0,tot_thu=0,tot_fri=0,tot_sat=0;
+	if(sRet=="success") {
+              for (i = 0; i < sc.m_vAllShifts.size(); i++) {
+              ScheduleInfo sch = (ScheduleInfo)sc.m_vAllShifts.elementAt(i);
+              tot_sun+=sch.sunday;
+              tot_mon+=sch.monday;
+              tot_tue+=sch.tuesday;
+              tot_wed+=sch.wednesday;
+              tot_thu+=sch.thursday;
+              tot_fri+=sch.friday;
+              tot_sat+=sch.saturday ;%>
+
+<%if (i%2==0){%>
+<tr bgcolor='#e6eff4'>
+<%}else{%>
+<tr bgcolor='#b4cfff'>
+<%}%>
+
+     <%if (sch.duration < regular_shift) {%>
+          <td width="80"   align="center" bgcolor='#FFC0CB'>
+     <%}else if (sch.duration > regular_shift) {%>
+         <td width="80"   align="center"  bgcolor='#DDA0DD'>
+      <%}else{%>
+          <td width="80"   align="center" >
+      <%}%>
+         <%out.write(sch.shift);%>
+      </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(sch.sunday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(sch.monday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(sch.tuesday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(sch.wednesday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(sch.thursday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(sch.friday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(sch.saturday));%>  </td>
+     </tr>
+      <%} // fin for
+    }else {
+        System.out.println("NO sucess");
+ }//fin if sucess  %>
+   <tr bgcolor='0099FF'>
+    <td><b><script>document.write(MultiArray["Total/Day"][lang])</script></b></td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_sun));%></b> </td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_mon));%></b> </td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_tue));%> </b></td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_wed));%></b> </td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_thu));%></b> </td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_fri));%> </b></td>
+    <td width="80" align="center"><b><%out.write(Long.toString(tot_sat));%> </b> </td>
+   </tr>
+
+   </table>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  &nbsp;<br>
+  </td>
+ </tr>
+ <tr>
+  <td align="center">
+   <table>
+    <tr>
+     <td  style="background-color:pink" width="40"></td><td>&nbsp;</td><td><script>document.write(MultiArray["part-time shift"][lang])</script>
+    </td>
+    </tr>
+    <tr>
+     <td  style="background-color:plum" width="40"></td><td>&nbsp;</td><td><script>document.write(MultiArray["split shift"][lang])</script>
+    </td>
+    </tr>
+   </table>
+  </td>
+ </tr>
+
+<tr>
+  <td>
+  &nbsp;<br>
+  </td>
+ </tr>
+</table>
+</fieldset>
+</div>
+
+
+<div class="tab-page" id="tabPage2"  align="center">
+  <h2 class="tab"><script>document.write(MultiArray["Agent group"][lang])</script>&nbsp; <script>document.write(MultiArray["view"][lang])</script> </h2>
+   <script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage2" ) );
+   </script>
+  <fieldset>
+
+<table width="100%" cellpadding="0" cellspacing="0" align="center">
+ <tr>
+  <td align="center">
+   <table width="100%"  border="0" align="center">
+    <tr>
+     <td width="100%" class="reportsID" align="center"><b>
+        <script>document.write(MultiArray["Agent group"][lang])</script>:   <%out.write(agentGroupName);%>  </b>
+     </td>
+    </tr>
+   </table>
+  </td>
+ </tr>
+ <tr>
+  <td>
+   <br><br>
+  </td>
+ </tr>
+
+  <tr>
+   <td align="center">
+    <table border="1" align="center">
+     <tr bgcolor='#b4cfff'>
+      <td><script>document.write(MultiArray["Name"][lang])</script></td>
+      <td><script>document.write(MultiArray["Sunday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Monday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Tuesday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Wednesday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Thursday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Friday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Saturday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Total hours"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Day off"][lang])</script> </td>
+     </tr>
+  <%
+//get the connection
+try{
+      sc.getConnection();
+}catch(Exception e){
+      }
+ try{
+    sc.GetGroupAgentSchedule(startingDateDaily,endingDateDaily,agentGroup);
+}catch(Exception e){
+      }
+
+
+for (i = 0; i < sc.m_vAllAgents.size(); i++) {
+   beanAgentLoginInfo agent = (beanAgentLoginInfo)sc.m_vAllAgents.elementAt(i); %>
+
+
+<%if (i%2==0){%>
+<tr bgcolor='#e6eff4'>
+<%}else{%>
+<tr bgcolor='#b4cfff'>
+<%}%>
+
+<%
+// we should use our variable next_day_off to know how many days an agent can work in a row
+if (agent.shifts.lastDayOff.equalsIgnoreCase("Saturday")){
+nextDayOff ="OK";
+}else if (agent.shifts.lastDayOff.equalsIgnoreCase("Friday")){
+nextDayOff ="Thursday";
+}else if (agent.shifts.lastDayOff.equalsIgnoreCase("Thursday")){
+nextDayOff ="Wednesday";
+}else if (agent.shifts.lastDayOff.equalsIgnoreCase("Wednesday")){
+nextDayOff ="Tuesday";
+}else if (agent.shifts.lastDayOff.equalsIgnoreCase("Tuesday")){
+nextDayOff ="Monday";
+}else if (agent.shifts.lastDayOff.equalsIgnoreCase("Monday")){
+nextDayOff ="Sunday";
+}else{
+nextDayOff ="";
+}%>
+  <td>
+      <% String name=agent.first_name+" "+agent.last_name;
+      out.write("<a href='/aheevaccs/Manager/jsp/addHoraires.jsp?nextDayOff="+nextDayOff+"&name="+name+"&login_id="+agent.agt_login_id+"&agentGroupName="+agentGroupName+"&group="+agentGroup+"&agentId="+agent.agt_id + "&startDate="+startingDateDaily + "&endDate="+endingDateDaily + "&mon="+agent.shifts.mon + "&tues="+agent.shifts.tues + "&wednes="+agent.shifts.wednes +"&thurs="+agent.shifts.thurs + "&fri="+agent.shifts.fri +"&satur="+agent.shifts.satur + "&sun="+agent.shifts.sun + "&lang=" + lang +"'>"); %>
+      <%out.write(agent.last_name);%>,<%out.write(agent.first_name);%>&nbsp; [<%out.write(agent.agt_login_id);%>]
+      </a>
+   </td>
+
+<%if (agent.shifts.sun.length()>0 && agent.shifts.sun.startsWith("p")) {%>
+ <td style="background-color:#BCBCDE">
+      <% out.write(agent.shifts.sun.substring(2,7)+ "-" + agent.shifts.sun.substring(agent.shifts.sun.length()-5,agent.shifts.sun.length()) ); %>
+ </td>
+
+<%}else if (agent.shifts.sun.length()>0 ){%>
+  <td><% out.write(agent.shifts.sun.substring(0,5)+ "-" + agent.shifts.sun.substring(agent.shifts.sun.length()-5,agent.shifts.sun.length()) ); %>
+  </td>
+<%}else{%>
+<td>&nbsp;</td>
+<%}%>
+
+<%if (agent.shifts.mon.length()>0 && agent.shifts.mon.startsWith("p")) {%>
+      <td style="background-color:#BCBCDE">
+<% out.write(agent.shifts.mon.substring(2,7)+ "-" + agent.shifts.mon.substring(agent.shifts.mon.length()-5,agent.shifts.mon.length()) ); %>
+</td>
+<%}else if (agent.shifts.mon.length()>0){%>
+      <td><% out.write(agent.shifts.mon.substring(0,5)+ "-" + agent.shifts.mon.substring(agent.shifts.mon.length()-5,agent.shifts.mon.length()) );  %></td>
+<%}else{%>
+<td>&nbsp;</td>
+<%}%>
+
+<%if (agent.shifts.tues.length()>0 && agent.shifts.tues.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+      <% out.write(agent.shifts.tues.substring(2,7)+ "-" + agent.shifts.tues.substring(agent.shifts.tues.length()-5,agent.shifts.tues.length()) );    %></td>
+
+<%}else if (agent.shifts.tues.length()>0){%>
+      <td><% out.write(agent.shifts.tues.substring(0,5)+ "-" + agent.shifts.tues.substring(agent.shifts.tues.length()-5,agent.shifts.tues.length()) );    %></td>
+<%}else{%>
+<td>&nbsp;</td>
+<%}%>
+
+<%if (agent.shifts.wednes.length()>0 && agent.shifts.wednes.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+      <% out.write(agent.shifts.wednes.substring(2,7)+ "-" + agent.shifts.wednes.substring(agent.shifts.wednes.length()-5,agent.shifts.wednes.length()) );    %></td>
+<%}else if(agent.shifts.wednes.length()>0) {%>
+      <td><% out.write(agent.shifts.wednes.substring(0,5)+ "-" + agent.shifts.wednes.substring(agent.shifts.wednes.length()-5,agent.shifts.wednes.length()) );    %></td>
+<%}else{%>
+<td>&nbsp;</td>
+<%}%>
+
+<%if (agent.shifts.thurs.length()>0 && agent.shifts.thurs.startsWith("p")) {%>
+      <td style="background-color:#BCBCDE">
+ <% out.write(agent.shifts.thurs.substring(2,7)+ "-" + agent.shifts.thurs.substring(agent.shifts.thurs.length()-5,agent.shifts.thurs.length()) );    %></td>
+<%}else if(agent.shifts.thurs.length()>0){%>
+ <td><% out.write(agent.shifts.thurs.substring(0,5)+ "-" + agent.shifts.thurs.substring(agent.shifts.thurs.length()-5,agent.shifts.thurs.length()) );    %></td>
+<%}else{%>
+<td>&nbsp;</td>
+<%}%>
+
+<%if (agent.shifts.fri.length()>0 && agent.shifts.fri.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+     <% out.write(agent.shifts.fri.substring(2,7)+ "-" + agent.shifts.fri.substring(agent.shifts.fri.length()-5,agent.shifts.fri.length()) );    %></td>
+<%}else if ( agent.shifts.fri.length()>0){%>
+     <td>
+<% out.write(agent.shifts.fri.substring(0,5)+ "-" + agent.shifts.fri.substring(agent.shifts.fri.length()-5,agent.shifts.fri.length()) );    %>
+</td>
+<%}else{%>
+<td>&nbsp;</td>
+<%}%>
+
+ <%if (agent.shifts.satur.length()>0 && agent.shifts.satur.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+    <% out.write(agent.shifts.satur.substring(2,7)+ "-" + agent.shifts.satur.substring(agent.shifts.satur.length()-5,agent.shifts.satur.length()) );    %></td>
+ <%}else if (agent.shifts.satur.length()>0){%>
+    <td><% out.write(agent.shifts.satur.substring(0,5)+ "-" + agent.shifts.satur.substring(agent.shifts.satur.length()-5,agent.shifts.satur.length()) );    %></td>
+<%}else {%>
+<td>&nbsp;</td>
+<%}%>
+
+  <td><%out.write(agent.shifts.getTotal());%></td>
+  <td><%out.write(nextDayOff);%></td>
+ </tr>
+ <%} // fin for %>
+</table>
+
+  </td>
+ </tr>
+ <tr>
+  <td align="center">&nbsp;<br>
+  </td>
+ </tr>
+ <tr>
+  <td align="center">
+  <script>document.write("<input  type=\"submit\" value=\""+MultiArray["Publish"][lang]+"\" >")</script>
+  </td>
+ </tr>
+</table>
+
+
+</fieldset>
+</div>
+
+
+<div class="tab-page" id="tabPage3"  align="center">
+  <h2 class="tab"><script>document.write(MultiArray["Teams"][lang])</script>&nbsp; <script>document.write(MultiArray["view"][lang])</script></h2>
+   <script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage3" ) );
+   </script>
+  <fieldset>
+
+<%
+    try{
+       sc.getTeams(agentGroup);
+    }   catch(Exception e){
+        }
+ %>
+
+<% for (i = 0; i < sc.m_vAllTeams.size(); i++) {
+       team team = (team)sc.m_vAllTeams.elementAt(i); %>
+<table>
+ <tr>
+  <td width="100%" class="reportsID" align="center"><b>
+     <script>document.write(MultiArray["Shcedule for team"][lang])</script> : <%out.write(team.m_team_name);%></b>
+  </td>
+ </tr>
+</table>
+      <% try{
+          sc.GetTeamAgentSchedule(team.m_dbid,startingDateDaily,endingDateDaily,agentGroup);
+         }catch(Exception e){
+              }
+      %>
+     <br>
+     <table>
+      <tr bgcolor='#b4cfff'>
+      <td><script>document.write(MultiArray["Name"][lang])</script></td>
+      <td><script>document.write(MultiArray["Sunday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Monday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Tuesday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Wednesday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Thursday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Friday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Saturday"][lang])</script> </td>
+      <td><script>document.write(MultiArray["Total hours"][lang])</script> </td>
+      </tr>
+      <%
+
+      for (l = 0; l < sc.m_vAllTeamAgents.size(); l++) {
+      beanAgentLoginInfo agentT = (beanAgentLoginInfo)sc.m_vAllTeamAgents.elementAt(l); %>
+      <%if (l%2==0){%>
+      <tr bgcolor='#e6eff4'>
+      <%}else{%>
+      <tr bgcolor='#b4cfff'>
+      <%}%>
+      <td>
+       <% String agt_name=agentT.first_name+" "+agentT.last_name;
+       out.write("<a href='/aheevaccs/Manager/jsp/addHoraires.jsp?name="+agt_name+"&login_id="+agentT.agt_login_id+"&agentGroupName="+agentGroupName+"&group="+agentGroup+"&agentId="+agentT.agt_id + "&startDate="+startingDateDaily + "&endDate="+endingDateDaily + "&mon="+agentT.shifts.mon + "&tues="+agentT.shifts.tues + "&wednes="+agentT.shifts.wednes +"&thurs="+agentT.shifts.thurs + "&fri="+agentT.shifts.fri +"&satur="+agentT.shifts.satur + "&sun="+agentT.shifts.sun + "&lang=" + lang  +"'>"); %>
+       <%out.write(agentT.last_name);%>,<%out.write(agentT.first_name);%>&nbsp; [<%out.write(agentT.agt_login_id);%>]</a>
+      </td>
+
+<%if (agentT.shifts.sun.length() >0 && agentT.shifts.sun.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+<% out.write(agentT.shifts.sun.substring(2,7)+ "-" + agentT.shifts.sun.substring(agentT.shifts.sun.length()-5,agentT.shifts.sun.length()) ); %>
+</td>
+<%}else if(agentT.shifts.sun.length() >0){%>
+      <td>
+<% out.write(agentT.shifts.sun.substring(0,5)+ "-" + agentT.shifts.sun.substring(agentT.shifts.sun.length()-5,agentT.shifts.sun.length()) ); %>
+</td>
+<%}else{%>
+<td></td>
+<%}%>
+
+ <%if (agentT.shifts.mon.length() >0 && agentT.shifts.mon.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+<% out.write(agentT.shifts.mon.substring(2,7)+ "-" + agentT.shifts.mon.substring(agentT.shifts.mon.length()-5,agentT.shifts.mon.length()) ); %>
+</td>
+<%}else if(agentT.shifts.mon.length() >0){%>
+      <td><% out.write(agentT.shifts.mon.substring(0,5)+ "-" + agentT.shifts.mon.substring(agentT.shifts.mon.length()-5,agentT.shifts.mon.length()) ); %>
+</td>
+<%}else{%>
+<td></td>
+<%}%>
+
+
+ <%if (agentT.shifts.tues.length() >0 && agentT.shifts.tues.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+<% out.write(agentT.shifts.tues.substring(2,7)+ "-" + agentT.shifts.tues.substring(agentT.shifts.tues.length()-5,agentT.shifts.tues.length()) ); %>
+</td>
+<%}else if(agentT.shifts.tues.length() >0){%>
+      <td><% out.write(agentT.shifts.tues.substring(0,5)+ "-" + agentT.shifts.tues.substring(agentT.shifts.tues.length()-5,agentT.shifts.tues.length()) ); %>
+</td>
+<%}else{%>
+<td></td>
+<%}%>
+
+
+ <%if (agentT.shifts.wednes.length() >0 && agentT.shifts.wednes.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+<% out.write(agentT.shifts.wednes.substring(2,7)+ "-" + agentT.shifts.wednes.substring(agentT.shifts.wednes.length()-5,agentT.shifts.wednes.length()) ); %>
+</td>
+<%}else if(agentT.shifts.wednes.length() >0){%>
+      <td><% out.write(agentT.shifts.wednes.substring(0,5 )+ "-" + agentT.shifts.wednes.substring(agentT.shifts.wednes.length()-5,agentT.shifts.wednes.length()) ); %>
+</td>
+<%}else{%>
+<td></td>
+<%}%>
+
+<%if (agentT.shifts.thurs.length() >0 && agentT.shifts.thurs.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+<% out.write(agentT.shifts.thurs.substring(2,7)+ "-" + agentT.shifts.thurs.substring(agentT.shifts.thurs.length()-5,agentT.shifts.thurs.length()) ); %>
+</td>
+<%}else if(agentT.shifts.thurs.length() >0){%>
+      <td><% out.write(agentT.shifts.thurs.substring(0,5)+ "-" + agentT.shifts.thurs.substring(agentT.shifts.thurs.length()-5,agentT.shifts.thurs.length()) ); %>
+</td>
+<%}else{%>
+<td></td>
+<%}%>
+
+<%if (agentT.shifts.fri.length() >0 && agentT.shifts.fri.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+<% out.write(agentT.shifts.fri.substring(2,7)+ "-" + agentT.shifts.fri.substring(agentT.shifts.fri.length()-5,agentT.shifts.fri.length()) ); %>
+</td>
+<%}else if(agentT.shifts.fri.length() >0){%>
+      <td><% out.write(agentT.shifts.fri.substring(0,5)+ "-" + agentT.shifts.fri.substring(agentT.shifts.fri.length()-5,agentT.shifts.fri.length()) ); %>
+</td>
+<%}else{%>
+<td></td>
+<%}%>
+
+<%if (agentT.shifts.satur.length() >0 && agentT.shifts.satur.startsWith("p") ) {%>
+      <td style="background-color:#BCBCDE">
+<% out.write(agentT.shifts.satur.substring(2,7)+ "-" + agentT.shifts.satur.substring(agentT.shifts.satur.length()-5,agentT.shifts.satur.length()) ); %>
+</td>
+<%}else if(agentT.shifts.satur.length() >0){%>
+      <td><% out.write(agentT.shifts.satur.substring(0,5)+ "-" + agentT.shifts.satur.substring(agentT.shifts.satur.length()-5,agentT.shifts.satur.length()) ); %></td>
+<%}else{%>
+<td></td>
+<%}%>
+
+     <td><%out.write(agentT.shifts.getTotal());%></td>
+
+</tr>
+<%}//fin for all agents of that team
+
+
+%>
+    </table>
+<br><br>
+
+
+<%}//fin for all teams
+  try{
+          sc.closeConnection();
+      }catch(Exception e){
+      }
+
+%>
+
+</fieldset>
+</div>
+
+
+<div class="tab-page" id="tabPage4"  align="center">
+  <h2 class="tab"><script>document.write(MultiArray["Assigned shifts"][lang])</script></h2>
+   <script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage4" ) );
+   </script>
+  <fieldset>
+
+<table width="100%" cellpadding="0" cellspacing="0" align="center">
+ <tr>
+  <td width="100%" align="center">
+   <table  border="0" align="center">
+    <tr>
+     <td class="reportsID"><b>
+       <script>document.write(MultiArray["Assigned shifts"][lang])</script> &nbsp; <script>document.write(MultiArray["From"][lang])</script>:
+        <%out.write(startingDateDaily);	%>
+        to
+        <%out.write(endingDateDaily); %>
+        </b>
+     </td>
+    </tr>
+   </table>
+  </td>
+ </tr>
+ <tr>
+  <td>
+   <br><br>
+  </td>
+ </tr>
+
+   <%  try{
+           ssRet=sc.buildAssignedScheduleForPeriod(startingDateDaily,endingDateDaily,agentGroup);
+       } catch(Exception e){
+    } %>
+
+<tr>
+ <td align="center">
+  <table align="center" border='1'> <!--Tableau de schedule-->
+   <tr  bgcolor='0099FF'>
+	<td align="center"> <script>document.write(MultiArray["Shift"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Sunday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Monday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Tuesday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Wednesday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Thursday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Friday"][lang])</script> </td>
+    <td width="70"  align="center"><script>document.write(MultiArray["Saturday"][lang])</script> </td>
+	
+   </tr>
+   <%
+    tot_sun=0;tot_mon=0;tot_tue=0;tot_wed=0;tot_thu=0;tot_fri=0;tot_sat=0;
+	if(ssRet=="success") {
+              for (int a = 0; a < sc.m_vAllAssignedShifts.size(); a++) {
+              ScheduleInfo asch = (ScheduleInfo)sc.m_vAllAssignedShifts.elementAt(a);
+              tot_sun+=asch.sunday;
+              tot_mon+=asch.monday;
+              tot_tue+=asch.tuesday;
+              tot_wed+=asch.wednesday;
+              tot_thu+=asch.thursday;
+              tot_fri+=asch.friday;
+              tot_sat+=asch.saturday ;%>
+
+<%if (i%2==0){%>
+<tr bgcolor='#e6eff4'>
+<%}else{%>
+<tr bgcolor='#b4cfff'>
+<%}%>
+
+     <%if (asch.duration < regular_shift) {%>
+          <td width="80"   align="center" bgcolor='#FFC0CB'>
+     <%}else if (asch.duration > regular_shift) {%>
+         <td width="80"   align="center"  bgcolor='#DDA0DD'>
+      <%}else{%>
+          <td width="80"   align="center" >
+      <%}%>
+         <%out.write(asch.shift);%>
+      </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(asch.sunday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(asch.monday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(asch.tuesday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(asch.wednesday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(asch.thursday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(asch.friday));%>  </td>
+      <td width="80"   align="center"> <%out.write(Long.toString(asch.saturday));%>  </td>
+     </tr>
+      <%} // fin for
+    }else {
+        System.out.println("NO sucess");
+ }//fin if sucess  %>
+   <tr bgcolor='0099FF'>
+    <td><b><script>document.write(MultiArray["Total/Day"][lang])</script></b></td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_sun));%></b> </td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_mon));%></b> </td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_tue));%> </b></td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_wed));%></b> </td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_thu));%></b> </td>
+    <td width="80" align="center"><b> <%out.write(Long.toString(tot_fri));%> </b></td>
+    <td width="80" align="center"><b><%out.write(Long.toString(tot_sat));%> </b> </td>
+   </tr>
+
+   </table>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  &nbsp;<br>
+  </td>
+ </tr>
+ <tr>
+  <td align="center">
+   <table>
+    <tr>
+     <td  style="background-color:pink" width="40"></td><td>&nbsp;</td><td><script>document.write(MultiArray["part-time shift"][lang])</script>
+    </td>
+    </tr>
+    <tr>
+     <td  style="background-color:plum" width="40"></td><td>&nbsp;</td><td><script>document.write(MultiArray["split shift"][lang])</script>
+    </td>
+    </tr>
+   </table>
+  </td>
+ </tr>
+
+<tr>
+  <td>
+  &nbsp;<br>
+  </td>
+ </tr>
+</table>
+</fieldset>
+</div>
+
+
+
+
+
+</div>
+<script type="text/javascript">
+	//setupAllTabs();
+</script>
+</form>
+</body>
+
+</html>
+

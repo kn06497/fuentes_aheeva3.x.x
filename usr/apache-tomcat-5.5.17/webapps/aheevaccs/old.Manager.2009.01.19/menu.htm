@@ -1,0 +1,1292 @@
+<html>
+<head>
+
+<title>Menu</title>
+<LINK href="Resources_pages/style.css" rel="stylesheet" type="text/css" />
+
+<base target="rbottom">
+
+<script language="JavaScript" src="Resources_pages/jsUtil.js"></script>
+<script language="javascript" src="Resources_pages/menuRightsTable.js"></script>
+<script language="javascript" type="text/javascript" src="Resources_pages/Browser.js"></script>
+<script language="JavaScript1.2">
+
+var head="display:''";
+img1=new Image();
+img1.src="img/fold.gif";
+img2=new Image();
+img2.src="img/open.gif";
+
+var ns6=document.getElementById&&!document.all
+var ie4=document.all&&navigator.userAgent.indexOf("Opera")==-1
+
+function checkcontained(e){
+	var iscontained=0
+	cur=ns6? e.target : event.srcElement
+	i=0
+	if (cur.id=="foldheader" || cur.id=="foldheaderconfig")
+		iscontained=1
+	else
+		while (ns6&&cur.parentNode||(ie4&&cur.parentElement))
+		{
+			if (cur.id=="foldheader"||IsInFoldingLists(cur.id) || cur.id=="foldheaderconfig")
+			{
+				iscontained=(cur.id=="foldheader" || cur.id=="foldheaderconfig")? 1 : 0;
+					break;
+			}
+			cur=ns6? cur.parentNode : cur.parentElement
+		}
+
+	if (iscontained){
+
+		var foldercontent=ns6? cur.nextSibling : cur.all.tags("UL")[0];
+
+		if (foldercontent.style.display=="none"){
+			foldercontent.style.display=""
+			if(cur.id=="foldheaderconfig")
+				cur.style.listStyleImage="url(img/foldco.gif)"
+			else
+				cur.style.listStyleImage="url(img/open.gif)"
+
+		}
+		else{
+			foldercontent.style.display="none"
+			if(cur.id=="foldheaderconfig")
+				cur.style.listStyleImage="url(img/foldcf.gif)"
+			else
+				cur.style.listStyleImage="url(img/fold.gif)"
+		}
+	}
+}
+
+function IsInFoldingLists(name)
+	{
+	var sRet = false;
+	if(name == "foldinglist")
+		sRet = true;
+	if(name == "foldinglist_agent")
+		sRet = true;
+	if(name == "foldinglist_agent_inactive")
+		sRet = true;
+	if(name == "foldinglist_group")
+		sRet = true;
+	if(name == "foldinglist_group_inactive")
+		sRet = true;
+	if(name == "foldinglist_server")
+		sRet = true;
+	if(name == "foldinglist_user")
+		sRet = true;
+	if(name == "foldinglist_user_inactive")
+		sRet = true;
+	if(name == "foldinglist_telephone")
+		sRet = true;
+	if(name == "foldinglist_historical")
+		sRet = true;
+
+	return sRet;
+	}
+
+function StringParse(tobeParsed)
+{
+	stringElements = new Array();
+	
+	var pairs = tobeParsed.split("&");	//split by the token
+	
+	for (var i=0;i<pairs.length;i++)	//For each pair, split by the =
+	{
+		var pos = pairs[i].indexOf('=');
+		if (pos >= 0)
+		{
+			var argname = pairs[i].substring(0,pos);
+			var value = pairs[i].substring(pos+1);
+			stringElements[argname] = value;			
+		}
+	}	
+	return stringElements;
+}
+
+function getRoutingScriptAndQueues(tenant_id)
+{
+	var rArray = new Array();
+	var jsRSCripts = String( appletObj.getRoutingScripts(tenant_id, "1")  );
+	var jsRSCRIPTArray = jsRSCripts.split("|");
+	for(var i = 0; i < jsRSCRIPTArray.length; i++)
+	{
+		if(jsRSCRIPTArray[i].length != 0) 
+		{
+			thisRScript = jsRSCRIPTArray[i].split(",");																				
+			rArray.push(thisRScript[1]);
+			//Get virtual queues in this script...
+			var thisScriptText = String( appletObj.getRoutingScript(thisRScript[0]) );
+			splitedString = thisScriptText.split('^');
+			//var rootNoddle;
+			for(var j = 0; j < splitedString.length; j++)
+			{
+				var curElement = splitedString[j];		
+				myElementTable = StringParse(curElement);
+				if(myElementTable['TYPE'] == 'AGENTPICKUP')
+				{
+					for(var it = 0; it < rArray.length; it++){
+						if(myElementTable['queueName'] == rArray[it] )
+							break;
+					}
+					
+					if(it >= rArray.length)
+						rArray.push(myElementTable['queueName']);				
+				}
+			}
+		}
+	}
+	
+	//alert(rArray);
+	return rArray;
+}
+
+
+
+
+
+function showMenu()
+{
+
+	var tenants 	= String( appletObj.getTenantInfo() );
+	var jsTenants	= tenants + "";
+	arrayTenants	= jsTenants .split("|")
+    var user  = normalizeString(QueryString('user'));
+	var user_tenant_id = normalizeString(QueryString('tenant'));
+
+	setRights(user);
+
+
+	if( RIGHTS["CONFIGURATION"] )
+	{  // A droit a la configuration
+		document.write("<ul id=\"mainfoldheader\">");
+		//document.write("<ul id=\"foldinglist\" >");
+  		document.write("<li id=\"foldheaderconfig\">Configuration</li>");
+		document.write("<ul id=\"foldinglist\" style=\"display:none; \">");
+		document.write("<li id=\"menuli\"><a href=\"./Resources_pages/architecture.htm\">&nbsp;Network Configuration&nbsp;</a></li>");
+			if(RIGHTS["TENANT_MANAGEMENT"])
+			{
+				document.write("<li id=\"foldheader\">Tenant Management</li>");
+				document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/addtenant.htm\">&lt;Add Tenant&gt;</a></li>");
+					for (i = 0; i < arrayTenants.length; i++)
+						{
+						thisTenantInfos = arrayTenants[i].split(",");
+						document.write("<li id=\"menuli\"><a href=\"./Resources_pages/tenant.htm?dbid="+thisTenantInfos[0]+"&tName="+thisTenantInfos[1]+"\">"+thisTenantInfos[1]+"</a></li>");
+
+						}
+				document.write("</ul>"); //Fin de Tenant Management
+			}
+
+			if(RIGHTS["USER_MANAGEMENT"])
+			{
+				/* Debut de User Management */
+				document.write("<li id=\"foldheader\">User Management</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user.gif')\">");
+						document.write("<li id=\"menuli\"><a href=\"./Resources_pages/adduser.htm\">&lt;Add User&gt;</a></li>");
+						document.write("<li id=\"foldheader\">Active Users</li>")
+							document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user.gif')\">");
+								//document.write("<li id=\"menuli\"><a href=\"./Resources_pages/adduser.htm\">&lt;Add User&gt;</a></li>"); ////
+							var jsUsers = String( appletObj.getUsers() + "" );
+
+							arrayUsers = jsUsers.split("|");
+							for(i = 0; i < arrayUsers.length; i++)
+								{
+								thisUser = arrayUsers[i].split(",");
+								if(thisUser[4] == "1")
+									document.write("<li id=\"menuli\"><a href=\"./Resources_pages/modifyuser.htm?dbid="+thisUser[0]+"&tenantID="+thisUser[1]+"&userName="+thisUser[2]+"&role="+thisUser[3]+"&active="+thisUser[4]+"\">"+thisUser[2]+"</a></li>");
+								}
+							document.write("</ul>");
+						document.write("<li id=\"foldheader\">Inactive Users</li>")
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user_inactive.gif')\">");
+								//document.write("<li id=\"menuli\"><a href=\"./Resources_pages/adduser.htm\">&lt;Add User&gt;</a></li>"); ////
+							var jsUsers = String( appletObj.getUsers() + "");
+
+							arrayUsers = jsUsers.split("|");
+							for(i = 0; i < arrayUsers.length; i++)
+								{
+								thisUser = arrayUsers[i].split(",");
+								if(thisUser[4] != "1")
+								document.write("<li id=\"menuli\"><a href=\"./Resources_pages/modifyuser.htm?dbid="+thisUser[0]+"&tenantID="+thisUser[1]+"&userName="+thisUser[2]+"&role="+thisUser[3]+"&active="+thisUser[4]+"\">"+thisUser[2]+"</a></li>");
+								}
+							document.write("</ul>");
+					document.write("</ul>");
+				//Fin de User Management
+			}
+
+
+			if(RIGHTS["LIVE_MONITORING"])
+			{
+				/* Debut de Live monitoring */
+				document.write("<li id=\"foldheader\">Live Monitoring</li>")
+				document.write("<ul  id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user.gif')\">");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/addLiveuser.htm\">&lt;Add User&gt;</a></li>"); ////
+					for(i = 0; i < arrayUsers.length; i++)
+						{
+						thisUser = arrayUsers[i].split(",");
+						if(thisUser[5].length != 0 && thisUser[5] != "null" && thisUser[5] != "NULL")
+							document.write("<li id=\"menuli\"><a href=\"./Resources_pages/modifyLiveuser.htm?dbid="+thisUser[0]+"\">"+thisUser[2]+"</a></li>");
+						}
+				document.write("</ul>");
+				/* Fin de Live monitoring */
+			}
+
+			if(RIGHTS["SWITCHES"])
+			{
+				/* Debut Switchs*/
+				//document.write("<li id=\"foldheader\">Switches</li>");
+				//document.write("<ul id=\"foldinglist\" style=\"display:none;  list-style-image:url('img/server.gif')\">");
+					//document.write("<li id=\"menuli\"><a href=\"./Resources_pages/addSwitch.htm\">&lt;Add Switch&gt;</a></li>");
+					//document.write("<li id=\"menuli\"><a href=\"./Resources_pages/architecture.htm\">&lt;Network Configuration&gt;</a></li>");
+					/*var jsServers = String( appletObj.getAsteriskSwitchs() + "" );
+					jsServersArray =  jsServers.split("|");
+					for(i = 0; i < jsServersArray.length; i++)
+						{
+						if(jsServersArray[i] != "")
+							{
+							thisServer = jsServersArray[i].split(",");
+							document.write("<li id=\"menuli\"><a href=\"./Resources_pages/modifySwitch.htm?dbid="+thisServer[0]+"\">"+thisServer[1]+"</a></li>");
+							}
+						}*/
+				//document.write("</ul>"); //Fin de Switchs
+			}
+
+			// AheevaPhone Settings
+			document.write("<li id=\"foldheader\">AheevaPhone</li>");
+			document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/starphone.gif')\">");
+			document.write("<li id=\"menuli\"><a href=\"./Resources_pages/modifyStarPhoneSettings.htm\">&lt;AheevaPhone Configuration&gt;</a></li>");
+			document.write("</ul>");
+			//Fin de AheevaPhone Settings
+
+	   	document.write("</ul>"); //Fin de Configuration
+		document.write("</ul>");
+	} //Fin de if( RIGHTS["CONFIGURATION"] )
+
+   	//document.write("</ul>");
+
+
+
+	if(RIGHTS["TENANT"])
+	{
+
+		for (a = 0; a < arrayTenants.length; a++) // get all tenant
+		{
+			// now extract the dbid and the name
+			var jsTenantsDetails 	= 	arrayTenants[a]+""
+			arrayDet				=	jsTenantsDetails .split(",");
+			tenantDBID				=   arrayDet[0];
+			tenantName				=   arrayDet[1];
+
+			document.write("<ul id=\"mainfoldheader\">");
+			document.write("<li id=\"foldheader\">"+tenantName+"</li>");
+			document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+
+				if(RIGHTS["TENANT_RESSOURCES"])
+				{
+					document.write("<li id=\"foldheader\">Configuration</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+					document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/generalConfigDemo.htm?tenant_dbid="+tenantDBID+"\">&nbsp;Payroll configuration</a></li>");
+					document.write("</ul>");
+
+					document.write("<li id=\"foldheader\">Activity</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+					document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/Activity.htm?tenant_dbid="+tenantDBID+"\">&nbsp;Add an activity</a></li>");
+
+
+
+
+
+
+						document.write("<li id=\"foldheader\">Current Activities</li>");
+						var activities = String( appletObj.getActivities() );
+						var jsActivities = activities + "";
+						arrayActivities = jsActivities.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(activities.length != 0)
+							{
+								var anActivity;
+								for (i = 0; i < arrayActivities.length; i++)
+								{
+									anActivity = arrayActivities[i].split("^");
+									document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/Activity.htm?activity_dbid="+anActivity[0]+"&activity_name="+anActivity[1]+"&tenant_dbid="+tenantDBID+"\">"+anActivity[1]+"</a></li>");
+									
+									//document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/Activity.htm?activity_name="+anActivity[1]+"&tenant_dbid="+tenantDBID+"\">"+anActivity[1]+"</a></li>");
+								} //Fin de for (i = 0; i <arrayGroups.length; i++)
+							} //Fin de if(agentGroups.length != 0)
+						document.write("</ul>");
+
+
+
+
+
+
+					document.write("</ul>");
+
+					document.write("<li id=\"foldheader\">Resources</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+
+					if(RIGHTS["TENANT_RESSOURCES_AGENT_GROUPS"])
+					{
+						// Agent groups
+						document.write("<li id=\"foldheader\">Agent Groups</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/agentGroup.htm?grpName=&tenant_dbid="+tenantDBID+"&recordingRight="+RIGHTS["TENANT_QUALITY_MONITORING"]+"\">&lt;Add agent group&gt;</a></li>");
+						//document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/generalConfigDemo.htm?tenant_dbid="+tenantDBID+"\">&lt;Configure&gt;</a></li>");
+
+						document.write("<li id=\"foldheader\">Active Agent Groups</li>");
+						var agentGroups = String( appletObj.getAgentGroupByNameAndStatus(tenantDBID, "1") );
+						var jsGroups = agentGroups + "";
+						arrayGroups = jsGroups .split("|");
+						//alert("voici les agent groups : "+jsGroups);
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(agentGroups.length != 0)
+							{
+								for (i = 0; i <arrayGroups.length; i++)
+									{
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/agentGroup.htm?grpName="+arrayGroups[i]+"&tenant_dbid="+tenantDBID+"&recordingRight="+RIGHTS["TENANT_QUALITY_MONITORING"]+"\">"+arrayGroups[i]+"</a></li>");
+									} //Fin de for (i = 0; i <arrayGroups.length; i++)
+							} //Fin de if(agentGroups.length != 0)
+						document.write("</ul>");
+
+						document.write("<li id=\"foldheader\">Inactive Agent Groups</li>");
+						var agentGroups = String( appletObj.getAgentGroupByNameAndStatus(tenantDBID, "0") );
+						var jsGroups = agentGroups + "";
+						arrayGroups = jsGroups .split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple_inactive.gif')\">");
+						if(agentGroups.length != 0)
+							{
+								for (i = 0; i <arrayGroups.length; i++)
+									{
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/agentGroup.htm?grpName="+arrayGroups[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayGroups[i]+"</a></li>");
+									} //Fin de for (i = 0; i <arrayGroups.length; i++)
+							} //Fin de if(agentGroups.length != 0)
+						document.write("</ul>");
+
+						document.write("</ul>");
+					} //Fin de if(RIGHTS["TENANT_RESSOURCES_AGENT_GROUPS"])
+
+					if(RIGHTS["TENANT_RESSOURCES_AGENTS"])
+					{
+					// Agents
+						   document.write("<li id=\"foldheader\">Agents</li>");
+						   document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/homme.gif')\">");
+					var agents = String( appletObj.getAgentsByNameAndStatus(tenantDBID,1) );
+					var jsAgents = agents + "";
+					arrayAgents = jsAgents .split("|");
+					document.write("<li id=\"menuli\"> <a href=\" ./Resources_pages/agent.htm?agtName=&tenant_dbid="+tenantDBID+"&rightSkills="+RIGHTS["TENANT_RESSOURCES_SKILLS"]+"\">&lt;Add agent&gt;</a></li>");
+
+							document.write("<li id=\"foldheader\">Active Agents</li>");
+							document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/homme.gif')\">");
+
+					<!-- Add an a line to add the possibility to add agents -->
+					if(agents.length != 0)
+					{
+						for (i = 0; i <arrayAgents.length; i++)
+						{
+							document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/agent.htm?agtName="+arrayAgents[i]+"&tenant_dbid="+tenantDBID+"&rightSkills="+RIGHTS["TENANT_RESSOURCES_SKILLS"]+"\">"+arrayAgents[i]+"</a></li>");
+						} //Fin de for (i = 0; i <arrayAgents.length; i++)
+					} //Fin de if(agents.length != 0)
+					document.write("</ul>");
+					agents = String( appletObj.getAgentsByNameAndStatus(tenantDBID,0) );
+					var jsAgents = agents + "";
+					arrayAgents = jsAgents .split("|");
+
+					document.write("<li id=\"foldheader\">Inactive Agents</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/homme_inactive.gif')\">");
+					<!-- Add an a line to add the possibility to add agent -->
+					if(agents.length != 0)
+					{
+						for (i = 0; i <arrayAgents.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/agent.htm?agtName="+arrayAgents[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayAgents[i]+"</a></li>");
+							} //Fin de for (i = 0; i <arrayAgents.length; i++)
+					} //Fin de if(agents.length != 0)
+				   document.write("</ul>");
+				   document.write("</ul>");
+				   } //Fin de if(RIGHTS["TENANT_RESSOURCES_AGENTS"])
+
+
+					// Campaigns
+					if(RIGHTS["TENANT_RESSOURCES_CAMPAIGNS"])
+					{
+						document.write("<li id=\"foldheader\">Campaigns</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none;  list-style-image:url('img/campaign.gif')\">");
+
+						<!-- Add an a line to add the possibility to add campaigns -->
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/campaign.htm?campaign_name=&tenant_dbid="+tenantDBID+"\">&lt;Add campaign&gt;</a></li>");
+
+						document.write("<li id=\"foldheader\">Active Campaigns</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none;   list-style-image:url('img/campaign_menu.gif')\">");
+						var campaigns = String( appletObj.getCampaignsByNameAndStatus(tenantDBID, "1") ); //Active campaigns
+
+						var jsCampaigns = campaigns + "";
+						arrayCampaigns = jsCampaigns.split("|");
+						if(campaigns.length != 0)
+						{
+							for (i = 0; i <arrayCampaigns.length; i++)
+								{
+									document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/campaign.htm?campaign_name="+arrayCampaigns[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayCampaigns[i]+"</a></li>");
+								} //Fin de for (i = 0; i <arrayCampaigns.length; i++)
+						} //Fin de if(campaigns.length != 0)
+						document.write("</ul>");
+						document.write("<li id=\"foldheader\">Inactive Campaigns</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none;   list-style-image:url('img/campaign_inactive.gif')\">");
+						var campaigns = String( appletObj.getCampaignsByNameAndStatus(tenantDBID, "0") ); //Inactive campaigns
+
+						var jsCampaigns = campaigns + "";
+						arrayCampaigns = jsCampaigns.split("|");
+						if(campaigns.length != 0)
+						{
+							for (i = 0; i <arrayCampaigns.length; i++)
+								{
+									document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/campaign.htm?campaign_name="+arrayCampaigns[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayCampaigns[i]+"</a></li>");
+								} //Fin de for (i = 0; i <arrayCampaigns.length; i++)
+						} //Fin de if(campaigns.length != 0)
+						document.write("</ul>");
+						document.write("</ul>");
+					} // Fin de if(RIGHTS["TENANT_RESSOURCES_CAMPAIGNS"])
+
+					// Calling lists
+					if(RIGHTS["TENANT_RESSOURCES_CALLING_LISTS"])
+					{
+						document.write("<li id=\"foldheader\">Calling lists</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/telephone.gif')\">");
+
+						var calling_lists = String( appletObj.getCallingListByName(tenantDBID,1) );
+						var jsCallingList = calling_lists + "";
+						arrayActiveCallingList = jsCallingList.split("|");
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/addCallingList.jsp?tenant_dbid="+tenantDBID+"\">"+"&lt;Add calling list&gt;"+"</a></li>");
+						//document.write("<li id=\"menuli\"> <a href=\"./jsp/listLoader.jsp?tenant_dbid="+tenantDBID+"\">&lt;Load calling list&gt;</a></li>");
+						//document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/callingList.htm?callinglistName=&tenant_dbid="+tenantDBID+"\">"+"&lt;Add calling list&gt;"+"</a></li>");
+
+						document.write("<li id=\"foldheader\">Active Lists</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/telephone.gif')\">");
+
+						<!-- Add an a line to add the possibility to add calling list -->
+
+						if(calling_lists.length != 0)
+						{
+							for (i = 0; i <arrayActiveCallingList.length; i++)
+								{
+									if(arrayActiveCallingList[i].length != 0)
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyCallingList.jsp?callinglistName="+arrayActiveCallingList[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayActiveCallingList[i]+"</a></li>");
+								} //Fin de for (i = 0; i <arrayActiveCallingList.length; i++)
+						} //Fin de if(calling_lists.length != 0)
+						document.write("</ul>");
+						calling_lists = String( appletObj.getCallingListByName(tenantDBID,0) );
+						jsCallingList = calling_lists + "";
+						arrayCallingList = jsCallingList.split("|");
+
+						document.write("<li id=\"foldheader\">Inactive Lists</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/telephone.gif')\">");
+						<!-- Add an a line to add the possibility to add calling list -->
+						if(calling_lists.length != 0)
+						{
+							for (i = 0; i <arrayCallingList.length; i++)
+								{
+									if(arrayCallingList[i].length != 0)
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyCallingList.jsp?callinglistName="+arrayCallingList[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayCallingList[i]+"</a></li>");
+								} //Fin de for (i = 0; i <arrayCallingList.length; i++)
+						} //Fin de if(calling_lists.length != 0)
+					   document.write("</ul>");
+
+					   document.write("</ul>");
+				   } // Fin de if(RIGHTS["TENANT_RESSOURCES_CALLING_LISTS"])
+
+
+
+					if(RIGHTS["TENANT_RESSOURCES_CALLING_LISTS"])
+					{
+					   document.write("<li id=\"foldheader\">Do-not-call Lists</li>");
+					   document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/telephone.gif')\">");
+					   document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/blackList.htm?tenant_dbid="+tenantDBID+"\">Create a do-not-call list group</a></li>");
+					   document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/addNumbersToBlackList.htm?tenant_dbid="+tenantDBID+"\">Add numbers to do-not-call list</a></li>");
+					   document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/blackListNumberInCampaign.htm?tenant_dbid="+tenantDBID+"\">Search campaign from do-not-call list number</a></li>");
+					   document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/viewBlacklistContents.htm?tenant_dbid="+tenantDBID+"\">Display do-not-call list contents</a></li>");
+					   document.write("</ul>");
+					}
+
+
+					if(RIGHTS["TENANT_RESSOURCES_FILTERS"])
+					{
+					// Calling list filters
+					document.write("<li id=\"foldheader\">Filters</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/filtre.gif')\">");
+					<!-- Add an a line to add the possibility to add a filter -->
+					document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/filter.htm?filter_name=&tenant_dbid="+tenantDBID+"\">"+"&lt;Add Filter&gt;"+"</a></li>");
+					document.write("<li id=\"foldheader\">Active Filters</li>");
+						document.write("<ul id=\"foldinglist\"  style=\"display:none; list-style-image:url('img/filtre.gif')\">");
+					//alert(tenantDBID)
+					var filters = String( appletObj.getFiltersByNameAndStatus(tenantDBID, "1") );
+					var jsFilters = filters + "";
+					arrayFilter = jsFilters.split("|");
+					if(filters.length != 0)
+						{
+							for (i = 0; i <arrayFilter.length; i++)
+								{
+									if(arrayFilter[i].length != 0)
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/filter.htm?filter_name="+arrayFilter[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayFilter[i]+"</a></li>");
+								} //Fin de for (i = 0; i <arrayFilter.length; i++)
+						} //Fin de if(filters.length != 0)
+						document.write("</ul>");
+					document.write("<li id=\"foldheader\">Inactive Filters</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/filtre_inactive.gif')\">");
+					var filters = String( appletObj.getFiltersByNameAndStatus(tenantDBID, "0") );
+					var jsFilters = filters + "";
+					arrayFilter = jsFilters.split("|");
+					if(filters.length != 0)
+						{
+							for (i = 0; i <arrayFilter.length; i++)
+								{
+									if(arrayFilter[i].length != 0)
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/filter.htm?filter_name="+arrayFilter[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayFilter[i]+"</a></li>");
+								} //Fin de for (i = 0; i <arrayFilter.length; i++)
+						} //Fin de if(filters.length != 0)
+					document.write("</ul>");
+
+					document.write("</ul>");
+					} // Fin de if(RIGHTS["TENANT_RESSOURCES_FILTERS"])
+
+					// Treatments
+					if(RIGHTS["TENANT_RESSOURCES_TREATMENTS"])
+					{
+					document.write("<li id=\"foldheader\">Treatments</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none;  list-style-image:url('img/treatment.gif')\">");
+						var treatments = String( appletObj.getTreatmentByNameAndStatus(tenantDBID, "0") );
+						var jsTreatments = treatments + "";
+						arrayTreatment = jsTreatments.split("|");
+						<!-- Add an a line to add the possibility to add treatment -->
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/treatment.htm?treatment_name=&tenant_dbid="+tenantDBID+"\">"+"&lt;Add Treatment&gt;"+"</a></li>");
+						document.write("<li id=\"foldheader\">Active Treatments</li>");
+						var treatments = String( appletObj.getTreatmentByNameAndStatus(tenantDBID, "1") );
+						var jsTreatments = treatments + "";
+						arrayTreatment = jsTreatments.split("|");
+							document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/treatment.gif')\">");
+							if(treatments.length != 0)
+								{
+									for (i = 0; i <arrayTreatment.length; i++)
+									{
+										if(arrayTreatment[i].length != 0)
+											document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/treatment.htm?treatment_name="+arrayTreatment[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayTreatment[i]+"</a></li>");
+									} //Fin de for (i = 0; i <arrayTreatment.length; i++)
+								} //Fin de if(treatments.length != 0)
+							document.write("</ul>");
+						document.write("<li id=\"foldheader\">Inactive Treatments</li>");
+						var treatments = String( appletObj.getTreatmentByNameAndStatus(tenantDBID, "0") );
+						var jsTreatments = treatments + "";
+						arrayTreatment = jsTreatments.split("|");
+							document.write("<ul id=\"foldinglist\" style=\"display:none;  list-style-image:url('img/treatment_inactive.gif')\">");
+							if(treatments.length != 0)
+								{
+									for (i = 0; i <arrayTreatment.length; i++)
+										{
+											if(arrayTreatment[i].length != 0)
+												document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/treatment.htm?treatment_name="+arrayTreatment[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayTreatment[i]+"</a></li>");
+										} //Fin de for (i = 0; i <arrayTreatment.length; i++)
+								} //Fin de if(treatments.length != 0)
+							document.write("</ul>");
+
+						document.write("</ul>");
+					}//Fin de if(RIGHTS["TENANT_RESSOURCES_TREATMENTS"])
+
+
+
+					if(RIGHTS["TENANT_RESSOURCES_NOT_READY_REASON"])
+					{
+
+						document.write("<li id=\"foldheader\">Not Ready Reasons</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/notReadyReason.htm?NRR_name=&tenant_dbid="+tenantDBID+"\">&lt;Add Not Ready Reason&gt;</a></li>");
+						//Active reasons
+						document.write("<li id=\"foldheader\">Active Not Ready Reasons</li>");
+						var reasons = String( appletObj.getNotReadyReasonByNameAndStatus(tenantDBID, "1") );
+						var jsReasons = reasons + "";
+						arrayReasons = jsReasons.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(reasons.length != 0)
+							{
+								for (i = 0; i <arrayReasons.length; i++)
+									{
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/notReadyReason.htm?NRR_name="+arrayReasons[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayReasons[i]+"</a></li>");
+									} //Fin de for (i = 0; i <arrayGroups.length; i++)
+							} //Fin de if(agentGroups.length != 0)
+						document.write("</ul>");
+
+						//Inactive reasons
+						document.write("<li id=\"foldheader\">Inactive Not Ready Reasons</li>");
+						var reasons = String( appletObj.getNotReadyReasonByNameAndStatus(tenantDBID, "0") );
+						var jsReasons = reasons + "";
+						arrayReasons = jsReasons.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(reasons.length != 0)
+							{
+								for (i = 0; i <arrayReasons.length; i++)
+									{
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/notReadyReason.htm?NRR_name="+arrayReasons[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayReasons[i]+"</a></li>");
+									} //Fin de for (i = 0; i <arrayGroups.length; i++)
+							} //Fin de if(agentGroups.length != 0)
+						document.write("</ul>");
+
+						document.write("</ul>");
+
+					}//Fin de if(RIGHTS["TENANT_RESSOURCES_NOT_READY_REASON"])
+
+
+					/////////////////////////////////////////////////////////////////
+					if(RIGHTS["TENANT_RESSOURCES_QUEUE"])
+					{
+
+					   	document.write("<li id=\"foldheader\">Queues</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none >");
+						//Agent Group Queues
+						document.write("<li id=\"foldheader\"></li>");
+						document.write("<li id=\"foldheader\">Agents Groups Queues</li>");
+						//var queues = String( appletObj.getQueueByName(tenantDBID) );
+						var queues = String( appletObj.getActifQueueByName(tenantDBID) );
+						//var queues = String( appletObj.getAgentGroupByNameAndStatus(tenantDBID,"1") );
+						//alert(queues);
+						var jsQueues = queues + "";
+						arrayQueues = jsQueues.split("|");
+						
+       			    	document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/queues.gif')\">");	
+
+						if ( queues != ''){//queues.length != 0 &&
+							//alert(queues);
+							for (i = 0; i < arrayQueues.length; i++){
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/queues.htm?queue_name="+arrayQueues[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayQueues[i]+"</a></li>");
+								
+							}
+						}	
+						document.write("</ul>");
+						
+
+					
+						//Routing script Queues
+						document.write("<li id=\"foldheader\">Routings scripts Queues</li>");
+						 document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/queues.gif')\">");	
+							 
+							arrayQueues = this.getRoutingScriptAndQueues(tenantDBID);
+							 for (i = 0; i <arrayQueues.length; i++){
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/queues.htm?queue_name="+arrayQueues[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayQueues[i]+"</a></li>");
+							}
+						document.write("</ul>");
+						
+						
+					
+						document.write("</ul>");
+
+					}//Fin de if(RIGHTS["TENANT_RESSOURCES_QUEUE"])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						/////////////////////////////////////////////////////////////
+						if(RIGHTS["TENANT_RESSOURCES_SKILLS"])
+							{
+								document.write("<li id=\"foldheader\">Skills</li>");
+								document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+								document.write("<li id=\"menuli\"><a href=\"./Resources_pages/addSkill.htm?tenant_dbid="+tenantDBID+"\">&lt;Add Skill&gt;</a></li>");
+
+									var jsSkillList = String( String( appletObj.getAllSkills(tenantDBID) ) );
+									if(jsSkillList.length != 0){
+										jsSkillListArray = jsSkillList.split("|");
+
+										for(i = 0; i < jsSkillListArray.length; i++)
+										{
+											thisSkill = jsSkillListArray[i].split(",");
+
+											document.write("<li id=\"menuli\"><a href=\"./Resources_pages/modifySkill.htm?skill_id="+thisSkill[0]+"&tenantDBID="+thisSkill[2]+"&skill_name="+thisSkill[1]+"\">"+thisSkill[1]+"</a></li>");
+										}
+									}
+
+								document.write("</ul>");
+							}
+						////////////////////////////////////////////////////////////
+
+
+
+
+					document.write("</ul>");
+				}//Fin de if(RIGHTS["TENANT_RESSOURCES"])
+
+
+
+
+
+				if(RIGHTS["TENANT_HISTORICAL_REPORTS"])
+				{
+					document.write("<li id=\"foldheader\">Historical Reports</li>");
+
+					document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/tarte.gif')\">");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/datePicker.htm?type=Agents&tenant_dbid="+tenantDBID+"\">Agent Details Reports</a></li>");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/datePicker.htm?type=AgentGroups&tenant_dbid="+tenantDBID+"\">Agent Groups Reports</a></li>");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/datePicker.htm?type=AgentSummary&tenant_dbid="+tenantDBID+"\">Agent Summary Reports</a></li>");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/datePicker.htm?type=Outbound&tenant_dbid="+tenantDBID+"\">Outbound Calls Reports</a></li>");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/inboundCalls.htm?type=Inbound&tenant_dbid="+tenantDBID+"\">Inbound Calls Reports</a></li>");
+								// Agent Login report
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/datePicker.htm?type=AgentLoginReport&tenant_dbid="+tenantDBID+"\">Agent Login Reports</a></li>");
+					if(RIGHTS["TENANT_REPORT_CAMPAIGN"])
+					{
+						document.write("<li id=\"menuli\"><a href=\"./Resources_pages/datePicker.htm?type=Campaigns&tenant_dbid="+tenantDBID+"\">Campaign Reports</a></li>");
+					}
+					if(RIGHTS["TENANT_REPORT_CALLING_LIST"])
+					{
+						document.write("<li id=\"menuli\"><a href=\"./Resources_pages/datePicker.htm?type=CallingsLists&tenant_dbid="+tenantDBID+"\">Calling List Reports</a></li>");
+					}
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/datePicker.htm?type=Queues&tenant_dbid="+tenantDBID+"\">Queue Reports</a></li>");
+					document.write("</ul>");
+				}// Fin de if(RIGHTS["TENANT_HISTORICAL_REPORTS"])
+
+
+				if(RIGHTS["TENANT_QUALITY_MONITORING"])
+				{
+				
+					document.write("<li id=\"foldheader\">Quality Monitoring </li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none\" >");
+					//document.write("<li id=\"menuli\"><a href=\"./jsp/workSchedule.jsp?tenant_dbid="+tenantDBID+"&group=\">Agent Working Schedule</a></li>");
+					//document.write("<li id=\"menuli\"><a href=\"./Resources_pages/recordSchedule.htm?tenant_dbid="+tenantDBID+"\">Agent Recording Schedule</a></li>");
+					document.write("<li id=\"menuli\" style=\"list-style-image:url('img/audio.gif')\"><a href=\"./Resources_pages/conversationRecPicker.htm?tenant_dbid="+tenantDBID+"\">Agent's Conversation</a></li>");
+					document.write("<li id=\"menuli\" style=\"list-style-image:url('img/tarte.gif')\"><a href=\"./Resources_pages/listenRecPicker.htm?tenant_dbid="+tenantDBID+"&group=\" >Agent listening Report</a></li>");
+//					document.write("<li id=\"menuli\"><a onClick=\"window.open('./VideoRecordingMain.htm?user="+user+"&tenant_dbid="+tenantDBID+"', 'VideoRecording')\">Video Recording </a></li>");
+					document.write("</ul>");
+				
+				} //Fin de if(RIGHTS["TENANT_QUALITY_MONITORING"])
+
+				if(RIGHTS["TENANT_WORK_FORCE"])
+				{
+					document.write("<li id=\"foldheader\">Work Force Management </li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none\">");//foldinglist1
+					// Teams
+					document.write("<li id=\"foldheader\">Teams </li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/wfmTeam.htm?team=&tenant_dbid="+tenantDBID+"\">&lt;Add a Team&gt;</a></li>");
+
+					var teams = String( appletObj.getAllTeams(tenantDBID) );
+					var jsTeams = teams + "";
+					arrayTeams = jsTeams.split("|");
+					if(teams.length != 0)
+					{
+						for (i = 0; i <arrayTeams.length; i++)
+							{
+								if(arrayTeams[i].length != 0)
+									{
+									arrayTeamData = arrayTeams[i].split("^");
+									team_dbid = arrayTeamData[0];
+									team_name =  arrayTeamData[1];
+									team_leader = arrayTeamData[2];
+									document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/wfmTeam.htm?team="+arrayTeams[i]+"&tenant_dbid="+tenantDBID+"\">"+team_name+"</a></li>");
+									} //Fin de if(arrayTeams[i].length != 0)
+							} //Fin de for (i = 0; i <arrayTeams.length; i++)
+					} //Fin de if(teams.length != 0)
+					document.write("</ul>");
+                                       /* 
+                                        // HORAIRE
+					
+					document.write("<li id=\"foldheader\">Schedule</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+                                        document.write("<li id=\"menuli\"><a href=\"./Resources_pages/horaires.htm?tenant_dbid="+tenantDBID+"&complete=no\"> add schedules </a></li>");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/horaires.htm?tenant_dbid="+tenantDBID+"&complete=yes\"> view published schedules </a></li>");
+                                        document.write("<li id=\"menuli\"><a href=\"./Resources_pages/horaires.htm?tenant_dbid="+tenantDBID+"&report=yes\"> Scheduled agent's report </a></li>");
+ 
+					document.write("</ul>");
+					*/
+				
+
+					// RTA
+					document.write("<li id=\"foldheader\">Adherence </li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/adherence.gif')\">");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/rta.htm?type=AgentGroupsRTA&tenant_dbid="+tenantDBID+"\"> Real Time Adherence </a></li>");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/rta.htm?type=Agents&tenant_dbid="+tenantDBID+"\"> View Adherence Graph</a></li>");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/adherenceReport.htm?type=AgentAdherenceReport&tenant_dbid="+tenantDBID+"\"> Adherence Report </a></li>");
+					document.write("</ul>");
+
+					// MOP
+					document.write("<li id=\"foldheader\">Payroll Information</li>");
+					document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+
+
+
+
+
+
+					if(RIGHTS["TENANT_MOP_MANAGEMENT"])
+					{
+						document.write("<li id=\"foldheader\">Commissions</li>")
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user.gif')\">");
+
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/mopTreatment.htm?tenant_dbid="+tenantDBID+"\">&lt;Add Commission&gt;</a></li>");
+						document.write("<li id=\"foldheader\">Active Commissions</li>")
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user.gif')\">");
+
+						// appeler la fonction qui retourne les traitements actifs
+						var treats = String( appletObj.getActiveTreats() );
+
+						var jsTreats = treats + "";
+						//alert(jsMops);
+						arrayTreats = jsTreats.split("|");
+						if(treats.length != 0)
+						{
+							for (i = 0; i < arrayTreats.length; i++)
+								{
+									if(arrayTreats[i].length != 0)
+										{
+										arrayTreatData = arrayTreats[i].split(",");
+										treat_dbid = arrayTreatData[0];
+										treat_name =  arrayTreatData[1];
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/mopTreatment.htm?mop_treatment_name="+treat_name+"\">"+treat_name+"</a></li>");
+										} //Fin de if(arrayTreatData[i].length != 0)
+								} //Fin de for (i = 0; i <arrayTreatData.length; i++)
+						} //Fin de if(treats.length != 0)
+
+
+						document.write("</ul>");
+						document.write("<li id=\"foldheader\">Inactive Commissions</li>")
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user_inactive.gif')\">");
+
+						// appeler la fonction qui retourne les traitements inactifs
+						var treats = String( appletObj.getInactiveTreats() );
+
+						var jsTreats = treats + "";
+						//alert(jsMops);
+						arrayTreats = jsTreats.split("|");
+						if(treats.length != 0)
+						{
+							for (i = 0; i < arrayTreats.length; i++)
+								{
+									if(arrayTreats[i].length != 0)
+										{
+										arrayTreatData = arrayTreats[i].split(",");
+										treat_dbid = arrayTreatData[0];
+										treat_name =  arrayTreatData[1];
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/mopTreatment.htm?mop_treatment_name="+treat_name+"\">"+treat_name+"</a></li>");
+										} //Fin de if(arrayTreatData[i].length != 0)
+								} //Fin de for (i = 0; i <arrayTreatData.length; i++)
+						} //Fin de if(treats.length != 0)
+						document.write("</ul>");
+						document.write("</ul>");
+
+
+						document.write("<li id=\"foldheader\">Methods of payments</li>")
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user.gif')\">");
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/mop.htm?tenant_dbid="+tenantDBID+"\">&lt;Add Method of Payment&gt;</a></li>");
+						document.write("<li id=\"foldheader\">Active MOPs</li>")
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user.gif')\">");
+
+
+						var mops = String( appletObj.getActiveMops() );
+
+						var jsMops = mops + "";
+						//alert(jsMops);
+						arrayMops = jsMops.split("|");
+						if(mops.length != 0)
+						{
+							for (i = 0; i <arrayMops.length; i++)
+								{
+									if(arrayMops[i].length != 0)
+										{
+										arrayMopData = arrayMops[i].split(",");
+										mop_dbid = arrayMopData[0];
+										mop_name =  arrayMopData[1];
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/mop.htm?mopName="+mop_name+"&tenant_dbid="+tenantDBID+"\">"+mop_name+"</a></li>");
+										} //Fin de if(arrayMops[i].length != 0)
+								} //Fin de for (i = 0; i <arrayMops.length; i++)
+
+						} //Fin de if(mops.length != 0)
+
+
+						document.write("</ul>");
+						document.write("<li id=\"foldheader\">Inactive MOPs</li>")
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user_inactive.gif')\">");
+
+						var mops = String( appletObj.getInactiveMops() );
+
+						var jsMops = mops + "";
+						//alert(jsMops);
+						arrayMops = jsMops.split("|");
+						if(mops.length != 0)
+						{
+							for (i = 0; i <arrayMops.length; i++)
+								{
+									if(arrayMops[i].length != 0)
+										{
+										arrayMopData = arrayMops[i].split(",");
+										mop_dbid = arrayMopData[0];
+										mop_name =  arrayMopData[1];
+										document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/mop.htm?mopName="+mop_name+"&tenant_dbid="+tenantDBID+"\">"+mop_name+"</a></li>");
+										} //Fin de if(arrayMops[i].length != 0)
+								} //Fin de for (i = 0; i <arrayMops.length; i++)
+
+						} //Fin de if(mops.length != 0)
+
+						document.write("</ul>");
+						document.write("</ul>");
+
+
+					<!-- Add an a line to add the possibility to add  -->
+					document.write("<li id=\"foldheader\">Reports</li>")
+					document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/user.gif')\">");
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/loginvsProduction.jsp?type=report&sessionParams=init&viewData=&saveAddedRows=&startDate=&agentGroupId=&agentId=&tenant_dbid="+tenantDBID+"&strToInsert=&strToUpdate=\"> Login & Production time </a></li>");
+					//document.write("<li id=\"menuli\"><a href=\"http://192.168.10.103:8470/AgentHours/extract_payroll_data.php\">Extract payroll data</a></li>");
+					//document.write("<li id=\"menuli\"><a href=\"./Resources_pages/loginProductionDatePicker.htm?type=report&tenant_dbid="+tenantDBID+"\"> Login vs Production time </a></li>");
+					//document.write("<li id=\"menuli\"><a href=\"./Resources_pages/loginProductionVerif.jsp?tenant_dbid="+tenantDBID+"\"> Login vs Production time </a></li>");
+				/*
+				document.write("<li id=\"menuli\"><a href=\"./Resources_pages/loginProductionDatePicker.htm?type=exception&tenant_dbid="+tenantDBID+"\"> Exception report Login vs Production time </a></li>");
+				if(RIGHTS["TENANT_MOP_MANAGEMENT"])
+				{
+					document.write("<li id=\"menuli\"><a href=\"./Resources_pages/campaignReportPicker.htm\"> Global Report for Campaign </a></li>");
+				}
+				*/
+					document.write("</ul>");
+				
+					// Constantin
+					/** In comment temporary*/
+					
+					
+						document.write("</ul>");
+					}// fin if(RIGHTS["TENANT_MOP_MANAGEMENT"])					
+
+					
+
+						document.write("</ul>");//end of foldinglist1
+				} //Fin de if(RIGHTS["TENANT_WORK_FORCE"])
+
+
+							if(RIGHTS["TENANT_ROUTING_SCRIPTS"])
+							{
+									var jsRSCripts;
+									document.write("<li id=\"foldheader\">Routing Scripts</li>");
+									document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+									document.write("<li id=\"menuli\"><a href=\"./Resources_pages/routingScript.htm?tenant_dbid="+tenantDBID+"&tenantName="+tenantName+"\">&lt;Add Routing Script&gt;</a></li>");
+										document.write("<li id=\"foldheader\">Active Scripts</li>");
+										document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+
+										jsRSCripts = String( String( appletObj.getRoutingScripts(tenantDBID, "1") ) );
+
+										jsRSCRIPTArray = jsRSCripts.split("|");
+										for(i = 0; i < jsRSCRIPTArray.length; i++)
+										{
+											if(jsRSCRIPTArray[i].length != 0)
+											{
+												thisRScript = jsRSCRIPTArray[i].split(",");
+												document.write("<li id=\"menuli\"><a href=\"./Resources_pages/routingScript.htm?tenant_dbid="+tenantDBID+"&tenantName="+tenantName+"&script_dbid="+thisRScript[0]+"&script_name="+thisRScript[1]+"&script_is_active="+thisRScript[2]+"&script_priority="+thisRScript[3]+"\">"+thisRScript[1]+"</a></li>");
+											}
+										}
+										document.write("</ul>");
+
+										document.write("<li id=\"foldheader\">Inactive Scripts</li>");
+										document.write("<ul id=\"foldinglist\" style=\"display:none\">");
+										jsRSCripts = String( appletObj.getRoutingScripts(tenantDBID, "0") );
+										jsRSCRIPTArray = jsRSCripts.split("|");
+										for(i = 0; i < jsRSCRIPTArray.length; i++)
+										{
+											if(jsRSCRIPTArray[i].length != 0)
+											{
+												thisRScript = jsRSCRIPTArray[i].split(",");
+												document.write("<li id=\"menuli\"><a href=\"./Resources_pages/routingScript.htm?tenant_dbid="+tenantDBID+"&tenantName="+tenantName+"&script_dbid="+thisRScript[0]+"&script_name="+thisRScript[1]+"&script_is_active="+thisRScript[2]+"&script_priority="+thisRScript[3]+"\">"+thisRScript[1]+"</a></li>");
+											}
+										}
+										document.write("</ul>");
+
+
+									document.write("</ul>");
+							}/*
+						//document.write("</ul>");
+					document.write("</ul>");//fin du skill base routing...
+				}// Fin de if(RIGHTS["TENANT_RESSOURCES_SKILL_BASE_ROUTING"])*/
+
+				/*
+				if(RIGHTS["TENANT_MESSAGE_CENTER"])
+				{
+						// schedules
+						document.write("<li id=\"foldheader\">Message Center</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"foldheader\">Schedules</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/addMessageSchedule.htm?tenant_dbid="+tenantDBID+"\">&lt;Add Message Schedule&gt;</a></li>");
+
+						document.write("<li id=\"foldheader\">StarPhone</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"foldheader\">Active Schedules </li>");
+						///////////////////////
+						//alert( String( appletObj.getStarPhoneSchedulesByNameAndStatus(tenantDBID, "1") ));
+						var starPhoneSchedules = String( appletObj.getStarPhoneSchedulesByNameAndStatus(tenantDBID, "1") );
+						var jsSchedules = starPhoneSchedules + "";
+						arraySchedules = jsSchedules.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(starPhoneSchedules.length != 0)
+						{
+							for (i = 0; i <arraySchedules.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyStarPhoneSchedule.htm?schedule_name="+arraySchedules[i]+"&tenant_dbid="+tenantDBID+"\">"+arraySchedules[i]+"</a></li>");
+							}
+						}
+						document.write("</ul>");
+
+						document.write("<li id=\"foldheader\">Inactive Schedules </li>");
+						///////////////////////////////////
+						//alert( String( appletObj.getStarPhoneSchedulesByNameAndStatus(tenantDBID, "1") ));
+						var starPhoneSchedules = String( appletObj.getStarPhoneSchedulesByNameAndStatus(tenantDBID, "0") );
+						var jsSchedules = starPhoneSchedules + "";
+						arraySchedules = jsSchedules.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(starPhoneSchedules.length != 0)
+						{
+							for (i = 0; i <arraySchedules.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyStarPhoneSchedule.htm?schedule_name="+arraySchedules[i]+"&tenant_dbid="+tenantDBID+"\">"+arraySchedules[i]+"</a></li>");
+							}
+						}
+						document.write("</ul>");
+
+						document.write("</ul>");
+
+						document.write("<li id=\"foldheader\">Manager</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"foldheader\">Active Schedules </li>");
+						/////////////////////////////////////
+						//alert( String( appletObj.getManagerSchedulesByNameAndStatus(tenantDBID, "1") ));
+						var managerSchedules = String( appletObj.getManagerSchedulesByNameAndStatus(tenantDBID, "1") );
+						var jsSchedules = managerSchedules + "";
+						arraySchedules = jsSchedules.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(managerSchedules.length != 0)
+						{
+							for (i = 0; i <arraySchedules.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyManagerSchedule.htm?schedule_name="+arraySchedules[i]+"&tenant_dbid="+tenantDBID+"\">"+arraySchedules[i]+"</a></li>");
+							}
+						}
+						document.write("</ul>");
+
+						document.write("<li id=\"foldheader\">Inactive Schedules </li>");
+						///////////////////////////////////////
+						//alert( String( appletObj.getManagerSchedulesByNameAndStatus(tenantDBID, "1") ));
+						var managerSchedules = String( appletObj.getManagerSchedulesByNameAndStatus(tenantDBID, "0") );
+						var jsSchedules = managerSchedules + "";
+						arraySchedules = jsSchedules.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(managerSchedules.length != 0)
+						{
+							for (i = 0; i <arraySchedules.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyManagerSchedule.htm?schedule_name="+arraySchedules[i]+"&tenant_dbid="+tenantDBID+"\">"+arraySchedules[i]+"</a></li>");
+							}
+						}
+						document.write("</ul>");
+						document.write("</ul>");
+						document.write("</ul>");
+
+						/////////////////////////////////////////////////////////alerts /////////////////////////////////////////////////////////////////////////////////////////////////
+						document.write("<li id=\"foldheader\">Alerts</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/addAlert.htm?tenant_dbid="+tenantDBID+"\">&lt;Add Alert&gt;</a></li>");
+
+						document.write("<li id=\"foldheader\">StarPhone</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"foldheader\">Active Alerts </li>");
+						/////////////////////////////////////
+						//alert( String( appletObj.getStarPhoneAlertsByNameAndStatus(tenantDBID, "1") ));
+						var starPhoneAlerts = String( appletObj.getStarPhoneAlertsByNameAndStatus(tenantDBID, "1") );
+						var jsAlerts = starPhoneAlerts + "";
+						arrayAlerts = jsAlerts.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(starPhoneAlerts.length != 0)
+						{
+							for (i = 0; i <arrayAlerts.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyStarPhoneAlert.htm?alert_name="+arrayAlerts[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayAlerts[i]+"</a></li>");
+							}
+						}
+						document.write("</ul>");
+
+						document.write("<li id=\"foldheader\">Inactive Alerts </li>");
+						///////////////////////////////////////////////
+						//alert( String( appletObj.getStarPhoneAlertsByNameAndStatus(tenantDBID, "1") ));
+						var starPhoneAlerts = String( appletObj.getStarPhoneAlertsByNameAndStatus(tenantDBID, "0") );
+						var jsAlerts = starPhoneAlerts + "";
+						arrayAlerts = jsAlerts.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(starPhoneAlerts.length != 0)
+						{
+							for (i = 0; i <arrayAlerts.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyStarPhoneAlert.htm?alert_name="+arrayAlerts[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayAlerts[i]+"</a></li>");
+							}
+						}
+						document.write("</ul>");
+
+						document.write("</ul>");
+
+						document.write("<li id=\"foldheader\">Manager</li>");
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						document.write("<li id=\"foldheader\">Active Alerts </li>");
+						///////////////////////////////////////////////
+						//alert( String( appletObj.getManagerAlertsByNameAndStatus(tenantDBID, "1") ));
+						var managerAlerts = String( appletObj.getManagerAlertsByNameAndStatus(tenantDBID, "1") );
+						var jsAlerts = managerAlerts + "";
+						arrayAlerts = jsAlerts.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(managerAlerts.length != 0)
+						{
+							for (i = 0; i <arrayAlerts.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyManagerAlert.htm?alert_name="+arrayAlerts[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayAlerts[i]+"</a></li>");
+							}
+						}
+						document.write("</ul>");
+
+						document.write("<li id=\"foldheader\">Inactive Alerts </li>");
+						///////////////////////////////////////////////
+						//alert( String( appletObj.getManagerAlertsByNameAndStatus(tenantDBID, "1") ));
+						var managerAlerts = String( appletObj.getManagerAlertsByNameAndStatus(tenantDBID, "0") );
+						var jsAlerts = managerAlerts + "";
+						arrayAlerts = jsAlerts.split("|");
+						<!-- Add an a line to add the possibility to add agents groups -->
+						document.write("<ul id=\"foldinglist\" style=\"display:none; list-style-image:url('img/couple.gif')\">");
+						if(managerAlerts.length != 0)
+						{
+							for (i = 0; i <arrayAlerts.length; i++)
+							{
+								document.write("<li id=\"menuli\"> <a href=\"./Resources_pages/modifyManagerAlert.htm?alert_name="+arrayAlerts[i]+"&tenant_dbid="+tenantDBID+"\">"+arrayAlerts[i]+"</a></li>");
+							}
+						}
+						document.write("</ul>");
+						document.write("</ul>");
+						document.write("</ul>");
+						document.write("</ul>");
+					} //Fin de if(RIGHTS["TENANT_RESSOURCES_AGENT_GROUPS"])
+			*/
+
+
+
+			document.write("</ul>");
+			document.write("</ul>");
+
+		} //Fin du for...
+	}
+}
+
+if (ie4||ns6)
+	document.onclick=checkcontained;
+</script>
+
+</head>
+
+<!-- <body bgcolor="#C0C0C0" scroll="yes"> -->
+<body class=multiLevelMenu_Background scroll="yes">
+<script language="javascript" type="text/javascript">
+	showMenu();
+</script>
+
+
+<script language="JavaScript1.2">
+<!--
+
+function get_cookie(Name) {
+//Get cookie routine by Shelley Powers
+  var search = Name + "="
+  var returnvalue = "";
+  if (document.cookie.length > 0) {
+    offset = document.cookie.indexOf(search)
+    // if cookie exists
+    if (offset != -1) {
+      offset += search.length
+      // set index of beginning of value
+      end = document.cookie.indexOf(";", offset);
+      // set index of end of cookie value
+      if (end == -1) end = document.cookie.length;
+      returnvalue=unescape(document.cookie.substring(offset, end))
+      }
+   }
+  return returnvalue;
+}
+
+var foldercontentarray=new Array()
+var c=0
+
+if (ns6){
+	for (i=0; i < document.getElementsByTagName("UL").length; i++){
+		if ( IsInFoldingLists(document.getElementsByTagName("UL")[i].id) ){
+			foldercontentarray[c]=document.getElementsByTagName("UL")[i];
+			c++;
+		}
+	}
+	//alert('foldercontentarray.length='+foldercontentarray.length);
+}
+
+
+if (get_cookie(window.location.pathname) != '')
+{
+  var openresults=String( get_cookie(window.location.pathname)).split(" ");
+  //alert('openresults='+openresults);
+  for (i=0 ; i < openresults.length ; i++)
+  {
+    if (ns6)
+	{
+		if(foldercontentarray[parseInt(openresults[i])] != null)
+		{
+			//alert('parseInt(openresults[i])='+parseInt(openresults[i]));
+    		foldercontentarray[parseInt(openresults[i])].style.display=''
+    		foldercontentarray[parseInt(openresults[i])].previousSibling.style.listStyleImage="url(img/open.gif)"
+		}
+    }
+	else
+	{
+		if(foldinglist[openresults[i]] != null)
+		{
+    		foldinglist[openresults[i]].style.display=''
+    		document.all[foldinglist[openresults[i]].sourceIndex -1].style.listStyleImage="url(img/open.gif)"
+		}
+    }
+  }
+}
+
+if (ns6||ie4)
+{
+	var nodelength=ns6? c-1 : (foldinglist.length-1);
+	var nodes=new Array(nodelength)
+	var openones=''
+}
+
+function checkit()
+{
+
+  	for (i=0 ; i <= nodelength ; i++)
+  	{
+    	if ((ns6&&foldercontentarray[i].style.display=='')||(ie4&&foldinglist[i].style.display==''))
+       		openones=openones + " " + i
+  	}
+	//alert('openones='+openones);
+  	document.cookie=window.location.pathname+"="+openones
+}
+
+if (ns6||ie4)
+	window.onunload=checkit
+//-->
+</script>
+</body>
+
+</html>

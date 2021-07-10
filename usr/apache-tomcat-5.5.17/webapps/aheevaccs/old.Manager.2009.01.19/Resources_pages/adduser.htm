@@ -1,0 +1,329 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<title>Add User</title>
+
+<script language="JavaScript" src="jsUtil.js"> </script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+
+<script language="javascript" type="text/javascript">
+function add_this_group()
+	{
+	//Trouver le option selectionnee
+	for(i=0; i < document.theForm.available_groups.length; i++)
+		{
+		if(document.theForm.available_groups.options[i].selected )
+			{
+			maPos = i;
+			myOption = new Option(document.theForm.available_groups.options[i].text,document.theForm.available_groups.options[i].value);
+			break;
+			}
+		}
+
+	// ajouter l option
+	document.theForm.assigned_groups.options[document.theForm.assigned_groups.length] = myOption;
+
+	//Enlever  l option deja chosiie et remonter les autres
+
+	for(i=0; i < (document.theForm.available_groups.length-1); i++)
+		{
+		if(i >= maPos)
+			{
+			uneOption = new Option(document.theForm.available_groups.options[i+1].text, document.theForm.available_groups.options[i+1].value);
+			document.theForm.available_groups.options[i] = uneOption;
+			}
+		}
+	document.theForm.available_groups.length = document.theForm.available_groups.length - 1;
+
+	document.theForm.b_add_group.disabled 		= true;
+	document.theForm.b_retrieve_group.disabled 	= true;
+	}
+
+
+
+function retrive_this_group()
+	{
+	//Trouver le option selectionnee
+	for(i=0; i < document.theForm.assigned_groups.length; i++)
+		{
+		if(document.theForm.assigned_groups.options[i].selected )
+			{
+			maPos = i;
+			myOption = new Option(document.theForm.assigned_groups.options[i].text, document.theForm.assigned_groups.options[i].value);
+			break;
+			}
+		}
+
+	// ajouter l option
+	document.theForm.available_groups.options[document.theForm.available_groups.length] = myOption;
+
+	//Enlever  l option deja chosiie et remonter les autres
+
+	for(i=0; i < (document.theForm.assigned_groups.length-1); i++)
+		{
+		if(i >= maPos)
+			{
+			uneOption = new Option(document.theForm.assigned_groups.options[i+1].text, document.theForm.assigned_groups.options[i+1].value);
+			document.theForm.assigned_groups.options[i] = uneOption;
+			}
+		}
+	document.theForm.assigned_groups.length = document.theForm.assigned_groups.length - 1;
+	document.theForm.b_add_group.disabled 		= true;
+	document.theForm.b_retrieve_group.disabled 	= true;
+	}
+
+
+function enableButtons()
+	{
+	document.theForm.b_add_group.disabled = false;
+	document.theForm.b_retrieve_group.disabled = true;
+	}
+
+function disableButtons()
+	{
+	document.theForm.b_add_group.disabled = true;
+	document.theForm.b_retrieve_group.disabled = false;
+	}
+
+function changeAvailableGroup(){
+	var i=document.theForm.available_groups.options.length;
+    if (i>=1){
+    	for (i-1; i>=0; i--){
+			document.theForm.available_groups.options[i] = null;
+		}
+    }
+	var i=document.theForm.assigned_groups.options.length;
+    if (i>=1){
+    	for (i-1; i>=0; i--){
+			document.theForm.assigned_groups.options[i] = null;
+		}
+    }
+	var agentGroups = String( appletObj.getAgentGroupsByStatusAndTenant("1", document.theForm.tenant_id.value) );
+	jsagentGroupsArray = agentGroups.split("|");
+	for(i=0; i < jsagentGroupsArray.length; i++){
+		thisAgentGroup = jsagentGroupsArray[i].split(",");
+		myOption = new Option(thisAgentGroup[1],thisAgentGroup[0])
+		optionPos = document.theForm.available_groups.options.length
+		document.theForm.available_groups.options[optionPos]=myOption
+	}
+}
+
+function changeDisabledTenant(){
+	if (document.theForm.role.value == "10"){
+		document.theForm.tenant_id.disabled = true;
+		document.theForm.available_groups.disabled = true;
+		document.theForm.b_add_group.disabled = true;
+		document.theForm.b_retrieve_group.disabled = true;
+		document.theForm.assigned_groups.disabled = true;
+	}
+	if (document.theForm.role.value == "20"){
+		document.theForm.tenant_id.disabled = false;
+		document.theForm.available_groups.disabled = true;
+		document.theForm.b_add_group.disabled = true;
+		document.theForm.b_retrieve_group.disabled = true;
+		document.theForm.assigned_groups.disabled = true;
+	}
+	if (document.theForm.role.value == "30" || document.theForm.role.value == "40" || document.theForm.role.value == "50" ){
+		document.theForm.tenant_id.disabled = false;
+		document.theForm.available_groups.disabled = false;
+		document.theForm.b_add_group.disabled.disabled = true;
+		document.theForm.b_retrieve_group.disabled = true;
+		document.theForm.assigned_groups.disabled = false;
+	}
+}
+
+function valideInfo()
+	{
+	valid_info = true;
+
+	if(document.theForm.tenant_id.value == "")
+		{
+		alert("Specify tenant ID");
+		valid_info = false;
+		}
+	if(document.theForm.username.value == "")
+		{
+		alert("Specify User name");
+		valid_info = false;
+		}
+	if(document.theForm.password.value == "")
+		{
+		alert("Specify user password");
+		valid_info = false;
+		}
+	else
+		if(document.theForm.password.value != document.theForm.password2.value)
+			{
+			alert("Passwords doesn't match.");
+			valid_info = false;
+			}
+
+	if(document.theForm.role.value == "")
+		{
+		alert("Specify user role");
+		valid_info = false;
+		}
+		
+	if(validation(document.theForm.tenant_id.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !");
+		document.theForm.tenant_id.focus();
+		valid_info = false;
+	}
+	else if(validation(document.theForm.username.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !");
+		document.theForm.username.focus();
+		valid_info = false;	
+	}
+	else if(validation(document.theForm.password.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !");
+		document.theForm.password.focus();
+		valid_info = false;	
+	}
+	else if(validation(document.theForm.password2.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !");
+		document.theForm.password2.focus();
+		valid_info = false;	
+	}
+
+	if(document.theForm.active.checked)
+		active_value = "1";
+	else
+		active_value = "0";
+
+	groups_list = "";
+	for(i = 0; i < document.theForm.assigned_groups.options.length; i++)
+		groups_list += document.theForm.assigned_groups.options[i].value+"|";
+
+	groups_list = groups_list.substring(0, (groups_list.length -1));
+	/// From here, we know if form is valide
+	if(valid_info)
+	{
+		appletObj.saveUser("", document.theForm.tenant_id.value, document.theForm.username.value, document.theForm.password.value,
+								document.theForm.role.value, active_value ,groups_list);
+		document.location.href = "../defaultpage.htm";
+	}
+}
+
+</script>
+</head>
+
+<body class="bottompagebody" TEXT="#000000" LINK="#000066" VLINK="#666666" >
+<form name="theForm">
+<table border="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td><h3>Add user</h3></td>
+  </tr>
+  <tr>
+    <td>User Name</td>
+    <td><input name="username" type="text"></td>
+  </tr>
+  <tr>
+    <td>Password</td>
+    <td><input name="password" type="password"></td>
+  </tr>
+  <tr>
+    <td>Retype password</td>
+    <td><input name="password2" type="password"></td>
+  </tr>
+  <tr>
+    <td>Role</td>
+    <td>
+		<select onChange="changeDisabledTenant()" name="role">
+			<option value="10">Super Admin</option>
+			<option value="20">Admin</option>
+			<option value="30">Historical Report</option>
+			<option value="40">Quality Monitoring</option>
+			<option value="50">Viewer</option>
+		</select>
+
+	</td>
+  </tr>
+  <tr>
+    <td width="100">Tenant</td>
+    <td>
+		<select disabled name="tenant_id" onChange="changeAvailableGroup()">
+	<script language="javascript" type="text/javascript">
+		var tenants 	= appletObj.getTenantInfo();
+		var jsTenants	= tenants + "";
+		arrayTenants	= jsTenants .split("|");
+		for(i=0; i < arrayTenants.length; i++)
+		{
+			thisTenantInfos = arrayTenants[i].split(",");
+			document.write("<option value=\""+thisTenantInfos[0]+"\">"+thisTenantInfos[1]+"</option>");
+		}
+
+	</script>
+		</select>
+
+	</td>
+  </tr>
+  <tr>
+  	<td valign="top">Groups</td>
+		<td valign="top">Available groups<br>
+			<select size="10" name="available_groups" disabled style="width:150px " onChange="enableButtons()">
+			<script>
+			var agentGroups = String( appletObj.getAgentGroupsByStatusAndTenant("1", document.theForm.tenant_id.value) );
+			jsagentGroupsArray = agentGroups.split("|");
+			for(i=0; i < jsagentGroupsArray.length; i++)
+			{
+				thisAgentGroup = jsagentGroupsArray[i].split(",");
+				//tmpOption = new Option(thisAgentGroup[1], thisAgentGroup[0]);
+				document.write("<option value=\""+thisAgentGroup[0]+"\" >"+thisAgentGroup[1]+"</option>");
+				//var nb_options = document.theForm.available_groups.options.length;
+				//document.theForm.available_groups.options[nb_options] = tmpOption;
+			}
+			</script>
+			</select>
+		</td>
+	    <td align="center">
+			<input name="b_add_group" type="button" value="&gt;&gt;" disabled onClick="add_this_group()"><br><br>
+			<input name="b_retrieve_group" type="button" value="&lt;&lt;" disabled onClick="retrive_this_group()">
+	</td>
+	    <td valign="top">Assigned groups<br>
+			<select size="10" name="assigned_groups" disabled style="width:150px " onChange="disableButtons()">
+	</select></td>
+  </tr>
+  </tr>
+  <tr>
+    <td>Active</td>
+    <td><input name="active" type="checkbox" checked></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><input name="" type="button" value="Add user" onClick="valideInfo()"></td>
+
+  </tr>
+</table>
+</form>
+	<script language="javascript" type="text/javascript">
+		changeDisabledTenant();
+	</script>
+</body>
+<script>
+	function fill_fields()
+	{
+		//Remplir les differents champs
+		var agentGroups = String( appletObj.getAgentGroupsByStatusAndTenant("1", document.theForm.tenant_id.value) );
+		jsagentGroupsArray = agentGroups.split("|");
+		for(i=0; i < jsagentGroupsArray.length; i++)
+		{
+			thisAgentGroup = jsagentGroupsArray[i].split(",");
+			tmpOption = new Option(thisAgentGroup[1], thisAgentGroup[0]);
+			//document.write("<option value=\""+thisAgentGroup[0]+"\" >"+thisAgentGroup[1]+"</option>");
+			var nb_options = document.theForm.available_groups.options.length;
+			document.theForm.available_groups.options[nb_options] = tmpOption;
+		}
+	}
+	//window.onload = fill_fields;
+</script>
+</html>

@@ -1,0 +1,264 @@
+<project name="Aheeva CCS Manager" default="install"  basedir=".">
+<description>Build file to compile the manager</description>
+
+<!-- Set global properties -->
+<!-- we use java 1.5 for some reasons... -->	
+<property name="srcdir-csvinterface" location="${basedir}/csvinterface" />
+<property name="srcdir-horaires" location="${basedir}/horaires" />
+<property name="srcdir-iaxclient" location="${basedir}/iaxclient" />
+<property name="srcdir-iaxclient.jni" location="${basedir}/iaxclient/jni" />
+<property name="srcdir-java" location="${basedir}/java" />
+<property name="srcdir-reports" location="${basedir}/reports" />
+<property name="srcdir-ressources" location="${basedir}/ressources" />
+<property name="srcdir-schedule" location="${basedir}/schedule" />
+<property name="srcdir-VideoReports" location="${basedir}/VideoReports" />
+<property name="srcdir-wfm" location="${basedir}/wfm" />
+<property name="srcdir-wfm_schedule" location="${basedir}/wfm_schedule" />
+<property name="srcdir-vncViewerApplet" location="${basedir}/vncViewerApplet" />
+<property name="buildir" location="./build" />
+<property name="aheevaccs" location="../aheevaccs" />	
+<property name="lib" location="${aheevaccs}/WEB-INF/lib" />
+<property name="web-inf" location="${aheevaccs}/WEB-INF" />
+<property name="Manager" location="${aheevaccs}/aheevaManager" />
+
+	
+	
+<target name="init">
+	<delete dir="${buildir}"/>
+	<mkdir dir="${buildir}" />
+	<delete dir="${lib}" />
+	<mkdir dir="${lib}" />
+	<delete dir="${Manager}" />
+	<mkdir dir="${Manager}" />
+</target>
+	
+<target name="compile-csvinterface" depends="init">
+	<javac target="1.5"  destdir="${buildir}">
+		<src path="${srcdir-csvinterface}" />
+	</javac>
+</target>
+	
+<target name="csvinterface.jar" depends="compile-csvinterface" >
+	<jar destfile="${lib}/csvinterface.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager"/>
+</target>
+
+<target name="compile" depends="csvinterface.jar">
+	<javac target="1.5" classpath="${java_path}" destdir="${buildir}">
+		<src path="${srcdir-java}" />
+	</javac>
+</target>
+	
+<target name="Manager.jar" depends="compile" >
+	<jar destfile="${buildir}/Manager.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+</target>
+
+<target name="sManager.jar" depends="Manager.jar">
+	<signjar jar="${buildir}/Manager.jar" alias="signfiles" keystore="aheevastore"
+	 keypass="aheeva" storepass="merlin" signedjar="${Manager}/sManager.jar" />
+	<delete dir="${buildir}/aheevaManager" />
+	<delete file="${buildir}/Manager.jar"/>
+</target>
+
+<target name="compile-horaires" depends="sManager.jar">
+	<javac target="1.5" classpath="${java_path}" destdir="${buildir}">
+		<classpath>
+			<pathelement path="../WebInfJars/servlet-api.jar"/>
+		</classpath>
+		<src path="${srcdir-horaires}" />
+	</javac>
+</target>
+	
+<target name="horaires.jar" depends="compile-horaires" >
+	<jar destfile="${lib}/horaires.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager"/>
+</target>
+
+<target name="compile-iaxPhone" depends="horaires.jar">
+	<javac target="1.4" source="1.4" classpath="${java_path}" destdir="${buildir}">
+		<src path="${srcdir-iaxclient}" />
+	</javac>
+	<javac target="1.4" source="1.4" classpath="${java_path}" destdir="${buildir}">
+		<src path="${srcdir-iaxclient.jni}" />
+	</javac>
+</target>
+	
+<target name="iaxPhone.jar" depends="compile-iaxPhone" >
+	<copy todir="${buildir}/build/classes/aheevaManager/iaxclient">
+	    <fileset dir="${buildir}/aheevaManager/iaxclient"/>
+	 </copy>
+	<copy todir="${buildir}/build/classes/net/sourceforge/iaxclient/jni">
+		    <fileset dir="${buildir}/aheevaManager/iaxclient/jni"/>
+	</copy>
+	<copy todir="${buildir}/net/sourceforge/iaxclient/jni">
+		    <fileset dir="${buildir}/aheevaManager/iaxclient/jni"/>
+	</copy>
+	<move todir="${lib}/jni">
+	    <fileset dir="${buildir}/aheevaManager/iaxclient/jni"/>
+	 </move>
+	<copy todir="${buildir}/jni">
+		<fileset file="${srcdir-iaxclient.jni}/jiaxclient.cc"/>
+		<fileset file="${srcdir-iaxclient.jni}/Makefile.am"/>
+		<fileset file="${srcdir-iaxclient.jni}/Makefile.in"/>
+	 </copy>
+	<move todir="${buildir}/aheevaManager/iaxclient/jni">
+	    <fileset dir="${lib}/jni"/>
+	 </move>
+	<jar destfile="${lib}/iaxPhone.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager/iaxclient"/>
+</target>
+	
+<target name="siaxPhone.jar" depends="iaxPhone.jar">
+	<signjar jar="${lib}/iaxPhone.jar" alias="signfiles" keystore="aheevastore"
+	 keypass="aheeva" storepass="merlin" signedjar="${lib}/siaxPhone.jar" />
+	<delete dir="${buildir}/aheevaManager" />
+</target>
+
+	
+<target name="compile-reports" depends="siaxPhone.jar">
+	<javac target="1.5" classpath="${java_path}" destdir="${buildir}">
+		<src path="${srcdir-reports}" />
+	</javac>
+</target>
+	
+<target name="reports.jar" depends="compile-reports" >
+	<jar destfile="${lib}/reports.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager"/>
+</target>
+	
+<target name="compile-ressources" depends="reports.jar">
+	<javac target="1.5" classpath="${java_path};" destdir="${buildir}">
+		<classpath>
+			<pathelement path="../WebInfJars/jxl.jar"/>
+			<pathelement path="${lib}/csvinterface.jar"/>
+		</classpath>
+		<src path="${srcdir-ressources}" />
+	</javac>
+</target>
+	
+<target name="ressources.jar" depends="compile-ressources" >
+	<jar destfile="${lib}/ressources.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager"/>
+</target>
+	
+<target name="compile-schedule" depends="ressources.jar">
+	<javac target="1.5" classpath="${java_path}" destdir="${buildir}">
+		<src path="${srcdir-schedule}" />
+	</javac>
+</target>
+	
+<target name="schedule.jar" depends="compile-schedule" >
+	<jar destfile="${lib}/schedule.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager"/>
+</target>
+	
+<target name="compile-VideoReports" depends="schedule.jar">
+	<javac target="1.5" classpath="${java_path}" destdir="${buildir}">
+		<src path="${srcdir-VideoReports}" />
+	</javac>
+</target>
+	
+<target name="VideoReports.jar" depends="compile-VideoReports" >
+	<jar destfile="${lib}/videoReports.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager"/>
+</target>
+	
+<target name="compile-wfm" depends="VideoReports.jar">
+	<javac target="1.5" classpath="${java_path}" destdir="${buildir}">
+		<classpath>
+			<pathelement path="../WebInfJars/mail.jar"/>
+			<pathelement path="../WebInfJars/activation.jar"/>
+		</classpath>
+		<src path="${srcdir-wfm}" />
+	</javac>
+</target>
+	
+<target name="wfm.jar" depends="compile-wfm" >
+	<jar destfile="${lib}/wfm.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager"/>
+</target>
+	
+<target name="compile-wfm_schedule" depends="wfm.jar">
+	<javac target="1.5" classpath="${java_path}" destdir="${buildir}">
+		<src path="${srcdir-wfm_schedule}" />
+	</javac>
+</target>
+	
+<target name="wfm_schedule.jar" depends="compile-wfm_schedule" >
+	<jar destfile="${lib}/wfm_schedule.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+	<delete dir="${buildir}/aheevaManager"/>
+</target>
+	
+<target name="compile-VncViewerApplet"  depends="wfm_schedule.jar" >
+	<javac target="1.5" classpath="${java_path}" destdir="${buildir}">
+		<src path="${srcdir-vncViewerApplet}" />
+	</javac>
+</target>
+	
+<target name="VncViewerApplet.jar" depends="compile-VncViewerApplet" >
+	<jar destfile="${buildir}/VncViewerApplet.jar">
+		<fileset dir="${buildir}" />
+	</jar>
+</target>
+
+<target name="sVncViewerApplet.jar" depends="VncViewerApplet.jar">
+	<signjar jar="${buildir}/VncViewerApplet.jar" alias="signfiles" keystore="aheevastore"
+	 keypass="aheeva" storepass="merlin" signedjar="${Manager}/sVncViewerApplet.jar" />
+	<copy todir="${Manager}/Resources_pages">
+	    <fileset file="${Manager}/sVncViewerApplet.jar"/>
+	</copy>
+	<delete file="${buildir}/VncViewerApplet.jar"/>
+	<delete file="${Manager}/sVncViewerApplet.jar"/>
+</target>
+	
+<target name="clean" depends="sVncViewerApplet.jar">
+	<delete dir="${buildir}"/>
+</target>
+	
+<target name="install" depends="clean">
+	<copy todir="${Manager}/img">
+		<fileset dir="../img"/>
+	 </copy>
+	<copy todir="${Manager}/jsp">
+	    <fileset dir="../jsp"/>
+	 </copy>
+	<copy todir="${Manager}/Resources_pages">
+	    <fileset dir="../Resources_pages"/>
+	</copy>
+	<copy todir="${Manager}">
+		<fileset file="../*.*"/>
+	</copy>
+	<copy todir="${Manager}">
+		<fileset file="../ManagerJars/*.jar"/>
+	</copy>
+	<copy todir="${lib}">
+		<fileset file="../WebInfJars/*.jar"/>
+	</copy>
+	<copy todir="${web-inf}">
+		<fileset file="../WebInfJars/web.xml"/>
+	</copy>
+	<copy todir="${aheevaccs}">
+			<fileset file="../aheevaManager/index.html"/>
+	</copy>
+</target>
+</project>

@@ -1,0 +1,77 @@
+<html>
+<%@page contentType="text/html"%>
+<%@page language = "java" %>
+<%@page import ="java.util.*"%>
+<%@page import ="java.net.*"%>
+<head>
+<script language="javascript" src="Resources_pages/globFuncs.js"></script>
+<script language="javascript" src="Resources_pages/jsUtil.js"></script>
+</head>
+
+
+<base target="contents">
+
+<body bottommargin="0" leftmargin="0" rightmargin="0" topmargin="0">
+<%!
+
+	public final static int IE = 0;
+	public final static int NETSCAPE = 1;
+	public final static int WML = 2;
+
+	public int getBrowser(HttpServletRequest req) 
+	{
+    String accept = req.getHeader("ACCEPT");
+    if (null != accept && -1 != accept.indexOf("wml")) 
+		{
+     	return WML;
+   		}
+   	String agent = req.getHeader("USER-AGENT");
+   	if (null != agent && -1 != agent.indexOf("MSIE")) 
+	{
+     return IE;
+   	}
+   	return NETSCAPE;
+	}
+%>
+<%
+
+  	String ip = request.getRemoteAddr();
+  	int browser = getBrowser(request);
+	if(browser == IE)
+	{
+%>
+
+	<OBJECT
+		classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
+		width="-1" height="-1" align="baseline"
+		codebase ="http://java.sun.com/products/plugin/autodl/jinstall-1_4-windows-i586.cab#Version=1,4,0,0"
+		name ="myApplet">
+		<PARAM name="code" value="Manager.java.ComApplet.class">
+		<PARAM name="ARCHIVE" value="sManager.jar">
+		<PARAM name="type" value="application/x-java-applet;jpi-version=1.4.2">
+		<PARAM name="debug" value="0">
+		<param name="MAYSCRIPT" value="true">
+  		<PARAM NAME="host" VALUE="<% if(ip.substring(0,7).compareTo("192.168") == 0)
+                                       out.write("192.168.5.35");
+                               else
+                                       out.write("200.93.237.16");%>">
+	</OBJECT>
+<%}
+else
+{%>
+	<OBJECT
+		id="myApplet"
+		classid="java:Manager.java.ComApplet.class"
+		width="-1" height="-1">
+		<PARAM name="ARCHIVE" value="sManager.jar">
+		<PARAM name="debug" value="1">
+		<param name="MAYSCRIPT" value="true">
+  		<PARAM NAME="host" VALUE="<% if(ip.substring(0,7).compareTo("192.168") == 0)
+                                       out.write("192.168.5.35");
+                               else
+                                       out.write("200.93.237.16");%>">
+	</OBJECT>	
+<%}%>
+<div id="dropin" name="dropin" style="position:absolute;visibility:hidden; width:100%;left:0px;top:0px;background-color:#FFFFEB; font-family:verdana; font-size:11px;"></div>
+</body>
+</html>

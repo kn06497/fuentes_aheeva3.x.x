@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<RecordServer>
+	<log level = "trace"/>
+	<username name="recServer01"/>
+	<password value="aheeva"/>	
+	<updateport value="8000"/>		
+	<AsteriskCTI>
+		<hostcti name="192.168.2.2"/>
+		<ctiport value="8765"/>	
+	</AsteriskCTI>	
+	<recordings>
+	        <maxFileReadAttempt value="5"/>
+	</recordings>
+	<ssl>
+		<certf fname="aheeva.pem"/>
+		<keyf fname="aheeva.pem"/>
+	</ssl>
+	<AltEncKey fname="aeskeyXXX"/>
+	<screenPass pass="atelka"/>
+</RecordServer>

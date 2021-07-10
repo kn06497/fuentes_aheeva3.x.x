@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--JBuilder XML Project-->
+<project>
+<property category="generalFormatting2" name="overrideBasicFormatting" value="1"/>
+<property category="idl" name="ProcessIDL" value="false"/>
+<property category="javaFormatting" name="packagePrefixGroups" value="java;javax;BLANK_LINE;java.awt;javax.swing;BLANK_LINE;org;(*)"/>
+<property category="javadoc" name="custom.tags.1" value="todo;a;To Do:"/>
+<property category="module" name="ProjectConvertedToEnsureModulesHaveSupportedFeatures" value="1"/>
+<property category="module" name="ProjectConvertedToUseFilesAndDependenciesAsDefaultContent" value="1"/>
+<property category="module" name="ProjectConvertedToUseProperModuleDefaults" value="1"/>
+<property category="module" name="projectConvertedFromModuleExtensionsToModuleFileTypes" value="1"/>
+<property category="runtime" name="DefaultConfiguration" value="-1"/>
+<property category="runtime" name="ExcludeDefaultForZero" value="1"/>
+<property category="serverservices" name="disabled.services" value=""/>
+<property category="serverservices" name="jsp.service.server" value="Tomcat 4.1"/>
+<property category="serverservices" name="single.server.name" value="Tomcat 4.1"/>
+<property category="sys" name="AuthorLabel" value="@author"/>
+<property category="sys" name="BackupPath" value="bak"/>
+<property category="sys" name="CheckStable" value="1"/>
+<property category="sys" name="Company" value=""/>
+<property category="sys" name="CompanyLabel" value="Company:"/>
+<property category="sys" name="Copyright" value="Copyright (c) 2003"/>
+<property category="sys" name="CopyrightLabel" value="Copyright:"/>
+<property category="sys" name="DefaultPath" value="../"/>
+<property category="sys" name="Description" value=""/>
+<property category="sys" name="DescriptionLabel" value="Description:"/>
+<property category="sys" name="DocPath" value="doc"/>
+<property category="sys" name="ExcludeClassEnabled" value="0"/>
+<property category="sys" name="IncludeTestPath" value="1"/>
+<property category="sys" name="InstanceVisibility" value="2"/>
+<property category="sys" name="JDK" value="java version 1.5.0_09-b03"/>
+<property category="sys" name="JvmVersion" value="1.5"/>
+<property category="sys" name="LastTag" value="0"/>
+<property category="sys" name="Libraries" value="mail;inifile;jiaxclient;jmf;libjiaxc;poi;servlet-api;activation;excelInterface"/>
+<property category="sys" name="MakeStable" value="0"/>
+<property category="sys" name="OutPath" value="classes"/>
+<property category="sys" name="SourcePath" value="../"/>
+<property category="sys" name="SourceVersion" value="1.5"/>
+<property category="sys" name="TestPath" value="../"/>
+<property category="sys" name="Title" value=""/>
+<property category="sys" name="TitleLabel" value="Title:"/>
+<property category="sys" name="Version" value="1.0"/>
+<property category="sys" name="VersionLabel" value="@version"/>
+<property category="sys" name="WorkingDirectory" value="."/>
+<node name="csvinterface.jar" type="Archive">
+<property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.AppletArchiver"/>
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/csvinterface/*.*"/>
+<property category="archiving" name="defaultLibraryState" value="3"/>
+<property category="archiving" name="libraryStates.1" value="0:mail"/>
+<property category="archiving" name="libraryStates.2" value="0:inifile"/>
+<property category="archiving" name="libraryStates.3" value="0:jiaxclient"/>
+<property category="archiving" name="libraryStates.4" value="0:jmf"/>
+<property category="archiving" name="libraryStates.5" value="0:libjiaxc"/>
+<property category="archiving" name="libraryStates.6" value="0:poi"/>
+<property category="archiving" name="libraryStates.7" value="0:servlet-api"/>
+<property category="archiving" name="libraryStates.8" value="0:activation"/>
+<property category="archiving" name="libraryStates.9" value="0:excelInterface"/>
+<property category="archiving" name="targetCompressed" value="1"/>
+<property category="archiving" name="targetPath" value="csvinterface.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<node name="horaires.jar" type="Archive">
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/horaires/*.*"/>
+<property category="archiving" name="extraDeployRoots.1" value="F:Manager/horaires/AbServlet.java"/>
+<property category="archiving" name="extraDeployRoots.2" value="F:Manager/horaires/LoadScheduleServlet.java"/>
+<property category="archiving" name="extraDeployRoots.3" value="F:Manager/horaires/PublishServlet.java"/>
+<property category="archiving" name="extraDeployRoots.4" value="F:Manager/horaires/SaveScheduleServlet.java"/>
+<property category="archiving" name="extraDeployRoots.5" value="F:Manager/horaires/ScheduleServlet.java"/>
+<property category="archiving" name="outPathState" value="4"/>
+<property category="archiving" name="targetPath" value="horaires/horaires.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<node name="reports.jar" type="Archive">
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/reports/*.*"/>
+<property category="archiving" name="extraDeployRoots.1" value="C:Manager.reports.*"/>
+<property category="archiving" name="outPathState" value="4"/>
+<property category="archiving" name="targetCompressed" value="1"/>
+<property category="archiving" name="targetPath" value="reports/reports.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<node name="ressources.jar" type="Archive">
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/ressources/*.*"/>
+<property category="archiving" name="targetPath" value="ressources.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<node name="schedule.jar" type="Archive">
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/schedule/*.*"/>
+<property category="archiving" name="extraDeployRoots.1" value="C:Manager.schedule.beanAgentSchedule"/>
+<property category="archiving" name="extraDeployRoots.2" value="C:Manager.schedule.beanWorkScheduleDetails"/>
+<property category="archiving" name="outPathState" value="4"/>
+<property category="archiving" name="targetPath" value="schedule/schedule.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<node name="siaxPhone" type="Archive">
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/iaxclient/*.*"/>
+<property category="archiving" name="contentRules.2" value="I:net/sourceforge/iaxclient/jni/*.*"/>
+<property category="archiving" name="extraDeployRoots.1" value="C:Manager.iaxclient.*"/>
+<property category="archiving" name="extraDeployRoots.2" value="C:Manager.iaxclient.jni.*"/>
+<property category="archiving" name="includeDeps" value="1"/>
+<property category="archiving" name="libraryStates.1" value="1:jmf"/>
+<property category="archiving" name="outPathState" value="4"/>
+<property category="archiving" name="targetCompressed" value="1"/>
+<property category="archiving" name="targetPath" value="siaxPhone.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<node name="sManager.jar" type="Archive">
+<property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ExecutableArchiver"/>
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/java/*.*"/>
+<property category="archiving" name="executableEnabled.1" value="0"/>
+<property category="archiving" name="executableEnabled.2" value="0"/>
+<property category="archiving" name="executableEnabled.3" value="0"/>
+<property category="archiving" name="executableEnabled.4" value="0"/>
+<property category="archiving" name="executableEnabled.5" value="0"/>
+<property category="archiving" name="executableFiles.1" value=""/>
+<property category="archiving" name="executableFiles.2" value=""/>
+<property category="archiving" name="executableFiles.3" value=""/>
+<property category="archiving" name="executableFiles.4" value=""/>
+<property category="archiving" name="executableFiles.5" value=""/>
+<property category="archiving" name="extraDeployRoots.1" value="C:Manager.java.*"/>
+<property category="archiving" name="obfuscator" value="RetroGuard for J2ME"/>
+<property category="archiving" name="outPathState" value="4"/>
+<property category="archiving" name="targetCompressed" value="1"/>
+<property category="archiving" name="targetPath" value="sManager.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<node name="wfm.jar" type="Archive">
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/wfm/*.*"/>
+<property category="archiving" name="extraDeployRoots.1" value="C:Manager.wfm.*"/>
+<property category="archiving" name="outPathState" value="5"/>
+<property category="archiving" name="targetCompressed" value="1"/>
+<property category="archiving" name="targetPath" value="wfm.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<node name="wfm_schedule" type="Archive">
+<property category="archiving" name="contentRules.1" value="I:aheevaManager/wfm_schedule/*.*"/>
+<property category="archiving" name="extraDeployRoots.1" value="C:Manager.wfm_schedule.*"/>
+<property category="archiving" name="outPathState" value="5"/>
+<property category="archiving" name="targetPath" value="wfm_schedule/wfm_schedule.jar"/>
+<property category="archiving" name="usingRules" value="1"/>
+</node>
+<file path="ressources/beanLoadCallingList.java"/>
+<file path="csvinterface/CSVFile.java"/>
+<file path="csvinterface/CSVFileWriter.java"/>
+<file path="java/EncServer.java"/>
+<file path="Resources_pages/essai.htm"/>
+<file path="jiaxclient.jar"/>
+<file path="libjiaxc.jar"/>
+<file path="java/PreferSite.java.java"/>
+</project>

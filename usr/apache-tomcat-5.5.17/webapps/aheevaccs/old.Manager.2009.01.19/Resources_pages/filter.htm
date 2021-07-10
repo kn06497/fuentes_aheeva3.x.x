@@ -1,0 +1,243 @@
+<html>
+
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript">
+var filterName          = '';
+var filterDBID 		= '';
+var tenant_dbid 	= "NULL"
+
+
+function enabledUpdateButton()
+{
+	document.filter.updateInfo.disabled = false;
+}
+
+function enableReload()
+{
+      appletObj.fReloadMenu = true;
+}
+
+function displayFilterInfo()
+{
+    ourCaption   	= document.getElementById("caption");
+	filterName   	= normalizeString(QueryString('filter_name'));
+	tenant_dbid 	= normalizeString(QueryString('tenant_dbid'));
+	var myForm   	= document.filter;
+        //alert('filterName:');
+
+	if (filterName== '')
+	{
+		ourCaption.innerHTML = "<h5>"+MultiArray["Add a new filter"][lang]+"</h5>";
+		//document.getElementById("deleteAgt").disabled=true;
+		document.filter.updateInfo.value = "Save";
+		
+	}
+	else
+	{
+                //alert('In else:');
+		ourCaption.innerHTML = "<h5>"+MultiArray["Modify existing filter information"][lang]+"</h5>";
+   		document.filter.filterName.value = filterName;
+                var filterDetails =  String( appletObj.getFilterInfo(filterName) );
+
+        // parse info received
+        var jsDetails = filterDetails + "";
+        arrayDetails = jsDetails.split("|");
+        //alert(arayDetails);
+
+	   	for (i = 0; i <arrayDetails.length; i++)
+	   	{
+			if(i == 0){
+				filterDBID = arrayDetails[i];
+			}else if(i == 1){ // description
+				document.filter.filterDescription.value		= arrayDetails[i];
+			}else if(i == 2) { // where
+				document.filter.filterWhereClause.value 	= arrayDetails[i];
+			}else if(i == 3) { // order by clause
+				document.filter.filterOrderByClause.value	= arrayDetails[i];
+			}else if (i == 4) { // state
+				if(arrayDetails[i] == '1')
+					document.filter.filterState.checked = true;
+				else
+					document.filter.filterState.checked = false;
+			}
+	  	}
+
+        }
+
+}
+
+function validateInfo()
+{
+	var state = '';
+    // Verify that the filter name is set
+    if (document.filter.filterName.value =='')
+    	alert (MultiArray["You must enter a FILTER NAME"][lang]);
+    else if(document.filter.filterWhereClause.value.length==0 && document.filter.filterOrderByClause.value.length==0)
+        alert (MultiArray["You must enter a criteria or order by clause"][lang]);
+	else if(validation(document.filter.filterName.value)==0)
+	{
+		alert (MultiArray["Invalid use of character"][lang]);
+		document.filter.filterName.focus();
+	}
+	else if(validation(document.filter.filterDescription.value)==0)
+	{
+		alert (MultiArray["Invalid use of character"][lang]);
+		document.filter.filterDescription.focus();	
+	}
+	else if(validation(document.filter.filterWhereClause.value)==0)
+	{
+		alert (MultiArray["Invalid use of character"][lang]);
+		document.filter.filterWhereClause.focus();	
+	}
+	else if(validation(document.filter.filterOrderByClause.value)==0)
+	{
+		alert (MultiArray["Invalid use of character"][lang]);
+		document.filter.filterOrderByClause.focus();	
+	}
+    else {
+    	// save filter details
+	    if(document.filter.filterState.checked)
+			state = 1;
+        else
+			state = 0;
+		
+		
+		
+		var alReadyExist = false;
+			   
+	   var filters = appletObj.getFiltersByName(tenant_dbid);
+	   jsfilters = filters.split("|");
+	   
+	   for(q = 0; q < jsfilters.length; q++)
+			{
+					
+			if( document.filter.filterName.value == jsfilters[q] && filterName != document.filter.filterName.value) //le groupe existe deja						
+				{
+				alReadyExist = true;
+				break;
+				}							
+			}
+			
+			
+		if(alReadyExist)
+			alert (MultiArray["Filter already exists"][lang]);
+		else
+			{
+			appletObj.saveFilter(filterDBID,
+									tenant_dbid,
+													document.filter.filterName.value,
+													document.filter.filterDescription.value,
+													document.filter.filterWhereClause.value,
+													document.filter.filterOrderByClause.value,
+												state);
+	
+			// reset the button to disabled
+			document.filter.updateInfo.disabled=true;
+			
+			//document.location.href = "../defaultpage.htm";
+			}
+
+	}
+}
+
+function askDelete()
+{
+	answer = confirm(MultiArray["Are you sure, you wish to delete this filter?"][lang]);
+	if(answer){
+		appletObj.deleteFilter(filterDBID);
+		// refresh the current page
+		//document.location = "./filter.htm?filter_name=&tenant_dbid="+tenant_dbid;
+        document.location.href = "../defaultpage.htm";
+	}
+}
+
+function checkOnUnload()
+{
+  //alert('checkOnUnload:');
+
+ return
+}
+
+</script>
+
+<title><script>document.write(MultiArray["Add a filter"][lang])</script></title>
+</head>
+
+<body class="bottompagebody" TEXT="#000000" LINK="#000066" VLINK="#666666" onLoad="displayFilterInfo()" onUnload=" return checkOnUnload()">
+<!--        <control:slider ID="oSlider" STYLE= "position:relative;backgroundColor:#C0C0C0" >
+			</control:slider>
+ -->
+
+<form name="filter" >
+<table  cellpadding="0" cellspacing="0"  width="56%" id="AutoNumber2" height="14">
+  <tr>
+    <td width="100%" height="14">
+    <table  cellspacing="0"   width="444" id="AutoNumber1"  cellpadding="0" >
+       <tr>
+        <td id="caption" height=40 width="2718" align="left" valign="top" style="border-right-style: none; border-right-width: 0; font-weight:bold;" colspan="2"  >
+        </td>
+      </tr>
+     <tr>
+        <td width="936" height="40" align="right" valign="top" style="border-right-style: none; border-right-width: 0" colspan="2"  >
+        <p align="left">
+       &nbsp;<script>document.write(MultiArray["Filter name"][lang])</script>&nbsp;&nbsp; &nbsp;&nbsp; 
+        <input type="text" name="filterName" size="25" onclick="enabledUpdateButton()" style="font-weight: bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      </tr>
+
+     <tr>
+        <td width="936" height="61" align="right" valign="top" style="border-right-style: none; border-right-width: 0" colspan="2">
+        <p>
+        <p align="left">&nbsp;<script>document.write(MultiArray["Description"][lang])</script>&nbsp;&nbsp;&nbsp; &nbsp; 
+        <textarea rows="2" name="filterDescription" cols="52" onclick="enabledUpdateButton()"></textarea></td>
+      </tr>
+
+     <tr>
+        <td width="936" height="71" align="right" valign="top" style="border-right-style: none; border-right-width: 0" colspan="2">
+        <p>
+        <p align="left">&nbsp;<script>document.write(MultiArray["Criteria"][lang])</script>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 
+        <textarea rows="3" name="filterWhereClause" cols="52" onclick="enabledUpdateButton()"></textarea></td>
+     </tr>
+
+      <tr>
+        <td width="2696" height="77" valign="top" style="border-right-style: none; border-right-width: 0" colspan="2"  >
+        <p>&nbsp;<script>document.write(MultiArray["Order by"][lang])</script>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b>
+                <textarea rows="3" name="filterOrderByClause" cols="52" onclick="enabledUpdateButton()"></textarea></td>
+     </tr>
+
+     <tr>
+        <td width="1348" height="47" valign="top" style="border-right-style: none; border-right-width: 0"  >
+        <p align="left">
+        <b>&nbsp;</b> 
+		<script>document.write("<input disabled=\"true\" name=\"updateInfo\" type=\"button\" value=\""+MultiArray["Update"][lang]+"\" onClick=\"validateInfo()\">")</script>
+	        <script language="JavaScript">
+        var filterName = normalizeString(QueryString('filter_name'));
+
+        if (filterName== '')
+		{
+	     	document.write('&nbsp;') 
+         }else {
+            document.write("<input id=\"deleteAgt\" name=\"deleteAgt\" onclick=\"askDelete()\"  value=\""+MultiArray["Delete"][lang]+"\"  type=\"button\">");         
+         } 
+           </script>
+        </td>
+        <td width="1348" height="47" valign="top" style="border-right-style: none; border-right-width: 0"  >
+        <p align="left">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <script>document.write(MultiArray["Active"][lang])</script>&nbsp;&nbsp;
+         <input type="checkbox" name="filterState" value="ON" onclick="enableReload();enabledUpdateButton()"></td>
+     </tr>
+    </table>
+   </td>
+  </tr>
+ </table>
+
+<p>&nbsp;
+ </p>
+</form>
+</body>
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language=JavaScript src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language=javascript src="Browser.js" type=text/javascript></script>
+<script language=javascript src="AnchorPosition.js" type=text/javascript></script>
+<script language=javascript src="ColorPicker2.js" type=text/javascript></script>
+<script language=javascript src="PopupWindow.js" type=text/javascript></script>
+
+<title>addAlert</title>
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="tab_luna.css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="style_2.css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<style type="text/css">
+
+.dynamic-tab-pane-control .tab-page {
+	height:		200px;
+}
+
+.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page {
+	height:		100px;
+}
+
+html, body {
+/*	background:	ThreeDFace; */
+
+}
+
+form {
+	margin:		0;
+	padding:	0;
+}
+
+/* over ride styles from webfxlayout */
+
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+</style>
+<script language="javascript" type="text/javascript" src="tabpane.js"></script>
+
+<script language="javascript" type="text/javascript" >
+/***********************************************************************
+************************************************************************/
+
+var tenant_dbid = QueryString('tenant_dbid') ? normalizeString(QueryString('tenant_dbid')) : "";
+var statistics_color='#000000';
+
+var nbRows = 0;
+var maxRow = 0;
+
+
+/***********************************************************************
+************************************************************************/
+
+function enabledUpdateButton(client)
+{
+	var updateInfo='updateInfo'+client;
+	document.getElementById(updateInfo).disabled = false;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function enableReload( client)
+{
+   appletObj.fReloadMenu = true;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function pickColor(color) 
+{
+	statistics_color=color;
+	document.getElementById('statisticsColor').style.backgroundColor = color;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function updateAlertsColor(client)
+{
+	var color1 ='#b4cfff';
+	var color2 ='#e6eff4';
+	var color=color1;
+	var trRow='';
+
+	for (var i=1; i<=maxRow ; i++)
+	{
+		trRow ='tr'+ client + i;
+		if ( document.getElementById(trRow) !=null)
+		{
+			document.getElementById(trRow).bgColor=color;
+			if(color==color1)
+				color=color2;
+			else if(color==color2)
+				color=color1;
+		}
+	}
+}
+
+/***********************************************************************
+************************************************************************/
+
+function displayGroupScheduleInfo()
+{
+	var groupName;
+	var freeGrpList;
+	var grpList;
+	var i=document.getElementById('availableGroupsForMC').options.length;
+	var j=document.getElementById('nonConfiguredGroupsForMC').options.length;
+
+
+	// Remove all groups from availableAgentInGroup option field
+	if (i>0)
+	{
+		for (i-1; i>=0; i--)
+			document.getElementById('availableGroupsForMC').options[i] = null;
+	}
+	// Remove all groups from NonConfiguredAgent option field
+	if (j>0)
+	{
+		for (j-1; j>=0; j--)
+			document.getElementById('nonConfiguredGroupsForMC').options[j] = null;
+	}
+	
+	document.getElementById('availableGroupsForMC').options.length=0;
+	freeGrpList = String( appletObj.getNonConfiguredGroupListForMC(tenant_dbid) );
+
+	// parse the Non configured agent list
+	var jsNCGrpList = freeGrpList+ "";
+	arrayNCGrpList = jsNCGrpList.split("|");
+
+	for (j = 0; j <arrayNCGrpList.length; j++)
+	{
+		groupName = arrayNCGrpList[j];
+
+		if(arrayNCGrpList[j] != '' )  
+		{
+			myOption = new Option(groupName,groupName);
+			optionPos = document.getElementById('nonConfiguredGroupsForMC').options.length
+			document.getElementById('nonConfiguredGroupsForMC').options[optionPos]=myOption
+		}
+	}
+
+}
+/***********************************************************************
+************************************************************************/
+
+
+function addMyRow(client)
+{
+	nbRows++;
+	maxRow++;
+	lyr=document.createElement("DIV");
+ 	lyr.id ='child'+ client+ maxRow;  
+	var nom = 'row'+ client+ maxRow; 
+	var nom2 = 'tr'+ client + maxRow; 
+	var alertName;
+	var code='';
+	var alertsItems ='alertsItems'+client;
+	
+    code ="<table width='300'><tr id='"+nom2+"' ><TD width='200' align='left'><select style='WIDTH: 150px' id='"+nom+"' name= '"+nom+"' onChange=\"enabledUpdateButton('"+client+"')\">";
+
+	if(client=='StarPhone')
+		var availableAlerts =  String( appletObj.getStarPhoneAlertsByNameAndStatus(tenant_dbid,'1') );
+	if(client=='Manager')
+		var availableAlerts = String( appletObj.getManagerAlertsByNameAndStatus(tenant_dbid,'1') );
+	arrayAvailableAlerts = availableAlerts.split('|');
+ 
+    for (j = 0; j <arrayAvailableAlerts.length; j++){
+   		 alertName = arrayAvailableAlerts[j];
+   		 code +=" <option value='"+ alertName +"'>"+alertName+"</option>";
+   	}   
+
+   	code +="</select>  </TD><td align='left'> &nbsp; &nbsp; <a href=\"javascript:deleteMyRow('"+maxRow+"','"+client+"')\">delete</a></td></TR></table>";
+   	lyr.innerHTML = code;
+  	document.getElementById(alertsItems).appendChild(lyr); 
+	updateAlertsColor(client);
+}
+
+/***********************************************************************
+************************************************************************/
+
+function deleteMyRow( nbRow,client)
+{
+	var child = 'child'+ client + nbRow;
+	var alertsItems ='alertsItems'+client;
+	document.getElementById(alertsItems).removeChild(document.getElementById(child));
+	
+	nbRows--;
+	enabledUpdateButton(client);
+	updateAlertsColor(client);
+}
+
+/***********************************************************************
+************************************************************************/
+
+function getAlerts (client)
+{
+	alertsToReturn ='';
+	row='row'+client;
+	for (var i=1; i<=maxRow ; i++)
+	{
+		if ( document.getElementById(row+i) !=null)
+			alertsToReturn += document.getElementById(row+i).value  +'^' ;
+	}
+	alertsToReturn = alertsToReturn.substring(0, alertsToReturn.length - 1);
+	return alertsToReturn;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function validateAlerts(client)
+{
+	var row='row'+client;
+	
+	for (var i=1; i<maxRow ; i++)
+	{
+		if ( document.getElementById(row+i) !=null)
+		{
+			for (var j=i+1; j<=maxRow ; j++)
+			{
+				if ( document.getElementById(row+j) !=null)
+				{
+					if(document.getElementById(row+i).value== document.getElementById(row+j).value && document.getElementById(row+i).value!='')
+					{
+						alert(MultiArray["You cannot select an alert several times"][lang]);
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+/***********************************************************************
+************************************************************************/
+
+function validateInfo( client)
+{
+	if (validateAlerts(client))
+	{
+		var alertsDefined = getAlerts(client);
+		var timeAlerts = 'timeAlerts' + client ;
+		var updateInfo = 'updateInfo' + client;
+		var	scheduleName = 'scheduleName' + client;
+		var scheduleState = 'scheduleState' + client;
+		
+		if (document.getElementById(scheduleName).value =='')
+		{
+			alert(MultiArray["You must enter a SCHEDULE NAME"][lang]);			
+		}
+		else if(validation(document.getElementById(scheduleName).value)==0)
+		{
+			alert(MultiArray["Invalid use of character"][lang]);
+			document.getElementById(scheduleName).focus();
+		}
+		else 
+		{
+			var alReadyExist = false;
+			var groupSchedules = String( appletObj.getGroupSchedulesForMC() );
+			jsGroupSchedules = groupSchedules.split("|");
+	
+				for(q = 0; q < jsGroupSchedules.length; q++)
+				{
+					thisSchedule = jsGroupSchedules[q];
+					thisScheduleArray = thisSchedule.split(",");
+					if( document.getElementById(scheduleName).value == thisScheduleArray[1] ) //le groupe existe deja
+					{
+						alReadyExist = true;
+						break;
+					}
+				}
+			if(alReadyExist)
+				alert(MultiArray["Schedule already exists"][lang]);
+			else
+			{
+				if(client=='StarPhone')
+				{
+					if(document.getElementById('statisticsColor').style.backgroundColor!='')
+						statistics_color=document.getElementById('statisticsColor').style.backgroundColor;
+						
+					appletObj.addNewScheduleForStarPhone(
+														tenant_dbid,
+														document.getElementById(scheduleName).value,
+														document.getElementById(scheduleState).checked == true ? '1':'0',
+														document.getElementById('timeStatistics').value,
+														statistics_color,
+														document.getElementById('ahtGroup').checked== true ? '1':'0',
+														document.getElementById('ahtAgent').checked== true ? '1':'0',
+														document.getElementById('netConvRateGroup').checked== true ? '1':'0',
+														document.getElementById('netConvRateAgent').checked== true ? '1':'0',
+														document.getElementById('salesPerHourGroup').checked== true ? '1':'0',
+														document.getElementById('salesPerHourAgent').checked== true ? '1':'0',
+														document.getElementById('productRatioGroup').checked== true ? '1':'0',
+														document.getElementById('productRatioAgent').checked== true ? '1':'0',
+														document.getElementById('busyFactorGroup').checked== true ? '1':'0',
+														document.getElementById('busyFactorAgent').checked== true ? '1':'0',
+														document.getElementById('loginTimeAgent').checked== true ? '1':'0',
+														document.getElementById('totalCallsGroup').checked== true ? '1':'0',
+														document.getElementById('totalCallsAgent').checked== true ? '1':'0',
+														document.getElementById('waitingCallsGroup').checked== true ? '1':'0',
+														document.getElementById('abandonedCallsGroup').checked== true ? '1':'0',
+														document.getElementById(timeAlerts).value,
+														alertsDefined);
+				}
+				if(client=='Manager')
+				{
+					appletObj.addNewScheduleForManager(
+														tenant_dbid,
+														document.getElementById(scheduleName).value,
+														document.getElementById(scheduleState).checked == true ? '1':'0',
+														document.getElementById(timeAlerts).value,
+														alertsDefined);
+				}
+				document.getElementById(updateInfo).disabled=true;	// reset the button to disabled
+			}
+		}
+	}
+}
+
+/***********************************************************************
+************************************************************************/
+
+function toggleLayer(whichLayer)
+{
+	if (document.getElementById)
+	{
+		// this is the way the standards work
+		var style2 = document.getElementById(whichLayer).style;
+		style2.display = style2.display? "":"none";
+	}
+	else if (document.all)
+	{
+		// this is the way old msie versions work
+		var style2 = document.all[whichLayer].style;
+		style2.display = style2.display? "":"none";
+	}
+	else if (document.layers)
+	{
+		// this is the way nn4 works
+		var style2 = document.layers[whichLayer].style;
+		style2.display = style2.display? "":"none";
+	}
+	
+}
+
+/***********************************************************************
+************************************************************************/
+</script>
+
+</head>
+<body class="bottompagebody"  onLoad="displayGroupScheduleInfo()">
+<div class="tab-pane" id="tabPane1">
+
+<script type="text/javascript">
+	tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+	var cp = new ColorPicker('window');
+</script>
+	<form id="formStarPhone" name="formStarPhone">
+		<div class="tab-page" id="pageStarPhone">
+			<h2 class="tab" ><script>document.write(MultiArray["StarPhone"][lang])</script></h2 >
+			<script type="text/javascript">tp1.addTabPage( document.getElementById( "pageStarPhone" ) );</script>
+			
+			<fieldset >
+				<legend><script>document.write(MultiArray["Add schedule for StarPhone"][lang])</script></legend>
+				
+				<table border="0" width="100%" cellspacing="0" cellpadding=""="0">
+					<tr height="5"><td  colspan="2"  ></td></tr>
+					<tr>
+						<td  valign="center" align="center"  colspan="2" height=25 bgcolor="#6AA5D7"><b><script>document.write(MultiArray["Schedule definition"][lang])</script></b></td>
+					</tr>
+					
+					<tr><td height=20 colspan="2" ></td></tr>
+					
+					<tr>
+						<td  width="120" height=25 ><script>document.write(MultiArray["Schedule name"][lang])</script></td>
+						<td  height=25 align= left>
+							<input id=scheduleNameStarPhone type="text" onchange= "enabledUpdateButton('StarPhone') " name="scheduleNameStarPhone">
+						</td> 
+					</tr>
+					<tr>
+						<td  width=120 height=25><script>document.write(MultiArray["Active"][lang])</script></td>
+						<td  align= left height=25>
+							<input id="scheduleStateStarPhone"  align="center" onclick="enableReload('StarPhone'); enabledUpdateButton('StarPhone')" type=checkbox CHECKED value=ON name="scheduleStateStarPhone">
+						</td> 
+					</tr>
+						<tr><td height=20 colspan="2" ></td></tr>
+				</table>
+
+				<table id=AutoNumber3 style="BORDER-COLLAPSE: collapse" borderColor=#c0c0c0 height=58 cellSpacing=0 cellPadding=0 width="100%" border=0>
+					<tr >
+						<td vAlign=middle align=center><b><script>document.write(MultiArray["Non-configured group"][lang])</script></b></td>
+						<td align=center>&nbsp;</td>
+						<td vAlign=middle align=center><b><script>document.write(MultiArray["Assigned group"][lang])</script></b></td></tr>
+					<tr>
+						<td align=center width="43%" height=52>
+							<select  style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 250px" disabled multiple size=10  id="nonConfiguredGroupsForMC" name="nonConfiguredGroupsForMC" width="200"></select> </td>
+						<td vAlign=middle noWrap align=center width="11%" borderColorDark=#c0c0c0 height=52>
+							<P>&nbsp;</P>
+							<button id=Button1 style="WIDTH: 40px; HEIGHT: 26px" disabled onclick="chkAndAddGroupToSchedule('StarPhone')" name="addButton" type=button>&gt;&gt;</button>
+							<p>&nbsp;</p>
+							<button id=Button2 style="WIDTH: 40px; HEIGHT: 26px" disabled onclick="chkAndDropGroupFromSchedule('StarPhone')" name="dropButton" type=button>&lt;&lt;</button> 
+							<p>&nbsp;</p></td>
+						<td borderColor=#000000 align=center width="288%" height=52>
+							<select style="FONT-WEIGHT: bold; FONT-SIZE: 8pt; WIDTH: 250px" disabled multiple size=10  id="availableGroupsForMC" name="availableGroupsForMC" width="200"></select></td></tr>
+				</table>
+				
+				<tr>
+					<td >
+						<a  style="text-decoration:underline"id=statisticsOptionsStarPhone href="javascript:toggleLayer('statisticsDivStarPhone')" title="StatisticsOptionsStarPhone"><strong><script>document.write(MultiArray["Statistics options"][lang])</script></strong></a>
+						<div  id="statisticsDivStarPhone" style="margin: 0px 20px 0px 20px;display: none">
+							<fieldset>
+								<table border="0" style="border-collapse:collapse " id=AutoNumber4>
+									<tr >
+										<td height=20 width=200> <b><script>document.write(MultiArray["Statistics"][lang])</script>:</b> </td>
+										<td height=20 width=100></td>
+										<td height=20 width=125 colspan="2" > <b><script>document.write(MultiArray["Stats related to"][lang])</script>:</b></td>
+									</tr>
+									<tr align=left>
+										<td colspan="2" height=20 ><b>&nbsp </b> </td>
+										<td height=20><b><script>document.write(MultiArray["Group"][lang])</script></b></td>
+										<td height=20><b><script>document.write(MultiArray["Agent"][lang])</script></b></td>
+									</tr>
+									<tr bgcolor=#b4cfff>
+										<td vAlign=top colspan="2" ><script>document.write(MultiArray["Average handling time"][lang])</script></td>
+										<td vAlign=top  >
+											<input id="ahtGroup" type=checkbox onchange=enabledUpdateButton('StarPhone') name=ahtGroup></td>
+										<td vAlign=top  >
+											<input id="ahtAgent" type=checkbox onchange=enabledUpdateButton('StarPhone') name=ahtAgent></td>
+									</tr>
+									<tr bgcolor=#e6eff4>
+										<td vAlign=top colspan="2" ><script>document.write(MultiArray["Net conversion rate"][lang])</script></td>
+										<td vAlign=top >
+											<input id="netConvRateGroup" type=checkbox onchange=enabledUpdateButton('StarPhone') name=netConvRateGroup></td>
+										<td vAlign=top  >
+											<input id="netConvRateAgent" type=checkbox onchange=enabledUpdateButton('StarPhone') name=netConvRateAgent></td>
+									</tr>
+									<tr bgcolor=#b4cfff>
+										<td vAlign=top colspan="2" ><script>document.write(MultiArray["Sales per hour"][lang])</script></td>
+										<td vAlign=top >
+											<input id="salesPerHourGroup" type=checkbox onchange=enabledUpdateButton('StarPhone') name=salesPerHourGroup></td>
+										<td vAlign=top  >
+											<input id="salesPerHourAgent" type=checkbox onchange=enabledUpdateButton('StarPhone') name=salesPerHourAgent></td>
+									</tr>
+									<tr bgcolor=#e6eff4>
+										<td vAlign=top colspan="2" ><script>document.write(MultiArray["Productivity ratio"][lang])</script></td>
+										<td vAlign=top >
+											<input id="productRatioGroup" type=checkbox onchange=enabledUpdateButton('StarPhone') name=productRatioGroup></td>
+										<td vAlign=top  >
+											<input id="productRatioAgent" type=checkbox onchange=enabledUpdateButton('StarPhone') name=productRatioAgent></td>
+									</tr>
+									<TR bgcolor=#b4cfff>
+										<td vAlign=top  colspan="2"><script>document.write(MultiArray["Busy Factor"][lang])</script></td>
+										<td vAlign=top >
+											<input id="busyFactorGroup" type=checkbox onchange=enabledUpdateButton('StarPhone') name=busyFactorGroup></td>
+										<td vAlign=top >
+											<input id="busyFactorAgent" type=checkbox onchange=enabledUpdateButton('StarPhone') name=busyFactorAgent></td>
+									</tr>
+									<TR bgcolor=#e6eff4>
+										<td vAlign=top colspan="3" ><script>document.write(MultiArray["Total login time"][lang])</script></td>
+										<td vAlign=top >
+											<input id="loginTimeAgent" type=checkbox onchange=enabledUpdateButton('StarPhone') name=loginTimeAgent></td>
+									</tr>
+									<TR bgcolor=#b4cfff>
+										<td vAlign=top colspan="2" ><script>document.write(MultiArray["Total calls"][lang])</script></td>
+										<td vAlign=top >
+											<input id="totalCallsGroup" type=checkbox onchange=enabledUpdateButton('StarPhone') name=totalCallsGroup></td>
+										<td vAlign=top >
+											<input id="totalCallsAgent" type=checkbox onchange=enabledUpdateButton('StarPhone') name=totalCallsAgent></td>
+									</tr>
+									<TR bgcolor=#e6eff4>
+										<td vAlign=top colspan="2" ><script>document.write(MultiArray["Waiting calls"][lang])</script></td>
+										<td vAlign=top colspan="2" >
+											<input id="waitingCallsGroup" type=checkbox onchange=enabledUpdateButton('StarPhone') name=waitingCallsGroup></td> 
+									</tr>
+									<TR bgcolor=#b4cfff>
+										<td vAlign=top colspan="2" ><script>document.write(MultiArray["Abandoned calls"][lang])</script></td>
+										<td vAlign=top colspan="2" >
+											<input id="abandonedCallsGroup" type=checkbox onchange=enabledUpdateButton('StarPhone') name=abandonedCallsGroup></td>
+									</tr>
+									<tr > 
+										<td  colspan="4">&nbsp; </td> 
+									</tr>
+								</table>
+									
+									
+								<table border="0" style="border-collapse:collapse " >
+									<tr>
+										<td bgcolor="#CCCCCC" width="200">
+											<script>document.write(MultiArray["Message color"][lang])</script></td>
+										<td bgcolor="#CCCCCC" width="100">
+											<input id="statisticsColor"  type="text" readonly="" size=8  onClick=" enabledUpdateButton('StarPhone'); cp.show('pick');return false ; " name="statisticsColor" style=" " >
+											<A HREF="#" onClick="enabledUpdateButton('StarPhone'); cp.show('pick');return false ; " NAME="pick" ID="pick"><u><script>document.write(MultiArray["Pick"][lang])</script></u></A></td>
+									</tr>
+									<tr  height="5">
+										<td colspan="2" bgcolor="#CCCCCC" ></td>
+									</tr>
+									
+									<tr >
+										<td  vAlign=top bgcolor=#CCCCCC > 
+											<script>document.write(MultiArray["Broadcast period (min)"][lang])</script>&nbsp;</td>
+										<td bgcolor="#CCCCCC" width="100">
+											<SELECT id="timeStatistics" onchange="enabledUpdateButton('StarPhone')" name="timeStatistics"> 
+												<OPTION value=1>1</OPTION> 
+												<OPTION value=5>5</OPTION> 
+												<OPTION value=15>15</OPTION> 
+												<OPTION value=30 selected>30</OPTION>
+												<OPTION value=1h>1h</OPTION> 
+												<OPTION value=2h>2h</OPTION> </SELECT> </td>
+									</tr>
+									
+								</table>
+							</fieldset>
+						</div>
+					</td>
+				</tr>
+				
+	 			<tr>
+					<td height=25><br></td>
+				</tr>
+				<tr>
+					<td height=25><br></td>
+				</tr>
+				
+				<tr>
+         			<TD colSpan=4 >
+	     			<a   style="text-decoration:underline "id=alertsOptionsStarPhone href="javascript:toggleLayer('alertsDivStarPhone')" title="AlertsOptionsStarPhone"><STRONG ><script>document.write(MultiArray["Alerts options"][lang])</script></STRONG></a>	
+         			<div  id="alertsDivStarPhone" style="margin: 0px 20px 0px 20px;display: none;">
+          				<FIELDSET id=alertsFieldsetStarPhone  > 
+          			 		<TABLE width="425">
+            					<TR>
+             						<td width="200">
+            								<script>document.write("<input  id=\"addAlertStarPhone\"   name=\"addAlertStarPhone\" type=\"button\" value=\""+MultiArray["Add alert"][lang]+"\" onClick=\"addMyRow('StarPhone');enabledUpdateButton('StarPhone')\">")</script>
+										</TD>
+								</TR>
+          	 				</TABLE> 
+         					<DIV id=alertsItemsStarPhone style="MARGIN: 0px 5px">
+								<table><p> </p>
+								</table>
+							</DIV>
+							<table border="0" style="border-collapse:collapse " >
+								<tr >
+									<td  colspan="2" height="20" > </td>
+								</tr>
+								<tr >
+									<td  vAlign=top width="200" bgcolor="#CCCCCC" > 
+										<script>document.write(MultiArray["Broadcast period (min)"][lang])</script>&nbsp;</td>
+									<td bgcolor="#CCCCCC" width="100">
+										<SELECT id="timeAlertsStarPhone" onchange="enabledUpdateButton('StarPhone')" name="timeAlertsStarPhone"> 
+											<OPTION value=1>1</OPTION> 
+											<OPTION value=5>5</OPTION> 
+											<OPTION value=15>15</OPTION> 
+											<OPTION value=30 selected>30</OPTION>
+											<OPTION value=1h>1h</OPTION> 
+											<OPTION value=2h>2h</OPTION> </SELECT> </td>
+								</tr>
+							</table>
+		 				</FIELDSET> 
+					</DIV> 
+					</TD>
+       			</tr>
+				
+				<table width="75%" cellpadding="0" cellspacing="0">
+					<tr>
+						<td height=25><br></td>
+					</tr>
+					<tr height=25 valign="bottom"  align="right">
+						<td >
+							<button id=updateInfoStarPhone style=" HEIGHT: 25px" disabled onclick="validateInfo('StarPhone')" name="updateInfoStarPhone" type=button>&nbsp;<script>document.write(MultiArray["Save"][lang])</script>&nbsp;</button> </td>
+					</tr>
+				</table>
+				
+			</fieldset>
+		</div>
+	</form> 
+
+<!-- *********************************************   MANAGER   **********************************************-->
+	
+	<form id="formManager" name="formManager">
+		<div class="tab-page" id="pageManager">
+			<h2 class="tab"><script>document.write(MultiArray["Manager"][lang])</script></h2 >
+		<script type="text/javascript">tp1.addTabPage( document.getElementById( "pageManager" ) );</script>
+		
+			<fieldset  >
+				<legend><script>document.write(MultiArray["Add schedule for manager"][lang])</script></legend>
+				
+				<table border="0" width="100%" cellspacing="0" cellpadding=""="0">
+					<tr height="5"><td  colspan="2"  ></td></tr>
+					<tr>
+						<td  valign="center" align="center"  colspan="2" height=25 bgcolor="#6AA5D7"><b><script>document.write(MultiArray["Schedule definition"][lang])</script></b></td>
+					</tr>
+					
+					<tr><td height=20 colspan="2" ></td></tr>
+					
+					<tr>
+						<td  width="120" height=25 ><script>document.write(MultiArray["Schedule name"][lang])</script> </td>
+						<td  height=25 align= left>
+							<input id="scheduleNameManager" type="text" onchange= "enabledUpdateButton('Manager') " name="scheduleNameManager">
+						</td> 
+					</tr>
+					<tr>
+						<td  width=120 height=25><script>document.write(MultiArray["Active"][lang])</script></td>
+						<td  align= left height=25>
+							<input id="scheduleStateManager"  align="center" onclick="enableReload('Manager'); enabledUpdateButton('Manager')" type=checkbox CHECKED value=ON name="scheduleStateManager">
+						</td> 
+					</tr>
+						<tr><td height=20 colspan="2" ></td></tr>
+				</table>
+
+				<tr>
+         			<TD colSpan=4 >
+	     			<a   style="text-decoration:underline "id=alertsOptionsManager href="javascript:toggleLayer('alertsDivManager')" title="AlertsOptionsManager"><STRONG ><script>document.write(MultiArray["Alerts options"][lang])</script></STRONG></a>	
+         			<div  id="alertsDivManager" style="margin: 0px 20px 0px 20px;display: none;">
+          				<FIELDSET id="alertsFieldsetManager"  > 
+          			 		<TABLE width="425">
+            					<TR>
+             						<td width="200">
+											<script>document.write("<input  id=\"addAlertManager\"   name=\"addAlertManager\" type=\"button\" value=\""+MultiArray["Add alert"][lang]+"\" onClick=\"addMyRow('Manager');enabledUpdateButton('Manager')"\">")</script>
+									</TD>
+            					</TR>
+          	 				</TABLE> 
+         					<DIV id=alertsItemsManager style="MARGIN: 0px 5px">
+								<table><p> </p>
+								</table>
+							</DIV>
+							<table border="0" style="border-collapse:collapse " >
+								<tr >
+									<td  colspan="2" height="20" > </td>
+								</tr>
+								<tr >
+									<td  vAlign=top width="200" bgcolor=#d4d0c8 > 
+										<script>document.write(MultiArray["Broadcast period (min)"][lang])</script>&nbsp;</td>
+									<td bgcolor="#CCCCCC" width="100">
+										<SELECT id="timeAlertsManager" onchange="enabledUpdateButton('Manager')" name="timeAlertsManager"> 
+											<OPTION value=1>1</OPTION> 
+											<OPTION value=5>5</OPTION> 
+											<OPTION value=15>15</OPTION> 
+											<OPTION value=30 selected>30</OPTION>
+											<OPTION value=1h>1h</OPTION> 
+											<OPTION value=2h>2h</OPTION> </SELECT> </td>
+								</tr>
+							</table>
+		 				</FIELDSET> 
+					</DIV> 
+					</TD>
+       			</tr>
+				
+				<table width="75%" cellpadding="0" cellspacing="0">
+					<tr>
+						<td height=25><br></td>
+					</tr>
+					<tr height=25 valign="bottom"  align="right">
+						<td >
+							<button id="updateInfoManager" style=" HEIGHT: 25px" disabled onclick="validateInfo('Manager')" name="updateInfoManager" type=button>&nbsp;<script>document.write(MultiArray["Save"][lang])</script>&nbsp;</button> </td>
+					</tr>
+				</table>
+				
+			</fieldset>
+		</div>
+	</form> 
+
+</div>
+</body>
+</html>

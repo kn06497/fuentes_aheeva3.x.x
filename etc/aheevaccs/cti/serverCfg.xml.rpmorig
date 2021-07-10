@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<AsteriskCTI>
+	<log level="trace"/>
+	<aheevalog enable="1" path="/var/log/aheevaccs/cti/" max_file_size="20" />
+	<syslog enable="0" syslog_facility="LOG_LOCAL1"/>
+	<nbThreadsInPool value="100"/>
+	<!--<bindport value="8765" />-->
+	<databaseInfo>
+		<host name ="192.168.2.2"/>
+		<db name="aheevaccs"/>
+		<db username="aheevaccs"/>
+		<db password= "aheevaccs"/>
+	</databaseInfo>
+	<slaveDBInfo>
+		<host name ="192.168.2.2"/>
+		<db name="aheevaccs"/>
+		<db username="aheevaccs"/>
+		<db password= "aheevaccs"/>
+	</slaveDBInfo>
+	<emailSender>
+		<deamon value="/usr/sbin/sendmail -t -i" />
+		<adminEmail value="sendto@aheeva.com"/>
+		<sendFrom value="from@aheeva.com"/>
+	</emailSender>
+	<stats_config>
+		<live_stats_logout_tolerancy value="900" />
+	</stats_config>
+</AsteriskCTI>

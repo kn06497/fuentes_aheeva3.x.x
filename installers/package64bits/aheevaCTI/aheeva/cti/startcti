@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+
+PID_FILE="pid.txt"
+
+CHECK_CMD="kill -0 `head -1 $PID_FILE`"
+KILL_CMD="kill `head -1 $PID_FILE`"
+RUN_CMD="nohup ./asteriskCTI"
+
+if [ ! -d logs ] ; then
+   mkdir logs
+fi
+
+if test -f $PID_FILE ; then
+    $CHECK_CMD >> /dev/null 2>&1
+    if test $? -eq 0 ; then
+        echo ""
+        echo "asteriskCTI process already running..."
+        echo ""
+        exit 0
+    fi
+fi
+
+$RUN_CMD >> /dev/null 2>&1 &
+
+$CHECK_CMD >> /dev/null 2>&1
+
+if test $? -ne 0 ; then
+    echo ""
+    echo "asteriskCTI process running."
+    echo ""
+    #start the dbCruncher if the CTI is running
+#    echo "Starting the DBCruncher"
+       
+    RUN_CMD_DB="./startdbCruncher"
+    CD_CMD="cd /usr/src/dbCruncher"
+
+
+#    $CD_CMD
+#    $RUN_CMD_DB
+else
+    echo ""
+    echo "Failed to start asteriskCTI process."
+    echo ""
+    exit 1
+fi
+
+

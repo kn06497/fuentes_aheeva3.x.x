@@ -1,0 +1,271 @@
+<html>
+<head>
+
+<title>Menu</title>
+<LINK href="Resources_pages/style.css" rel="stylesheet" type="text/css" />
+<base target="rmiddle">
+
+<script language="JavaScript" src="Resources_pages/jsUtil.js"> </script>
+<script language="JavaScript1.2">
+
+var head="display:''"
+img1=new Image()
+img1.src="img/fold.gif"
+img2=new Image()
+img2.src="img/open.gif"
+
+var ns6=document.getElementById&&!document.all
+var ie4=document.all&&navigator.userAgent.indexOf("Opera")==-1
+
+var starttime='';
+
+function checkcontained(e){
+	var iscontained=0
+	cur=ns6? e.target : event.srcElement
+	i=0
+	if (cur.id=="foldheader")
+		iscontained=1
+	else
+		while (ns6&&cur.parentNode||(ie4&&cur.parentElement))
+		{
+			if (cur.id=="foldheader"||cur.id=="foldinglist1"||cur.id=="foldinglist")
+			{
+				iscontained=(cur.id=="foldheader")? 1 : 0
+					break
+			}
+			cur=ns6? cur.parentNode : cur.parentElement
+		}
+
+	if (iscontained){
+		var foldercontent=ns6? cur.nextSibling.nextSibling : cur.all.tags("UL")[0]
+		if (foldercontent.style.display=="none"){
+			foldercontent.style.display=""
+			cur.style.listStyleImage="url(img/open.gif)"
+		}
+		else{
+		foldercontent.style.display="none"
+		cur.style.listStyleImage="url(img/fold.gif)"
+		}
+	}
+}
+
+/**
+* Seach all the information to call the Schedule page. 
+*/
+function callSchedulePage()
+{
+       var starttime = window.top.rtop.bdate.value
+       var endtime = window.top.rtop.edate.value
+       var colspace = window.top.rtop.spacing.value
+       var mon = window.top.rtop.month.value
+       var year = window.top.rtop.year.value
+
+       agt_dbid = callSchedulePage.arguments[0]
+	   var agt_id = callSchedulePage.arguments[1]
+       var location = "./jsp/videoAgent.jsp?agt=";
+       location += agt_id;
+       location +="&st=";
+       location += starttime;
+       location +="&et=";
+       location += endtime;
+       location +="&cols=";
+       location += colspace;
+       location +="&mm=";
+       location += mon;
+       location +="&yy=";
+       location += year;
+	   location +="&agt_id=";
+       location += agt_id;
+//	   alert("location = ["+location+"]");
+       return location;
+}
+
+
+function showMenu(){
+   	//alert("show menu");
+	var user  = normalizeString(QueryString('user'));
+	tenantDBID				=   normalizeString(QueryString('tenant_dbid'));//arrayDet[0];
+	
+ 	document.write("<ul style=\"margin:10; margin-bottom:-15\">");
+    document.write("<li id=\"foldheader\">Resources</li>");
+    document.write("<ul id=\"foldinglist\" style=\"display:none\" style=&{head};>");
+	document.write("<li id=\"foldheader\">Agent groups</li>");
+    document.write("<ul id=\"foldinglist\" style=\"display:none\" style=&{head};>");
+    // get all agent groups
+	var agentGroups = window.top.opener.appletObj.getAgentGroupByName(tenantDBID);
+	var jsGroups = agentGroups + "";
+    	arrayGroups = jsGroups .split("|");
+    	if(agentGroups.length != 0){
+    		for (i = 0; i <arrayGroups.length; i++){
+							//write the agent groups
+	    		document.write("<li id=\"foldheader\">"+arrayGroups[i]+"</li>");
+				document.write("<ul id=\"foldinglist1\" style=\"display:none\" style=&{head};>");
+				//get all the agents from a particular group
+	   	 		var agents = String(window.top.opener.appletObj.getAgentsByGroup(arrayGroups[i],1));
+				var jsAgents = agents + "";
+    			arrayAgents = jsAgents .split("|");				
+				if(agents.length != 0){
+		        	for (j = 0; j <arrayAgents.length; j++){
+                        var agtinfo = arrayAgents[j].split(",");
+                        var agt_dbid = agtinfo[0];
+						var agt_id =agtinfo[3];
+                        var loc = callSchedulePage(agt_dbid,agt_id);
+						
+						//write a agents in the menu and
+						// ref the agent.jsp page for a particular agent
+						document.write("<li> <a href=\""+loc+"\">"+agtinfo[1]+","+agtinfo[2]+"["+agtinfo[3]+"]"+"</a></li>");
+					}
+				}
+				document.write("</ul>");
+			}
+        }
+    	document.write("</ul>");
+
+
+	<!-- Start of RECORDING ON TRIGGER-->
+ 	document.write("<li id=\"foldheader\">Recording on Trigger</li>");
+    document.write("<ul id=\"foldinglist\" style=\"display:none\" style=&{head};>");
+	document.write("<li><a href=\"newTrigger.htm?type=Agents&action=add\">&lt;Add a recording on Trigger&gt;</a></li>");
+	document.write("<li id=\"foldheader\">"+"Defined Recording on Trigger"+"</li>");
+	document.write("<ul id=\"foldinglist\" style=\"display:none\" style=&{head};>");
+	<!-- Add an a line to add the possibility to add agents groups -->
+	var forms = "ANI|DNIS|AgentID|AttachedData"// window.top.opener.appletObj.getFormByName();
+	var jsForms = forms + "";
+    arrayForms = jsForms .split("|");
+	<!-- Add an a line to add the possibility to add agents -->
+
+	var recordlist = new Array();
+	var thisrecordlist = new Array();
+	recordlist["ANI"] = window.top.opener.appletObj.getTriggerByType("ani");
+	recordlist["DNIS"] = window.top.opener.appletObj.getTriggerByType("dnis");
+	recordlist["AgentID"] = window.top.opener.appletObj.getTriggerByType("agent_ID");
+	recordlist["AttachedData"] = window.top.opener.appletObj.getTriggerByType("userData");
+
+	if(forms.length != 0){
+		for (j = 0; j <arrayForms.length; j++){
+			document.write("<li id=\"foldheader\"> "+arrayForms[j]+"</li>");
+			document.write("<ul id=\"foldinglist\" style=\"display:none\" style=&{head};>")
+			thisrecordlist = recordlist[arrayForms[j]].split("|");
+			if(thisrecordlist[0] ==""){
+			} else {
+				for(k=0; k< thisrecordlist.length; k++){
+					var arrayTriggerInfo = new Array();
+					arrayTriggerInfo = thisrecordlist[k].split("^");
+					document.write("<li><a href=\"modifTrigger.htm?recordtype="+arrayForms[j]+"&recordvalue="+arrayTriggerInfo[0]+"&triggerID="+arrayTriggerInfo[1]+"\">"+arrayTriggerInfo[0]+"</a></li>")
+				}
+			}
+			document.write("</ul>")
+		}
+		
+	}
+	document.write("</ul>");
+    document.write("</ul>");
+
+
+ 	document.write("<li id=\"foldheader\">Evaluation Form</li>");
+    document.write("<ul id=\"foldinglist\" style=\"display:none\" style=&{head};>");
+	document.write("<li><a TARGET = \"_blank\"  href=\"./evaluationForm/EvaluationForm.jsp?type=Agents\">&lt;Add an Evaluation Form&gt;</a></li>");
+	document.write("<li id=\"foldheader\">"+"Defined Forms"+"</li>");
+	document.write("<ul id=\"foldinglist\" style=\"display:none\" style=&{head};>");
+	<!-- Add an a line to add the possibility to add agents groups -->
+	var forms = window.top.opener.appletObj.getFormByName();
+	var jsForms = forms + "";
+    arrayForms = jsForms .split("|");
+	<!-- Add an a line to add the possibility to add agents -->
+	if(forms.length != 0){
+	  	for (j = 0; j <arrayForms.length; j++){
+			var arrayFormInfo = arrayForms[j].split("^");
+			document.write("<li> <a TARGET = \"_blank\" href=\"./evaluationForm/EvaluationForm.jsp?FormID="+arrayFormInfo[0]+"\">"+arrayFormInfo[1]+"</a></li>");
+		}
+	}
+	document.write("</ul>");
+
+    document.write("</ul>");
+
+  	document.write("</ul>");
+	document.write("</ul>");
+	//alert("fin show menu");
+}
+
+if (ie4||ns6)
+document.onclick=checkcontained
+
+
+</script>
+
+</head>
+
+<body class=multiLevelMenu_Background scroll="yes">
+
+<script>
+	showMenu()
+</script>
+
+<script language="JavaScript1.2">
+
+function get_cookie(Name) {
+//Get cookie routine by Shelley Powers
+  var search = Name + "="
+  var returnvalue = "";
+  if (document.cookie.length > 0) {
+    offset = document.cookie.indexOf(search)
+    // if cookie exists
+    if (offset != -1) {
+      offset += search.length
+      // set index of beginning of value
+      end = document.cookie.indexOf(";", offset);
+      // set index of end of cookie value
+      if (end == -1) end = document.cookie.length;
+      returnvalue=unescape(document.cookie.substring(offset, end))
+      }
+   }
+  return returnvalue;
+}
+
+var foldercontentarray=new Array()
+var c=0
+
+if (ns6){
+for (i=0;i<document.getElementsByTagName("UL").length;i++){
+if (document.getElementsByTagName("UL")[i].id=="foldinglist"||document.getElementsByTagName("UL")[i].id=="foldinglist1"){
+foldercontentarray[c]=document.getElementsByTagName("UL")[i]
+c++
+}
+}
+}
+
+if (get_cookie(window.location.pathname) != ''){
+  var openresults=get_cookie(window.location.pathname).split(" ")
+  for (i=0 ; i < openresults.length ; i++){
+    if (ns6){
+    foldercontentarray[openresults[i]].style.display=''
+    foldercontentarray[openresults[i]].previousSibling.previousSibling.style.listStyleImage="url(img/open.gif)"
+    }
+    else{
+    foldinglist[openresults[i]].style.display=''
+    document.all[foldinglist[openresults[i]].sourceIndex -1].style.listStyleImage="url(img/open.gif)"
+    }
+  }
+}
+
+if (ns6||ie4){
+var nodelength=ns6? c-1 : foldinglist.length-1
+var nodes=new Array(nodelength)
+var openones=''
+}
+
+function checkit(){
+  for (i=0 ; i <= nodelength ; i++){
+    if ((ns6&&foldercontentarray[i].style.display=='')||(ie4&&foldinglist[i].style.display==''))
+       openones=openones + " " + i
+  }
+  document.cookie=window.location.pathname+"="+openones
+}
+
+if (ns6||ie4)
+window.onunload=checkit
+//-->
+</script>
+</body>
+
+</html>

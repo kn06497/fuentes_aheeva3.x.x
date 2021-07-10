@@ -1,0 +1,8 @@
+To be able to use the TOMCAT web server with the encryption via SSL,
+please add the following options to catalina.sh. For more details, consult 
+the "Encryption Server Installation guide "
+
+        -Djavax.net.ssl.keyStore=/root/server.keystore \
+        -Djavax.net.ssl.keyStorePassword=changeit \
+        -Djavax.net.ssl.trustStore=/root/server.keystore \
+        -Djavax.net.ssl.trustStorePassword=changeit \

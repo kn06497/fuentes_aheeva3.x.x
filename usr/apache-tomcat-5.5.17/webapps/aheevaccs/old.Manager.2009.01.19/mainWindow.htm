@@ -1,0 +1,102 @@
+<html>
+
+<head>
+
+<LINK href="Resources_pages/style.css" rel="stylesheet" type="text/css" />
+
+
+<script language="JavaScript" src="Resources_pages/jsUtil.js"> </script>
+<script language="javascript" type="text/javascript" src="Resources_pages/Browser.js"></script>
+<script language="javascript" type="text/javascript">
+
+function setUserConfig()
+{
+  user  = normalizeString(QueryString('user'));
+  tenant = normalizeString(QueryString('tenant'));
+  //alert(user)
+  appletObj.setUserType(user);
+
+  if(user == '10') // SuperAdmin
+     {
+         //document.write("<frameset cols=\"280,*\" border=\"1\"  frameborder=\"1\"  fbordercolor=\"red\"  >");
+		document.write("<frameset  id=\"ColFrameset\"  border=\"0\"  frameborder=\"0\"  framespacing=\"5\"  cols=\"280,*\" >");
+		//document.write(" <frame name=\"left\" scrolling=\"yes\" target=\"rtop\" src=\"menu.htm?user="+user+"&tenant="+tenant+"\">");
+		document.write(" <frame name=\"left\" scrolling=\"yes\" target=\"rtop\"  CLASS=\"FrameBorders\"  src=\"menu_waiting.htm\">");
+        document.write("  <frameset id=\"RowFrameset\"  border=\"0\"  frameborder=\"0\"   framespacing=\"5\"  rows=\"60%,40%\">");
+        document.write("   <frame name=\"rtop\" target=\"rbottom\"  CLASS=\"FrameBorders\" src=\"top.htm\" >");
+        document.write("   <frame name=\"rbottom\" target=\"rbottom\"  CLASS=\"FrameBorders\"  src=\"Contents.htm\" >");
+        //document.write("   <frame name=\"rhidden\" target=\"rhidden\" >");
+        document.write("  </frameset>"); 
+        document.write("  </frameset>");
+     }
+  if(user =='20') //Admin
+     {
+	 	document.write("<frameset  id=\"ColFrameset\"  border=\"0\"  frameborder=\"0\"  framespacing=\"5\"  cols=\"280,*\">");
+		//document.write(" <frame name=\"left\" scrolling=\"yes\" target=\"rtop\" src=\"menu.htm?user="+user+"&tenant="+tenant+"\">");
+		document.write(" <frame name=\"left\" scrolling=\"yes\" target=\"rtop\"  CLASS=\"FrameBorders\"  src=\"menu_waiting.htm\">");
+        document.write("  <frameset  id=\"RowFrameset\"  border=\"0\"  frameborder=\"0\"   framespacing=\"5\"  rows=\"60%,40%\">");
+        document.write("   <frame name=\"rtop\" target=\"rbottom\" CLASS=\"FrameBorders\"  src=\"top.htm\" >");
+        document.write("   <frame name=\"rbottom\" target=\"rbottom\"  CLASS=\"FrameBorders\"  src=\"Contents.htm\" >");
+        //document.write("   <frame name=\"rhidden\" target=\"rhidden\" >");
+        document.write("  </frameset>");
+        document.write("  </frameset>");
+     }
+
+	 if(user =='30') //Historical Report
+     {
+        document.write("<frameset  id=\"ColFrameset\"  border=\"0\"  frameborder=\"0\"  framespacing=\"5\"  cols=\"280,*\">");
+		//document.write(" <frame name=\"left\" scrolling=\"yes\" target=\"rtop\" src=\"menu.htm?user="+user+"&tenant="+tenant+"\">");
+		document.write(" <frame name=\"left\" scrolling=\"yes\" target=\"rtop\"  CLASS=\"FrameBorders\"   src=\"menu_waiting.htm\">");
+        document.write("  <frameset  id=\"RowFrameset\"  border=\"0\"  frameborder=\"0\"   framespacing=\"5\"  rows=\"60%,40%\">");
+        document.write("   <frame name=\"rtop\" target=\"rbottom\"  CLASS=\"FrameBorders\"  src=\"top.htm\" >");
+        document.write("   <frame name=\"rbottom\" target=\"rbottom\" CLASS=\"FrameBorders\"  src=\"Contents.htm\" >");
+        //document.write("   <frame name=\"rhidden\" target=\"rhidden\" >");
+        document.write("  </frameset>");
+        document.write("  </frameset>");
+
+     }
+
+	if(user =='40') //Quality monitoring
+     {
+        document.write("<frameset  id=\"ColFrameset\"  border=\"0\"  frameborder=\"0\"  framespacing=\"5\"  cols=\"280,*\">");
+		//document.write(" <frame name=\"left\" scrolling=\"yes\" target=\"rtop\" src=\"menu.htm?user="+user+"&tenant="+tenant+"\">");
+		document.write(" <frame name=\"left\" scrolling=\"yes\" target=\"rtop\"  CLASS=\"FrameBorders\"  src=\"menu_waiting.htm\">");
+        document.write("  <frameset  id=\"RowFrameset\"  border=\"0\"  frameborder=\"0\"   framespacing=\"5\"  rows=\"60%,40%\">");
+        document.write("   <frame name=\"rtop\" target=\"rbottom\"  CLASS=\"FrameBorders\"  src=\"top.htm\" >");
+        document.write("   <frame name=\"rbottom\" target=\"rbottom\"  CLASS=\"FrameBorders\"  src=\"Contents.htm\" >");
+        //document.write("   <frame name=\"rhidden\" target=\"rhidden\" >");
+        document.write("  </frameset>");
+        document.write("  </frameset>");
+
+     }
+
+    if(user =='50') //Viewer
+     {
+        document.write(" <frameset  id=\"RowFrameset\"  border=\"0\"  frameborder=\"0\"   framespacing=\"5\"  rows=\"100%,*\">");
+        document.write("    <frame name=\"rtop\" target=\"rbottom\"  CLASS=\"FrameBorders\"   src=\"top.htm\" >");
+        document.write("    <frame name=\"rbottom\" target=\"rbottom\"  CLASS=\"FrameBorders\"  src=\"Contents.htm\" >");
+        document.write(" </frameset>");
+     }
+}
+
+</script>
+<title>Aheeva CCS Manager</title>
+</head>
+
+<script language="javascript" type="text/javascript">
+    setUserConfig();
+</script>
+<!--
+<frameset cols="293,*">
+ <frame name="left" scrolling="no" noresize target="rtop" src="menu.htm">
+  <frameset rows="35%,*">
+    <frame name="rtop" target="rbottom" src="top.htm" >
+    <frame name="rbottom" target="rbottom" src="Contents.htm" >
+  </frameset>
+<script language="javascript" type="text/javascript">
+if(user =='1')
+  document.write("</frameset>")
+</script>
+-->
+
+</html>

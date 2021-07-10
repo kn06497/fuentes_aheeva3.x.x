@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<title>Add skill</title>
+<script language="JavaScript" src="jsUtil.js"> </script>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="javascript" type="text/javascript">
+var user_tenant_id = normalizeString(QueryString('tenant_dbid'));
+function validateInfo()
+{
+	
+	if(document.skillForm.skillName.value == "")
+		alert(MultiArray["Please enter skill name"][lang]);
+	if(validation(document.skillForm.skillName.value)==0)
+	{
+		alert(MultiArray["Invalid use of character"][lang]);
+		document.skillForm.skillName.focus();
+	}
+	else
+	{
+		already_use = false;
+		var skills 	= String( appletObj.getAllSkills(user_tenant_id) );
+		var jsSkills	= skills + "";
+		arraySkills	= jsSkills .split("|")
+		for(h=0; h < arraySkills.length && !already_use; h++)
+		{
+			thisSkillInfos = arraySkills[h].split(",");			
+			if(thisSkillInfos[1] == document.skillForm.skillName.value)
+				{
+				alert(""+MultiArray["Skill"][lang]+" "+document.skillForm.skillName.value+" "+MultiArray["already exists"][lang]+" \n !");
+				already_use = true;
+				}			
+		}
+		if(!already_use)
+			{			
+			appletObj.addSkill(document.skillForm.skillName.value, user_tenant_id);
+			document.location.href = "../defaultpage.htm";
+			}
+	}	
+}
+
+</script>
+</head>
+<base target="rbottom">
+
+
+<body class="bottompagebody" TEXT="#000000" LINK="#000066" VLINK="#666666" >
+<form name="skillForm" method="get">
+		<table border="0">
+		  <tr>
+			<td>&nbsp;</td>
+			<td><h5><script>document.write(MultiArray["Add new skill"][lang])</script></h5></td>
+		  </tr>
+		  <tr>
+			<td>&nbsp;<script>document.write(MultiArray["Name"][lang])</script></td>
+			<td>&nbsp;<input name="skillName" type="text"></td>
+		  </tr>
+		  <tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;	<script>
+				document.write("<input name=\"submit\" type=\"button\" value=\""+MultiArray["Submit"][lang]+"\" onClick=\"validateInfo()\">");</script>
+				  </tr>
+		</table>
+		</form>
+</body>
+</html>

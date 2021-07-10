@@ -1,0 +1,355 @@
+<html>
+<head>
+<script type="text/javascript" src="script/scripts.js"></script>
+<script type="text/javascript" src="script/jsXMLParser/xmlsax.js"></script>
+<script type="text/javascript" src="script/ah_js_functions.js"></script>
+<script type="text/javascript" src="script/ah_graph_functions.js"></script>
+<script type="text/javascript" src="script/disablekey.js"></script>
+
+
+<title>DialPad</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+
+<style type="text/css">
+
+
+body{
+
+margin-top: 0px;
+margin-left: 0px;
+margin-right: 0px;
+margin-bottom: 0px;
+}
+
+td {
+   text-align: center;
+   width: 25px;
+   height: 24px;
+   color:#050;
+   font-family: Verdana, Helvetica, sans-serif;
+   font-size:10px;
+   font-weight:bold;
+
+}
+
+.empty_td {
+  text-align: center;
+  width: 25px;
+  height: 30px;
+  color:#050;
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size:10px;
+
+}
+
+.dialed_string {
+  font-size: 12px ;
+  font-family: Arial;
+  color:#050;
+}
+
+
+</style>
+
+<script lang="JavaScript">
+
+var fActiveMenu = false;
+var oOverMenu = false;
+document.onmousedown = mouseSelect;
+</script>
+
+
+
+<script language="JavaScript" type="text/JavaScript">
+
+
+
+function saveNumbers()
+{
+ var number_toadd = document.getElementById("dvObjectHolder_AhPhoneJSDialpad_dialstring").value;
+ if(number_toadd!="")
+ {
+	if(window.opener.list_num!=null)
+	{
+		var add=true;
+		var tempo = new Array();
+		tempo = window.opener.list_num.split('^');
+		for(var i in tempo)
+		{
+			if(tempo[i]==number_toadd && i>tempo.length-max_prev_num)
+			{
+				add=false;
+				break;
+			}		
+		}	
+		if(add)
+		{
+			window.opener.list_num +="^"+number_toadd;
+		}
+	}
+	else
+	{
+
+	}
+ }
+}
+
+
+function refreshDropList()
+{
+	if(window.opener.getDialToneMode()=="normal_dial")
+	{
+		if(window.opener.list_num!=null)
+		{
+			var temp = new Array();
+			temp = window.opener.list_num.split('^');
+			
+			var obj = document.getElementById('combosel');
+			var last = temp.length;
+			obj.options.length = 0;
+				for(var i=0; i<last; i++){
+					if(temp[i]!="")
+					{
+						var new_option = new Option(temp[i], temp[i]);
+						obj.options[obj.options.length]	= new_option;
+					}
+				}
+			
+		}
+	}
+
+}
+
+
+</script>
+
+<SCRIPT language="JavaScript">
+
+if (document.images)
+{
+pic1= new Image();
+pic1.src="./images/0.png";
+
+pic2= new Image();
+pic2.src="./images/1.png";
+
+pic3= new Image();
+pic3.src="./images/2.png";
+
+pic4= new Image();
+pic4.src="./images/3.png";
+
+pic5= new Image();
+pic5.src="./images/4.png";
+
+pic6= new Image();
+pic6.src="./images/5.png";
+
+pic7= new Image();
+pic7.src="./images/6.png";
+
+pic8= new Image();
+pic8.src="./images/7.png";
+
+pic9= new Image();
+pic9.src="./images/8.png";
+
+pic10= new Image();
+pic10.src="./images/9.png";
+
+pic11= new Image();
+pic11.src="./images/dial_button.png";
+
+pic12= new Image();
+pic12.src="./images/clear.png";
+
+pic13= new Image();
+pic13.src="./images/exit.png";
+
+pic14= new Image();
+pic14.src="./images/star.png";
+
+pic15= new Image();
+pic15.src="./images/pound.png";
+
+pic16= new Image();
+pic16.src="./images/0-1.png";
+
+pic17= new Image();
+pic17.src="./images/1-1.png";
+
+pic18= new Image();
+pic18.src="./images/2-1.png";
+
+pic19= new Image();
+pic19.src="./images/3-1.png";
+
+pic20= new Image();
+pic20.src="./images/4-1.png";
+
+pic21= new Image();
+pic21.src="./images/5-1.png";
+
+pic22= new Image();
+pic22.src="./images/6-1.png";
+
+pic23= new Image();
+pic23.src="./images/7-1.png";
+
+pic24= new Image();
+pic24.src="./images/8-1.png";
+
+pic25= new Image();
+pic25.src="./images/9-1.png";
+
+pic26= new Image();
+pic26.src="./images/dial_button1.png";
+
+pic27= new Image();
+pic27.src="./images/clear-1.png";
+
+pic28= new Image();
+pic28.src="./images/exit1.png";
+
+pic29= new Image();
+pic29.src="./images/star-1.png";
+
+pic30= new Image();
+pic30.src="./images/pound-1.png";
+
+pic31= new Image();
+pic31.src="./images/0-2.png";
+
+pic32= new Image();
+pic32.src="./images/1-2.png";
+
+pic33= new Image();
+pic33.src="./images/2-2.png";
+
+pic34= new Image();
+pic34.src="./images/3-2.png";
+
+pic35= new Image();
+pic35.src="./images/4-2.png";
+
+pic36= new Image();
+pic36.src="./images/5-2.png";
+
+pic37= new Image();
+pic37.src="./images/6-2.png";
+
+pic38= new Image();
+pic38.src="./images/7-2.png";
+
+pic39= new Image();
+pic39.src="./images/8-2.png";
+
+pic40= new Image();
+pic40.src="./images/9-2.png";
+
+pic41= new Image();
+pic41.src="./images/dial_button2.png";
+
+pic42= new Image();
+pic42.src="./images/clear-2.png";
+
+pic43= new Image();
+pic43.src="./images/exit2.png";
+
+pic44= new Image();
+pic44.src="./images/star-2.png";
+
+pic45= new Image();
+pic45.src="./images/pound-2.png";
+
+}
+
+</SCRIPT>
+
+
+</head>
+
+
+<body id="dialpad_body" onload="setDiapadOpen();refreshDropList();" onUnload="checkClose();" border=0 frameborder=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0>
+<DIV bgcolor='#eeeeee' frameborder=0 border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_AhPhoneJSDialpad">
+<script>
+var str_dial = "";
+var str_dropdown = "";
+
+var d = document.getElementById("dialpad_body");
+//alert("dialmode"+window.opener.getDialToneMode());
+if(window.opener.getDialToneMode()=="dialtone_only"){
+	str_dial = "<td width=30 ></td><td></td><td></td>";
+	str_dropdown = "<td colspan=4></td>";
+	try{
+		window.resizeTo(100,200);
+	}
+	catch (e){
+			
+	}
+	
+	d.setAttribute("background-image","./images/dialpad_bg_nobar.png");
+	d.background="./images/dialpad_bg_nobar.png";
+}else{
+	d.setAttribute("background-image","./images/dialpad_bg.png");
+	d.background="./images/dialpad_bg.png";
+
+	if(window.opener.getDialString()=="")
+	{
+	}
+	else
+	{
+		input_out_of_focus();
+	}
+
+	str_dial = "<td><img src=\"./images/dial_button.png\"  id=\"dialpad_ok_btn\" name=\"dialpad_ok_btn\" value=\" \" onClick=\"setCloseOk();\" onMouseOver=\"MM_swapImage('dialpad_ok_btn','','./images/dial_button1.png',1)\" onMouseOut=\"MM_swapImgRestore()\" title=\"Dial number\" onMouseDown=\"MM_swapImage('dialpad_ok_btn','','./images/dial_button2.png',1)\" onMouseUp=\"MM_swapImage('dialpad_ok_btn','','./images/dial_button.png',1)\"></td>" +
+	"<td><img title=\"Clear number\" src=\"./images/clear_button.png\"id=\"clear_btn\" onMouseDown=\"javascript:checkKey('clr');\" onMouseOver=\"MM_swapImage('clear_btn','','./images/clear_button1.png',1)\" onMouseOut=\"MM_swapImgRestore()\" onMouseDown=\"MM_swapImage('clear_btn','','./images/clear_button2.png',1)\" onMouseUp=\"MM_swapImage('clear_btn','','./images/clear_button1.png',1)\"></img></td>"+
+	"<td width=\"20\"><img title=\"Exit\" src=\"./images/exit.png\"  id=\"dialpad_cancel_btn\" name=\"dialpad_cancel_btn\" value=\" \" onMouseDown=\"window.close();\" onMouseOver=\"MM_swapImage('dialpad_cancel_btn','','./images/exit1.png',1)\" onMouseOut=\"MM_swapImgRestore()\" onMouseDown=\"MM_swapImage('dialpad_cancel_btn','','./images/exit2.png',1)\" onMouseUp=\"MM_swapImage('dialpad_cancel_btn','','./images/exit1.png',1)\"></td>";
+	
+			
+	
+	str_dropdown = "<td><nobr>"
+	+	"  <input type=\"text\" id=\"dvObjectHolder_AhPhoneJSDialpad_dialstring\" size=\"16\" style=\"width:105\"  value=\""
+	+		window.opener.getDialString() 
+	+		"\" readonly='true' />" 
+	+ " <img src=\"./images/dialpad_arrow.gif\"  onclick=\"JavaScript:menuActivate('dvObjectHolder_AhPhoneJSDialpad_dialstring', 'combodiv', 'combosel')\">"
+	+ "    <div id=\"combodiv\" style=\"position:absolute; display:none; top:0px; left:0px;z-index:10000\" onmouseover=\"javascript:oOverMenu='combodiv';\" onmouseout=\"javascript:oOverMenu=false;\">"
+	+ "      <select size=\"6\" id=\"combosel\" style=\"width: 110; border:0;\" onclick=\"JavaScript:textSet('dvObjectHolder_AhPhoneJSDialpad_dialstring',this.value);\" onkeypress=\"JavaScript:comboKey('dvObjectHolder_AhPhoneJSDialpad_dialstring', this);\">"
+	+ "      </select>"
+	+ "    </div>"
+	+ "</form>"
+	
+	"</nobr></td>";
+}
+//document.getElementById('dvObjectHolder_AhPhoneJSDialpad').innerHTML =
+</script>
+<table align='center' cellpadding=5>
+<tr><script> document.write(str_dropdown); </script></tr>
+</table>
+
+<center>
+
+<table border=0 width=80 cellpadding=0 cellspacing=0>
+	<tr>
+		<td><img src="./images/1.png" id="digit_1_btn" name="digit_1_btn" value="  1  "  ondblclick="dlbclickHandler('1');" onMouseOver="MM_swapImage('digit_1_btn','','./images/1-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('1');" onMouseUp="MM_swapImage('digit_1_btn','','./images/1-1.png',1)"></img></td>
+		<td><img src="./images/2.png" id="digit_2_btn" name="digit_2_btn" value="  2  "  ondblclick="dlbclickHandler('2');" onMouseOver="MM_swapImage('digit_2_btn','','./images/2-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('2');" onMouseUp="MM_swapImage('digit_2_btn','','./images/2-1.png',1)"></img></td>
+		<td><img src="./images/3.png" id="digit_3_btn" name="digit_3_btn" value="  3  "  ondblclick="dlbclickHandler('3');" onMouseOver="MM_swapImage('digit_3_btn','','./images/3-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('3');" onMouseUp="MM_swapImage('digit_3_btn','','./images/3-1.png',1)"></img></td>
+	</tr><tr>
+		<td><img src="./images/4.png" id="digit_4_btn" name="digit_4_btn" value="  4  "  ondblclick="dlbclickHandler('4');" onMouseOver="MM_swapImage('digit_4_btn','','./images/4-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('4');" onMouseUp="MM_swapImage('digit_4_btn','','./images/4-1.png',1)"></img></td>
+		<td><img src="./images/5.png" id="digit_5_btn" name="digit_5_btn" value="  5  "  ondblclick="dlbclickHandler('5');" onMouseOver="MM_swapImage('digit_5_btn','','./images/5-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('5');" onMouseUp="MM_swapImage('digit_5_btn','','./images/5-1.png',1)"></img></td>
+		<td><img src="./images/6.png" id="digit_6_btn" name="digit_6_btn" value="  6  "   ondblclick="dlbclickHandler('6');" onMouseOver="MM_swapImage('digit_6_btn','','./images/6-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('6');" onMouseUp="MM_swapImage('digit_6_btn','','./images/6-1.png',1)"></img></td>
+	</tr><tr>
+		<td><img src="./images/7.png" id="digit_7_btn" name="digit_7_btn" value="  7  "   ondblclick="dlbclickHandler('7');" onMouseOver="MM_swapImage('digit_7_btn','','./images/7-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('7');" onMouseUp="MM_swapImage('digit_7_btn','','./images/7-1.png',1)"></img></td>
+		<td><img src="./images/8.png" id="digit_8_btn" name="digit_8_btn" value="  8  "  ondblclick="dlbclickHandler('8');" onMouseOver="MM_swapImage('digit_8_btn','','./images/8-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('8');" onMouseUp="MM_swapImage('digit_8_btn','','./images/8-1.png',1)"></img></td>
+		<td><img src="./images/9.png" id="digit_9_btn" name="digit_9_btn" value="  9  "   ondblclick="dlbclickHandler('9');" onMouseOver="MM_swapImage('digit_9_btn','','./images/9-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('9');" onMouseUp="MM_swapImage('digit_9_btn','','./images/9-1.png',1)"></img></td>
+	</tr><tr>
+		<td><img src="./images/star.png" id="digit_*_btn" name="digit_*_btn" value="  *  "  onMouseOver="MM_swapImage('digit_*_btn','','./images/star-1.png',1)" onMouseOut="MM_swapImgRestore()" ondblclick="dlbclickHandler('*');" onMouseDown="clickHandler('*');" onMouseUp="MM_swapImage('digit_*_btn','','./images/star-1.png',1)"></img></td>
+		<td><img src="./images/0.png" id="digit_0_btn" name="digit_0_btn" value="  0  "   ondblclick="dlbclickHandler('0');" onMouseOver="MM_swapImage('digit_0_btn','','./images/0-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('0');" onMouseUp="MM_swapImage('digit_0_btn','','./images/0-1.png',1)"></img></td>
+		<td><img src="./images/pound.png" id="digit_#_btn" name="digit_#_btn" value="  #  "  ondblclick="dlbclickHandler('#');" onMouseOver="MM_swapImage('digit_#_btn','','./images/pound-1.png',1)" onMouseOut="MM_swapImgRestore()" onMouseDown="clickHandler('#');" onMouseUp="MM_swapImage('digit_#_btn','','./images/pound-1.png',1)"></img></td>
+</tr><tr><script>document.write(str_dial);</script> 
+</tr>
+</table>
+</div>
+</center>
+</body></html>

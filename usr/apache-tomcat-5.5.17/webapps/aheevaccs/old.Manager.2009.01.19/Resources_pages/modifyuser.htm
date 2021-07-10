@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Add User</title>
+<script language="JavaScript" src="jsUtil.js"> </script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript">
+	dbid_o = normalizeString(QueryString("dbid"));
+	tenantID_o = normalizeString(QueryString("tenantID"));
+	userName_o = normalizeString(QueryString("userName"));
+	role_o = normalizeString(QueryString("role"));
+	active_o = normalizeString(QueryString("active"));
+</script>
+<script language="javascript" type="text/javascript">
+
+function changeAvailableGroup(){
+	var i=document.theForm.new_available_groups.options.length;
+    if (i>=1){
+    	for (i-1; i>=0; i--){
+			document.theForm.new_available_groups.options[i] = null;
+		}
+    }
+	var i=document.theForm.new_assigned_groups.options.length;
+    if (i>=1){
+    	for (i-1; i>=0; i--){
+			document.theForm.new_assigned_groups.options[i] = null;
+		}
+    }
+	var agentGroups = String( appletObj.getAgentGroupsByStatusAndTenant("1", document.theForm.tenant_id.value) );
+	jsagentGroupsArray = agentGroups.split("|");
+	for(i=0; i < jsagentGroupsArray.length; i++){
+		thisAgentGroup = jsagentGroupsArray[i].split(",");
+		myOption = new Option(thisAgentGroup[1],thisAgentGroup[0])
+		optionPos = document.theForm.new_available_groups.options.length
+		document.theForm.new_available_groups.options[optionPos]=myOption
+	}
+}	
+
+function add_this_group()
+	{
+	//Trouver le option selectionnee
+	for(i=0; i < document.theForm.new_available_groups.length; i++)	
+		{
+		if( document.theForm.new_available_groups.options[i].selected )
+			{
+			maPos = i;
+			myOption = new Option(document.theForm.new_available_groups.options[i].text,
+										document.theForm.new_available_groups.options[i].value);
+			break;
+			}
+		}
+		
+	// ajouter l option
+	document.theForm.new_assigned_groups.options[document.theForm.new_assigned_groups.length] = myOption;
+	
+	//Enlever  l option deja chosiie et remonter les autres
+	
+	for(i=0; i < (document.theForm.new_available_groups.length-1); i++)
+		{		
+		if(i >= maPos)
+			{
+			uneOption = new Option(document.theForm.new_available_groups.options[i+1].text, document.theForm.new_available_groups.options[i+1].value);
+			document.theForm.new_available_groups.options[i] = uneOption;
+			}
+		}
+	document.theForm.new_available_groups.length = document.theForm.new_available_groups.length - 1;	
+	
+	document.theForm.b_add_group.disabled 		= true;
+	document.theForm.b_retrieve_group.disabled 	= true;	
+}
+	
+function retrive_this_group()
+	{
+	//Trouver le option selectionnee
+	for(i=0; i < document.theForm.new_assigned_groups.length; i++)	
+		{
+		if(document.theForm.new_assigned_groups.options[i].selected )
+			{
+			maPos = i;
+			myOption = new Option(document.theForm.new_assigned_groups.options[i].text, 
+										document.theForm.new_assigned_groups.options[i].value);
+			break;
+			}
+		}
+		
+	// ajouter l option
+	document.theForm.new_available_groups.options[document.theForm.new_available_groups.length] = myOption;
+	
+	//Enlever  l option deja chosiie et remonter les autres
+	
+	for(i=0; i < (document.theForm.new_assigned_groups.length-1); i++)
+		{		
+		if(i >= maPos)
+			{
+			uneOption = new Option(document.theForm.new_assigned_groups.options[i+1].text, document.theForm.new_assigned_groups.options[i+1].value);
+			document.theForm.new_assigned_groups.options[i] = uneOption;
+			}
+		}
+	document.theForm.new_assigned_groups.length = document.theForm.new_assigned_groups.length - 1;
+	document.theForm.b_add_group.disabled 		= true;
+	document.theForm.b_retrieve_group.disabled 	= true;
+}
+
+function changeDisabledTenant(){
+	if (document.theForm.role.value == "10"){
+		document.theForm.tenant_id.disabled = true;
+		document.theForm.new_available_groups.disabled = true;
+		document.theForm.b_add_group.disabled = true;
+		document.theForm.b_retrieve_group.disabled = true;
+		document.theForm.new_assigned_groups.disabled = true;
+	} 
+	if (document.theForm.role.value == "20"){
+		document.theForm.tenant_id.disabled = false;
+		document.theForm.new_available_groups.disabled = true;
+		document.theForm.b_add_group.disabled = true;
+		document.theForm.b_retrieve_group.disabled = true;
+		document.theForm.new_assigned_groups.disabled = true;
+	} 
+	if (document.theForm.role.value == "30" || document.theForm.role.value == "40" || document.theForm.role.value == "50" ){
+		document.theForm.tenant_id.disabled = false;
+		document.theForm.new_available_groups.disabled = false;
+		document.theForm.b_add_group.disabled.disabled = true;
+		document.theForm.b_retrieve_group.disabled = true;
+		document.theForm.new_assigned_groups.disabled = false;
+	} 
+}
+
+function enableButtons()
+{	
+	document.theForm.b_add_group.disabled = false;
+	document.theForm.b_retrieve_group.disabled = true;
+}
+
+function disableButtons()
+{	
+	document.theForm.b_add_group.disabled = true;
+	document.theForm.b_retrieve_group.disabled = false;
+}
+
+function valideInfo()
+	{
+	valid_info = true;
+	
+	if(document.theForm.tenant_id.value == "")
+		{
+		alert("Specify tenant ID");
+		valid_info = false;
+		}
+	if(document.theForm.username.value == "")
+		{
+		alert("Specify User name");
+		valid_info = false;
+		}
+	
+	if(document.theForm.role.value == "")
+		{
+		alert("Specify user role");
+		valid_info = false;
+		}
+		
+	if(validation(document.theForm.tenant_id.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !!!");
+		document.theForm.tenant_id.focus();
+		valid_info = false;
+	}
+	else if(validation(document.theForm.username.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !!!");
+		document.theForm.username.focus();
+		valid_info = false;	
+	}	
+	else if(validation(document.theForm.role.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !!!");
+		document.theForm.role.focus();
+		valid_info = false;	
+	}	
+	else if(validation(document.theForm.password.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !!!");
+		document.theForm.password.focus();
+		valid_info = false;	
+	}
+	else if(validation(document.theForm.password2.value)==0)
+	{
+		alert("You cannot use ~ or ^ or | !!!");
+		document.theForm.password2.focus();
+		valid_info = false;	
+	}
+	
+	if(document.theForm.active.checked)
+		active_value = "1";
+	else
+		active_value = "0";
+	
+	if(document.theForm.password.value != "")
+		{
+		if(document.theForm.password.value != document.theForm.password2.value)
+			{
+			alert("Passwords doesn't match.");
+			valid_info = false;
+			}
+		}
+		
+	groups_list = "";
+	for(i = 0; i < document.theForm.new_assigned_groups.options.length; i++)
+		groups_list += document.theForm.new_assigned_groups.options[i].value+"|";
+	
+	groups_list = groups_list.substring(0, (groups_list.length -1));
+	//alert(groups_list);
+	/// From here, we know if form is valide
+	if(valid_info) 
+		{		
+		appletObj.saveUser(dbid_o, document.theForm.tenant_id.value, document.theForm.username.value, document.theForm.password.value, document.theForm.role.value, active_value, groups_list );
+		document.location.href = "../defaultpage.htm";	
+		}
+	}
+
+function askDelete()
+	{
+	var userName = String( appletObj.getUserName() );
+	//alert(userName);
+	//alert(userName_o);
+	if (userName == userName_o){
+		alert("You can't delete your own user!");
+	} else {
+		var yes_no = confirm("This user will be permanently delete.\n Do you want to continue ?");
+		if(yes_no)	
+			appletObj.deleteUser(dbid_o);
+			document.location.href = "../defaultpage.htm";	
+		}
+	}
+
+</script>
+</head>
+
+<body class="bottompagebody" TEXT="#000000" LINK="#000066" VLINK="#666666" >
+<form name="theForm">
+<table border="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td><h3>Modify user</h3></td>
+  </tr>
+ 
+  <tr>
+    <td>User Name</td>
+    <td>
+		<script language="javascript" type="text/javascript">
+		document.write("<input name=\"username\" type=\"text\" value=\""+userName_o+"\">");
+		</script>
+	</td>
+  </tr>
+  <tr>
+    <td>Password</td>
+    <td><input name="password" type="password"></td>
+  </tr>
+  <tr>
+    <td>Retype password</td>
+    <td><input name="password2" type="password"></td>
+  </tr>
+  <tr>
+    <td>Role</td>
+    <td><select name="role" onChange="changeDisabledTenant()">
+	<script language="javascript" type="text/javascript">		
+		if(role_o == "10")
+			document.write("<option value=\"10\" selected>Super Admin</option>");
+		else
+			document.write("<option value=\"10\">Super Admin</option>");
+			
+		if(role_o == "20")
+			document.write("<option value=\"20\" selected>Admin</option>");
+		else
+			document.write("<option value=\"20\">Admin</option>");
+			
+		if(role_o == "30")
+			document.write("<option value=\"30\" selected>Historical Report</option>");
+		else
+			document.write("<option value=\"30\">Historical Report</option>");
+			
+		if(role_o == "40")
+			document.write("<option value=\"40\" selected>Quality Monitoring</option>");
+		else
+			document.write("<option value=\"40\">Quality Monitoring</option>");
+				
+		if(role_o == "50")
+			document.write("<option value=\"50\" selected>Viewer</option>");
+		else
+			document.write("<option value=\"50\">Viewer</option>");		
+	</script>
+	</select>
+	</td>
+  </tr>
+   <tr>
+    <td width="100">Tenant</td>
+    <td>
+		<select name="tenant_id" onChange="changeAvailableGroup()">
+	<script language="javascript" type="text/javascript">
+		var tenants 	= String( appletObj.getTenantInfo() );
+		var jsTenants	= tenants + "";
+		arrayTenants	= jsTenants .split("|");
+		for(i=0; i < arrayTenants.length; i++)
+			{
+			thisTenantInfos = arrayTenants[i].split(",");
+			
+			if(thisTenantInfos[0] == tenantID_o)
+				document.write("<option value=\""+thisTenantInfos[0]+"\" selected>"+thisTenantInfos[1]+"</option>");			
+			else
+				document.write("<option value=\""+thisTenantInfos[0]+"\">"+thisTenantInfos[1]+"</option>");
+			}
+	</script>
+		</select>
+	</td>
+  </tr>
+  <tr>
+			<td valign="top"><b>Groups</b></td>
+							
+			<td valign="top"><b>Available groups</b><br>
+              <select size="10" name="new_available_groups" style="width:200px " onChange="enableButtons()">
+                <script language="javascript" type="text/javascript">
+				var UserGroupList = String( appletObj.getUserAuthorizeGroupsByUserDBID(dbid_o) );
+				//alert(UserGroupList);
+				var UserGroupListArray;
+				
+				if(UserGroupList != "")
+					UserGroupListArray = UserGroupList.split("|");
+				else
+					UserGroupListArray = new Array();
+				//alert(tenantID_o);							
+				var NonUserGroupList = String( appletObj.getUserNoAuthorizeGroupsByUserDBID(dbid_o,tenantID_o) );	
+				//alert(NonUserGroupList)
+				var NonUserGroupListArray;
+				if(NonUserGroupList != "")				
+					NonUserGroupListArray = NonUserGroupList.split("|");				
+				else
+					NonUserGroupListArray = new Array();
+					
+				for(i=0; i < NonUserGroupListArray.length; i++)
+					{
+					//thisGroup = NonUserGroupListArray[i].split(",");
+					groupInfos = String( appletObj.getAgentGroupByDBIDAndState(NonUserGroupListArray[i], "1") );
+					if(groupInfos != "")
+						{
+						groupInfosArray = groupInfos.split(",");					
+						document.write("<option value=\""+groupInfosArray[0]+"\">"+groupInfosArray[1]+"</option>");					
+						}
+					}
+				</script>
+              </select>
+</td>
+			<td align="center">
+				<input name="b_add_group" type="button" value="&gt;&gt;" disabled onClick="add_this_group()"><br><br>
+				<input name="b_retrieve_group" type="button" value="&lt;&lt;" disabled onClick="retrive_this_group()">
+			</td>
+	<td valign="top"><b>Assigned groups</b><br>
+      <select size="10" name="new_assigned_groups" style="width:200px " onChange="disableButtons()">
+        <script language="javascript" type="text/javascript">
+				for(i=0; i < UserGroupListArray.length; i++)
+					{
+					//alert("UserGroupListArray["+i+"]="+UserGroupListArray[i])
+					thisGroup = UserGroupListArray[i].split(",");
+					
+					groupInfos = String( appletObj.getAgentGroupByDBIDAndState(thisGroup[2], "1") );
+					
+					if(groupInfos != "")
+						{
+						groupInfosArray = groupInfos.split(",");
+						document.write("<option value=\""+groupInfosArray[0]+"\" >"+groupInfosArray[1]+"</option>");					
+						}
+					}
+				</script>
+      </select>
+</td>
+			</script>
+			
+		</tr>
+  <tr>
+    <td>Active</td>
+    <td>
+	<script language="javascript" type="text/javascript">
+	if(active_o == 1)
+		document.write("<input name=\"active\" type=\"checkbox\" checked>");
+	else
+		document.write("<input name=\"active\" type=\"checkbox\">");
+	</script>
+	</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+		<input name="" type="button" value="Modify user" onClick="valideInfo()">&nbsp;
+		<input name="" type="button" value="Delete user" onClick="askDelete()">
+	</td>
+  </tr>
+</table>
+</form>
+</body>
+<script language="javascript" type="text/javascript">
+	changeDisabledTenant();
+</script>
+</html>

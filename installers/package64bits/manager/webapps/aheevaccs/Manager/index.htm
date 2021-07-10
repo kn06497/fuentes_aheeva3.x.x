@@ -1,0 +1,22 @@
+<html>
+
+<head>
+
+<LINK REL="SHORTCUT ICON" HREF="img/aheeva.ico">
+<script language="JavaScript" src="/jsUtil.js"></script>
+
+<SCRIPT LANGUAGE="JavaScript">
+function refreshFrame() {
+frames['comm'].window.location.href = "CommPage.jsp"; // frame 1's page
+}
+</SCRIPT>
+<script language="javascript" src="Resources_pages/globFuncsIndexHTM.js"></script>
+
+<title>Aheeva CCS Manager</title>
+
+</head>
+<frameset rows="*,100%"  border="1" >
+<frame name="comm" scrolling="no" noresize target="contents" src="CommPage.jsp" >
+<frame name="main" scrolling="no" noresize target="contents" src="login.jsp" >
+<noframes>Your browser does not support frames</noframes>
+</html>

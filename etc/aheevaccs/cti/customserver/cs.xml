@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<CustomServer>
+	<Module name="BillingModule">
+	<filename>abcd.so</filename>
+	<functions>
+		<function name="isSomeoneAvailable" />
+		<function name="getBalance" />
+	</functions>
+	</Module>
+</CustomServer>
+

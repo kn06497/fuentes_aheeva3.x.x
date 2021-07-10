@@ -1,0 +1,85 @@
+<html>
+
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Language" content="en-us">
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript" src="wfmTeam.js"></script>
+
+</head>
+
+<body class="bottompagebody" onLoad="displayTeamInfo()" onUnload=" return checkOnUnload()" >
+<form name="teamInfo" onKeyDown="KeyDownHandler(save)">
+  <table border="0">
+    <tr>
+      <td width="75">&nbsp;</td>
+     <!-- <td colspan="2" id="caption"><h3>Modify a Team</h3></td> -->
+ <td id="caption" height="40" font-weight:bold; text-align:center; colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+      <td><script>document.write(MultiArray["Team Name"][lang])</script></td>
+      <td colspan="2"><input name="teamname" type="text" onClick="enabledUpdateButton()"></td>
+    </tr>
+    <tr>
+      <td><script>document.write(MultiArray["Team Leader"][lang])</script></td>
+      <td colspan="2"><input name="teamleader" type="text" onClick="enabledUpdateButton()"></td>
+    </tr>
+  </table>
+<!--Assign an agent -->
+
+<table border="0" cellpadding="0" cellspacing="0" width="561" id="AutoNumber2" height="157">
+  <tr>
+   <td height="21" width="75">&nbsp;
+   </td>
+  </tr>
+  <tr>
+   <td  height="146">
+     <table border="0" width="100%" id="AutoNumber3" height="58" cellspacing="0" cellpadding="0" bordercolor="#C0C0C0" style="border-collapse: collapse">
+          <tr>
+            <td colspan="3" align="center" valign="center" ><script>document.write(MultiArray["Non-configured agent"][lang])</script></td>
+            <td align="center">&nbsp;</td>
+            <td align="center" valign="center"><script>document.write(MultiArray["Assigned agent"][lang])</script></td>
+          </tr>
+          <tr>
+            <td height="52" colspan="3" align="center" style="border-style: solid; border-width: 0"> 
+             <select width="200" style="width: 200px;font-size: 8pt; font-weight: bold" name="nonConfiguredAgents" size="10" multiple onChange="enabledAddButton()"> 
+             </select>
+            </td>
+            <td width="40" height="52" bordercolordark="#C0C0C0" nowrap align="center">
+              <p>&nbsp; </p>
+              <input type="button" name="addButton"  disabled="true" onClick="chkAndAddAgentToTeam()" style="width: 40; height: 26" value="&gt;&gt;">
+              <p>&nbsp;</p>
+              <input type="button" name="dropButton" disabled="true" onClick="chkAndDropAgentFromTeam()" style="width: 40; height: 26" value="&lt;&lt;">
+              <p>&nbsp;</p></td>
+            <td width="1314" height="52" style="border-style: none; border-width: 0" bordercolor="#000000" align="center"> <select width="200" name="availableAgentInTeam" size="10" multiple  style="width: 200px; font-size: 8pt; font-weight: bold" onChange="enabledDropButton()"> </select>
+            </td>
+          </tr>
+          <!-- update or delete your the changes -->
+          <tr>
+            <td width="351">&nbsp;</td>
+            <td width="734">
+		<script>document.write("<input id=\"save\" name=\"updateInfo\" type=\"button\" disabled=\"true\" value=\""+MultiArray["Add team"][lang]+"\" onClick=\"return saveInfo()\">")</script>
+
+	    </td>
+
+            <td width="205">
+			<script>document.write("<input name=\"deleteInfo\" type=\"button\" disabled=\"true\" value=\""+MultiArray["Delete team"][lang]+"\" onClick=\"askDelete()\">")</script>
+ 
+            </td>
+            <td width="40">&nbsp; </td>
+            <td width="1314">&nbsp;</td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+</table>
+
+
+</form >
+</body>
+
+</html>

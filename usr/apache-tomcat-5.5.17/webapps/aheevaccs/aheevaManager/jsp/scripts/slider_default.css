@@ -1,0 +1,55 @@
+*.horizontal_track {
+	background-color: #bbb;
+	width: 320px;
+	line-height: 0px;
+	font-size: 0px;
+	text-align: left;
+	padding: 4px;
+	border: 1px solid;
+	border-color: #ddd #999 #999 #ddd;
+}
+*.horizontal_slider {
+	background-color: #666;
+	width: 16px;
+	height: 8px;
+	position: relative;
+	z-index: 2;
+	line-height: 0;
+	margin: 0;
+	border: 2px solid;
+	border-color: #999 #333 #333 #999;
+}
+*.horizontal_slit {
+	background-color: #333;
+	width: 310px;
+	height: 2px;
+	margin: 4px 4px 2px 4px;
+	line-height: 0;
+	position: absolute;
+	z-index: 1;
+	border: 1px solid;
+	border-color: #999 #ddd #ddd #999;
+}
+*.display_holder {
+	background-color: #bbb;
+	color: #fff;
+	width: 34px;
+	height: 20px;
+	text-align: right;
+	padding: 0;
+	border: 1px solid;
+	border-color: #ddd #999 #999 #ddd;
+}
+.value_display {
+	background-color: #bbb;
+	color: #333;
+	width: 30px;
+	margin: 0 2px;
+	text-align: right;
+	font-size: 8pt;
+	font-face: verdana, arial, helvetica, sans-serif;
+	font-weight: bold;
+	line-height: 12px;
+	border: 0;
+	cursor: default;
+}

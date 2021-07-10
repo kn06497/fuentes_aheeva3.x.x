@@ -1,0 +1,216 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>AheevaCCS - Statistics</title>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+
+<script language="javascript" src="jsdom_menuvariables.js" type="text/javascript" ></script>
+<script language="javascript" src="jsdomenu.config.js" type="text/javascript" ></script>
+<script language="javascript" src="jsdomenu.js" type="text/javascript"></script>
+<script language="javascript" src="jsdomenu.inc.js" type="text/javascript" ></script>
+
+<script language="javascript" src="jsUtil.js" type="text/javascript"></script>
+<script language="javascript" src="Browser.js" type="text/javascript"></script>
+<script language="javascript" src="topstatsFunctions.js" type="text/javascript"></script>
+<script language="javascript" src="agentSpyFunctions.js" type="text/javascript"></script>
+
+<LINK href="style.css" 	rel="stylesheet" type="text/css" />
+<LINK href="office_xp.css" 	rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+
+div.TableContainer {
+	width: 100%;
+	height: 99%; 
+	overflow:  auto;
+	margin: 0 auto; 
+}	
+tbody	{ 
+	overflow: auto; 
+	height: 10px;
+}
+thead tr	{	
+	position:relative; 
+	top:expression(this.parentNode.parentNode.parentNode.scrollTop-2);
+
+ }
+</style>
+
+
+
+<SCRIPT language="JavaScript">
+<!--
+if (document.images)
+{
+pic1= new Image(20,16); 
+pic1.src="../img/inbound.gif"; 
+
+pic2= new Image(20,16); 
+pic2.src="../img/outbound.gif"; 
+
+pic3= new Image(20,16); 
+pic3.src="../img/coaching.gif"; 
+
+pic4= new Image(20,16); 
+pic4.src="../img/conference.gif"; 
+
+pic5= new Image(20,16); 
+pic5.src="../img/dialing.gif"; 
+
+pic6= new Image(20,16); 
+pic6.src="../img/logged_out.gif"; 
+
+pic7= new Image(20,16); 
+pic7.src="../img/not_ready.gif"; 
+
+pic8= new Image(20,16); 
+pic8.src="../img/on_break.gif"; 
+
+pic9= new Image(20,16); 
+pic9.src="../img/on_hold.gif"; 
+
+pic10= new Image(20,16); 
+pic10.src="../img/technical_problem.gif"; 
+
+pic11= new Image(20,16); 
+pic11.src="../img/waiting.gif"; 
+
+pic12= new Image(20,16); 
+pic12.src="../img/wrap_up.gif"; 
+
+pic13= new Image(20,16); 
+pic13.src="../img/follow_up.gif"; 
+}
+-->
+</SCRIPT>
+
+
+
+</head>
+
+<body class="topstatsbody" onLoad="initjsDOMenu()" SCROLL="NO">
+<div id="stats_division" class="TableContainer" >	</div>
+	
+	
+	<div id="changeStatusDialog" class="changeStatusDialog">
+	<table>
+		<tr>
+			<td bgcolor="#AFCEEF" colspan="2"><script>document.write(MultiArray["Notice"][lang])</script>:</td>
+		</tr>
+		<tr>
+			<td id="changeStatusDialog_text" colspan="2"></td>
+		</tr>
+		<tr>
+			<td colspan="2"><script>document.write(MultiArray["Message"][lang])</script><input name="changeStatusDialog_mess" value="" class="changeStatusDialog_input" maxlength="256"></td>
+		</tr>
+		<tr>
+			<td align="right" id="changeStatusDialog_okButton" width="50%">&nbsp;</td>
+			<td align="left" width="50%">
+	      		<script>document.write("<input  type=\"button\" value=\""+MultiArray["Cancel"][lang]+"\" onClick=\"hidechangeStatusDialog()\">")</script>
+		</td></tr>
+	</table>	
+	</div>
+	
+	<div id="showLiveListeningDialog" style="visibility:hidden; position:absolute; top:0px; left:0px; z-index:500;">
+	
+	<table width="220" height="74" border="0" align="center" cellpadding="0" cellspacing="0" style="border: 1px solid rgb(136, 136, 136);">
+			<tr style="background-image:url(../img/tile_blue.gif)">
+			<td  style="background-image:url(../img/tile_blue.gif);cursor:move;" width="253" height="16" valign="top" onMouseDown="dragThis('showLiveListeningDialog')">
+		  &nbsp;&nbsp;<font color="#FFFFFF" size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong><script>document.write(MultiArray["Agent spying"][lang])</script></strong></font></td>
+		<td width="15" align="right" style="background-image:url(../img/tile_blue.gif)"><div align="right"><img src="../img/x.gif" width="15" height="14" border="0"  onClick="javascript:hideSpyInterface()" style="cursor:pointer"></div></td>
+	  </tr>
+	  <tr bgcolor="#FFFFF0">
+		<td height="2" colspan="2" align="left" valign="top"><img src="../img/line_gray.gif" width="100%" height="1"></td>
+	  </tr>
+	  <tr bgcolor="#FFFFF0">
+		<td height="30" colspan="2" valign="middle">&nbsp;&nbsp; 
+			<img id="listen_img" src="../img/listen.gif" width="36" height="25" style="cursor:pointer" onClick="javascript:spy_start()">
+		  	<img src="../img/stop.gif" width="36" height="25" style="cursor:pointer" onClick="javascript:spy_stop()">
+			<!--<img src="../img/talk_to_agent_inactive.gif" alt="Whisper to agent" width="36" height="25" id="whisper_agent_img" style="cursor:pointer" onClick="javascript:whisper_agent()">
+			<img src="../img/talk_to_customer_inactive.gif" alt="Whisper to customer" width="36" height="25" id="whisper_customer_img" style="cursor:pointer" onClick="javascript:whisper_customer()">-->
+		</td>
+	  </tr>
+	  <tr bgcolor="#EAF4F3">
+		<td height="2" colspan="2" align="left" valign="top"><img src="../img/line_gray.gif" width="100%" height="1"></td>
+	  </tr>
+	  <tr bgcolor="#EAF4F3">
+		<td height="15" colspan="2" id="agtSpyTicker" style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px">&nbsp; </td>
+	  </tr>
+	</table>
+	</div>
+	<!-- INCLUDE THE IAX JAVA STARPHONE -->
+	
+	<!-- HTML CONVERTER -->
+	<OBJECT
+		classid = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"
+		codebase = "http://java.sun.com/products/plugin/autodl/jinstall-1_4-windows-i586.cab#Version=1,4,0,0"
+		WIDTH = -1 HEIGHT = -1 id="myPhoneApplet" name="myPhoneApplet" >
+	
+		<PARAM NAME = "type" VALUE = "application/x-java-applet;version=1.4">
+		<PARAM NAME = "scriptable" VALUE = "true">
+		<PARAM NAME = "CODE" VALUE="Manager.iaxclient.iaxPhone.class">
+		<PARAM NAME = ARCHIVE VALUE="../siaxPhone.jar" >
+		<PARAM NAME = INPUT VALUE ="0">
+		<PARAM NAME = OUTPUT VALUE ="0">
+		<PARAM NAME = OUTPUT VALUE ="0">
+		<PARAM NAME = "MAYSCRIPT" VALUE="true">
+		<PARAM NAME = "USER" VALUE="aheeva_spy">
+		<PARAM NAME = "PASS" VALUE="aheeva_spy">
+		<PARAM NAME = "REGISTER" VALUE="false">
+		<!--<PARAM NAME = "PREFERRED" VALUE="">
+		<PARAM NAME = "ALLOWED" VALUE="">-->
+		<PARAM NAME = "NUMBER" VALUE="">
+	
+		<COMMENT>
+		<EMBED
+				type = "application/x-java-applet;version=1.4" \
+				WIDTH = -1 \
+				HEIGHT = -1 \
+				CODE ="Manager.iaxclient.iaxPhone.class" \
+				ARCHIVE ="../siaxPhone.jar" \
+				INPUT ="0" \
+				OUTPUT ="0" \
+			scriptable = false \
+			pluginspage = "http://java.sun.com/products/plugin/index.html#download">
+			<NOEMBED>
+	
+				</NOEMBED>
+		</EMBED>
+		</COMMENT>
+	</OBJECT>
+	
+	<!--
+	<APPLET WIDTH = -1 HEIGHT = -1>
+	<PARAM NAME = "CODE" VALUE="IAXTest.class">
+	<PARAM NAME = ARCHIVE VALUE="jiaxtest.jar" >
+	<PARAM NAME = INPUT VALUE ="0">
+	<PARAM NAME = OUTPUT VALUE ="0">
+	<param name="MAYSCRIPT" value="true">
+	<PARAM NAME = "USER" VALUE="true">
+	<PARAM NAME = "PASS" VALUE="true">
+	<PARAM NAME = "REGISTER" VALUE="true">
+	<PARAM NAME = "NUMBER" VALUE="">
+	<PARAM NAME = "PREFERRED" VALUE="">
+	<PARAM NAME = "ALLOWED" VALUE="">
+	</APPLET>
+	-->
+	<!-- END OF IAX STARPHONE -->
+	
+	
+	<!-- ERROR MESSAGES DIV -->
+	
+	<div id="showMessageDialogError" class="showMessageDialogError">
+	<table width="100%">
+		<tr>
+			<td width="30"><img src="../img/error.gif" width="30" height="30"></td>
+			<td id="showMessageDialogError_text" class="showMessageDialogError_text"></td>
+		</tr>
+	</table>	
+	</div>
+	
+	<!-- ~ ERROR MESSAGES DIV  -->
+
+</body>
+</html>

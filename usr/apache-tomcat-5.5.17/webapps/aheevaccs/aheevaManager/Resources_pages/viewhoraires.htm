@@ -1,0 +1,591 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>View schedule</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="tab_luna.css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="style_2.css" />
+<link type="text/css" rel="StyleSheet" href="slider/css/luna.css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<style type="text/css">
+.dynamic-tab-pane-control .tab-page {
+	height:		200px;
+}
+.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page {
+	height:		100px;
+}
+html, body {
+/*	background:	ThreeDFace; */
+
+}
+form {
+	margin:		0;
+	padding:	0;
+}
+/* over ride styles from webfxlayout */
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+</style>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="javascript" type="text/javascript" src="agentFunctions.js"></script>
+<script language="javascript" type="text/javascript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript" src="tabpane.js"></script>
+
+<!-- Calendar required javascript -->
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+
+<!-- End of calendar required section -->
+
+<script type="text/javascript" src="slider/js/range.js"></script>
+<script type="text/javascript" src="slider/js/timer.js"></script>
+<script type="text/javascript" src="slider/js/slider.js"></script>
+
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+
+
+<script>
+
+var vValue = normalizeString(QueryString('type'));
+var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+var complete = normalizeString(QueryString('complete'));
+
+
+
+function sortSelect(o)
+{
+	if (o.length==0) { return; }
+
+	if(document.horaire.viewckbox.checked == false){
+		o = o.sort(
+			function(a,b) {
+				if ((a.text+"") < (b.text+"")) { return -1; }
+				if ((a.text+"") > (b.text+"")) { return 1; }
+				return 0;
+				}
+			);
+	}
+	else{
+		o = o.sort(
+			function(a,b) {
+
+					if (parseInt(a.value) < parseInt(b.value)) { return -1; }
+					if (parseInt(a.value) > parseInt(b.value)) { return 1; }
+					return 0;
+				}
+			);
+	}
+
+}
+
+function sortSelect2(obj)
+{
+	var o = new Array();
+	if (obj.options==null) { return; }
+	for (var i=0; i<obj.options.length; i++) {
+		o[o.length] = new Option( obj.options[i].text, obj.options[i].value, obj.options[i].defaultSelected, obj.options[i].selected) ;
+		}
+	if (o.length==0) { return; }
+
+	if(document.horaire.viewckbox.checked == false){
+		o = o.sort(
+			function(a,b) {
+				if ((a.text+"") < (b.text+"")) { return -1; }
+				if ((a.text+"") > (b.text+"")) { return 1; }
+				return 0;
+				}
+			);
+	}
+	else{
+		o = o.sort(
+			function(a,b) {
+
+					if (parseInt(a.value) < parseInt(b.value)) { return -1; }
+					if (parseInt(a.value) > parseInt(b.value)) { return 1; }
+					return 0;
+				}
+			);
+	}
+	for (var i=0; i<o.length; i++) {
+		obj.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+		}
+
+}
+
+
+
+function fillObjectCombo()
+{
+
+		var agents = String( appletObj.getAgentsByNameActif(tenant_dbid) );
+		var jsAgents = agents + "";
+    	arrayAgents = jsAgents .split("|");
+    	for (j = 0; j <arrayAgents.length; j++){
+    		var iStartPos = arrayAgents[j].indexOf('[');
+    		var iEndPos   = arrayAgents[j].indexOf(']');
+    		var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+		var agt_dbid = String(appletObj.getAgentDBID(login));
+		login = login.concat("^");
+		login=login.concat(agt_dbid); 
+    		myOption = new Option(arrayAgents [j],login)
+			optionPos = document.horaire.agts.options.length
+			document.horaire.agts.options[optionPos]=myOption
+     }
+//end load agents
+
+		var agentGroups = String( appletObj.getAgentGroupByDBIDandName(tenant_dbid) );
+		var jsAgentGroups = agentGroups + "";
+
+    	        arrayGroups = jsAgentGroups.split("|");
+		for (j = 0; j <arrayGroups.length; j++){
+                  var groups = arrayGroups[j].split(",");
+
+    			myOption = new Option(groups[0],arrayGroups[j])
+			optionPos = document.horaire.objects.options.length
+			document.horaire.objects.options[optionPos]=myOption
+    		}
+ // End - load Groups
+    
+    if(document.horaire.objects.options.length >= 10)
+	   	document.horaire.objects.size = 10;
+	else
+		document.horaire.objects.size = document.horaire.objects.options.length;
+
+
+}
+
+function changeAgentListView(){
+
+	var agents;
+	var name="";
+	var o = new Array();
+	document.horaire.agts.length = 0;
+	
+   	if (document.horaire.viewckbox.checked == true)
+    	agents = String( appletObj.getAgentsByName(tenant_dbid) );
+	else
+		agents = String( appletObj.getAgentsByNameActif(tenant_dbid) );
+	var jsAgents = agents + "";
+    arrayAgents = jsAgents.split("|");
+    for (j = 0; j <arrayAgents.length; j++){
+		  var iStartPos = arrayAgents[j].indexOf('[');
+		  var iEndPos   = arrayAgents[j].indexOf(']');
+		  var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+		  name = login+'['+arrayAgents[j].substr(0,iStartPos)+']'
+		  var agt_dbid = String(appletObj.getAgentDBID(login));
+		  login = login + '^' + agt_dbid;
+		   
+		  if (document.horaire.viewckbox.checked == false)  // show agents name as : firstname, lastname[login]
+			myOption = new Option(arrayAgents [j],login);  // show agents name as : login[firstname, lastname]
+		  else
+			myOption = new Option(name,login);
+		  o[o.length]=myOption
+
+   }
+
+	sortSelect(o);
+
+	for (var i=0; i<o.length; i++) {
+		document.horaire.agts.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+	}
+
+}
+
+
+
+
+function selectAll()
+{
+  for (j = 0; j <document.horaire.objects.options.length; j++)
+	  document.horaire.objects.options[j].selected = true;  
+}
+
+function unSelectAll()
+{
+  for (j = 0; j <document.horaire.objects.options.length; j++)
+	  document.horaire.objects.options[j].selected = false;  
+
+}
+
+function getSelectedObjects()
+{
+
+	selectedObjects = new Array()
+	for (i=document.horaire.objects.selectedIndex;i<document.horaire.objects.options.length;i++) {
+  		if (document.horaire.objects.options[i].selected) {
+  			selectedObjects[selectedObjects.length]=document.horaire.objects.options[i].value;
+  		}
+  	}
+        var url = '';
+	if (selectedObjects.length > 0)
+	{
+		url= escape(selectedObjects.join('/'))
+	}
+
+	return url;
+}
+
+
+function getSelectedAgent()
+{
+
+	selectedObjects = new Array()
+	for (i=document.horaire.agts.selectedIndex;i<document.horaire.agts.options.length;i++) {
+  		if (document.horaire.agts.options[i].selected) {
+  			selectedObjects[selectedObjects.length]=document.horaire.agts.options[i].value;
+  		}
+  	}
+        var url = '';
+	if (selectedObjects.length > 0)
+	{
+		url= escape(selectedObjects.join('/'))
+	}
+
+	return url;
+}
+
+function getSelectedTeams(){
+		var url = '';
+
+		selectedTeams = new Array()
+		for (i=teams.selectedIndex;i<teams.options.length;i++) {
+  			if (teams.options[i].selected) {
+  				selectedTeams[selectedTeams.length]=teams.options[i].value;
+  			}
+  		}
+		if (selectedObjects.length > 0){
+			url= escape(selectedObjects.join('/'))
+		}
+
+		return url;
+}
+
+function getRequestedPeriod()
+{
+
+	var destination = '';
+
+		if(document.horaire.startingDateDaily.value.length == 0)
+		{
+				alert(MultiArray["Please enter a starting date"][lang]);
+			return false;
+		}
+		if(document.horaire.endingDateDaily.value.length == 0)
+		{
+				alert(MultiArray["Please enter an ending date"][lang]);
+			return false;
+		}
+	
+	if(dateChecker() == false)
+	{
+		return;
+	}
+	
+   
+
+	destination = "../jsp/publishedHoraires.jsp" // to do 
+	destination += "?startingDateDaily="
+	destination += document.horaire.startingDateDaily.value;
+	destination +="&endingDateDaily=";
+	destination += document.horaire.endingDateDaily.value;
+	destination +="&group=";
+	destination += getSelectedObjects();
+	
+
+	window.open(destination);
+	
+}
+
+
+
+function getRequestedPeriod0()
+{
+
+	var destination = '';
+
+		if(document.horaire.startingDateDaily0.value.length == 0)
+		{
+			alert(MultiArray["Please enter a starting date"][lang]);
+			return false;
+		}
+		if(document.horaire.endingDateDaily0.value.length == 0)
+		{
+			alert(MultiArray["Please enter an ending date"][lang]);
+			return false;
+		}
+	
+	if(dateChecker() == false)
+	{
+		return;
+	}
+	
+   
+
+	destination = "../jsp/agentHoraires.jsp" // to do 
+	destination += "?startingDateDaily="
+	destination += document.horaire.startingDateDaily0.value;
+	destination +="&endingDateDaily=";
+	destination += document.horaire.endingDateDaily0.value;
+	destination +="&agent=";
+	destination += getSelectedAgent();
+
+	
+	window.open(destination);
+	
+}
+
+function dateChecker()
+{
+	var startDate=new Date(document.horaire.startingDateDaily.value);
+	var endDate = new Date(document.horaire.endingDateDaily.value);
+	if(endDate < startDate)
+	{
+		alert(MultiArray["Your ending date cannnot be smaller than your starting date"][lang]);
+		return false;
+	}
+
+	return true;
+}
+
+function changeDisabled(){
+
+		document.horaire.startingDateDaily.disabled = true;
+		document.horaire.endingDateDaily.disabled = true;
+				
+	
+}
+
+/* 
+ * StringParse(): Take a list of key-value as string and transform them to an array. ex: abcd=4&efgh=80  ==> stringElements[abcd]=4; stringElements[efgh]=80 
+ * Parameters: tobeParsed. The string that will be parse
+ * Return value: an associative array key-value
+ */
+function StringParse(tobeParsed)
+{
+	stringElements = new Array();
+	
+	var pairs = tobeParsed.split("&");	//split by the token
+	
+	for (var i=0;i<pairs.length;i++)	//For each pair, split by the =
+	{
+		var pos = pairs[i].indexOf('=');
+		if (pos >= 0)
+		{
+			var argname = pairs[i].substring(0,pos);
+			var value = pairs[i].substring(pos+1);
+			stringElements[argname] = value;			
+		}
+	}	
+	return stringElements;
+}
+
+function getRoutingScriptAndQueues(tenant_id)
+{
+	var rArray = new Array();
+	var jsRSCripts = String( appletObj.getRoutingScripts(tenant_id, "1")  );
+	var jsRSCRIPTArray = jsRSCripts.split("|");
+	for(var i = 0; i < jsRSCRIPTArray.length; i++)
+	{
+		if(jsRSCRIPTArray[i].length != 0) 
+		{
+			thisRScript = jsRSCRIPTArray[i].split(",");																				
+			rArray.push(thisRScript[1]);
+			//Get virtual queues in this script...
+			var thisScriptText = String( appletObj.getRoutingScript(thisRScript[0]) );
+			splitedString = thisScriptText.split('^');
+			//var rootNoddle;
+			for(var j = 0; j < splitedString.length; j++)
+			{
+				var curElement = splitedString[j];		
+				myElementTable = StringParse(curElement);
+				if(myElementTable['TYPE'] == 'AGENTPICKUP')
+				{
+					rArray.push(myElementTable['queueName']);				
+				}
+			}
+		}
+	}
+	
+	//alert(rArray);
+	return rArray;
+}
+
+
+
+</script>
+
+
+</head>
+<body class="bottompagebody" onload="fillObjectCombo()" >
+<div class="tab-pane" id="tabPane1">
+<form name="horaire" >
+
+<script type="text/javascript">
+tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+</script>
+
+<div class="tab-page" id="tabGroup">
+	<h2 class="tab"><script>document.write(MultiArray["Per group"][lang])</script></h2>
+	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabGroup" ) );</script>
+	<fieldset>
+	<legend><script>document.write(MultiArray["Choose a group or all"][lang])</script></legend>
+
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="69%"  >
+  <tr>
+   <td>&nbsp;</td>
+  </tr>
+  <tr height="45">
+  <script language="JavaScript">
+  var vValue = normalizeString(QueryString('type'));
+
+    document.write('<td width="34%" valign="top" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1" >')
+    document.write('<select name="objects" multiple>')
+    document.write('</select>')
+    document.write('</td>')
+    </script>
+
+ <td width="28%" valign="top" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >
+ </td>
+  </tr>
+
+  <tr ><td height="20">&nbsp;</td><td height="20">&nbsp;</td><td height="20">&nbsp;</td>
+  </tr>
+  <tr height="26" valign="top" >
+    
+    <td width="38%" style="border-top-style: none; border-top-width: 1" >
+     <script>document.write(MultiArray["Starting date"][lang])</script>
+    </td>
+    <td width="28%" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >
+     <script>document.write(MultiArray["Ending date"][lang])</script>
+    </td>
+  </tr>
+ 
+  <tr>
+   
+   <td id="id_startingDateDaily" valign="top" width="34%" style="border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1" >
+   	 <input type="text" size="20" onFocus="showCalendar('',this,this,'','id_startingDateDaily',0,30,1);this.blur()" name="startingDateDaily" />
+	
+    </td>
+    <td id="id_endingDateDaily" valign="top" width="38%" style="border-bottom-style: none; border-bottom-width: 1">
+     	<input type="text" size="20" onFocus="showCalendar('',this,this,'','id_endingDateDaily',0,30,1);this.blur()" name="endingDateDaily"/>
+    </td>
+  <tr>
+
+   <td  style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1" >&nbsp;
+   </td>
+   <td  style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">&nbsp;
+   </td>
+   <td  valign"top"  align="right" >
+   <script>document.write("<input type=\"button\" value=\""+MultiArray["Submit"][lang]+"\" onClick=\"getRequestedPeriod()\">")</script>
+  
+   </td>
+  </tr>
+</table>
+	
+
+
+	</fieldset>
+</div>
+
+
+<div class="tab-page" id="tabAgent">
+	<h2 class="tab"><script>document.write(MultiArray["Per agent"][lang])</script></h2>
+	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabAgent" ) );</script>
+	<fieldset>
+	<legend><script>document.write(MultiArray["Choose agent"][lang])</script></legend>
+	
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="69%"  >
+  <tr>
+   <td>&nbsp;</td>
+  </tr>
+  <tr height="45">
+   <script language="JavaScript">
+   var vValue = normalizeString(QueryString('type'));
+
+    document.write('<td width="34%" valign="top" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1" >')
+    document.write('<select name="agts" multiple>')
+    document.write('</select>')
+    document.write('</td>')
+    </script>
+    <tr>
+     <td>&nbsp;</td>
+     <td>&nbsp;</td>
+    </tr>
+
+    <td width="28%" valign="top" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >
+    </td>
+  </tr>
+  <tr>
+   <td valign="top" width="45%" style="border-top-style: none; border-top-width: 1" >
+     <script>document.write(MultiArray["Show agent by ID"][lang])</script><input type="checkbox" name="viewckbox" onClick="changeAgentListView()" >	
+   </td>
+
+  <td>&nbsp;</td>
+  </tr>
+
+  <tr ><td height="20">&nbsp;</td><td height="20">&nbsp;</td><td height="20">&nbsp;</td>
+  </tr>
+  <tr height="26" valign="top" >
+    
+    <td width="38%" style="border-top-style: none; border-top-width: 1" >
+     <script>document.write(MultiArray["Starting date"][lang])</script> 
+    </td>
+    <td width="28%" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >
+     <script>document.write(MultiArray["Ending date"][lang])</script> 
+    </td>
+  </tr>
+ 
+  <tr>
+   
+   <td id="id_startingDateDaily0" valign="top" width="34%" style="border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1" >
+   	 <input type="text" size="20" onFocus="showCalendar('',this,this,'','id_startingDateDaily0',0,30,1);this.blur()" name="startingDateDaily0" />
+
+    </td>
+    <td id="id_endingDateDaily0" valign="top" width="38%" style="border-bottom-style: none; border-bottom-width: 1">
+     	<input type="text" size="20" onFocus="showCalendar('',this,this,'','id_endingDateDaily0',0,30,1);this.blur()" name="endingDateDaily0"/>
+    </td>
+  <tr>
+
+   <td  style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1" >&nbsp;
+   </td>
+   <td  style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">&nbsp;
+   </td>
+   <td  valign"top"  align="right" >
+	  <script>document.write("<input type=\"button\" value=\""+MultiArray["Submit"][lang]+"\" onClick=\"getRequestedPeriod0()\">")</script>
+   </td>
+  </tr>
+</table>
+
+
+
+	</fieldset>
+</div>
+
+
+
+</form>
+</div>
+
+</body>
+</html>

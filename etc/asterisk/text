@@ -1,0 +1,341 @@
+Nov 27 13:53:00 DEBUG[16063] acl.c: ##### Testing 192.168.200.37 with 0.0.0.0
+Nov 27 13:53:01 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:02 DEBUG[16063] acl.c: ##### Testing 192.168.200.45 with 0.0.0.0
+Nov 27 13:53:03 DEBUG[16063] acl.c: ##### Testing 192.168.200.33 with 0.0.0.0
+Nov 27 13:53:03 DEBUG[16063] acl.c: ##### Testing 192.168.200.49 with 0.0.0.0
+Nov 27 13:53:05 DEBUG[16059] dsp.c: dsp busy pattern set to 0,0
+Nov 27 13:53:05 VERBOSE[5677] logger.c:     -- Starting simple switch on 'Zap/16-1'
+Nov 27 13:53:06 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Executing SetVar("Zap/16-1", "DNIS=2510353") in new stack
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Executing SetMusicOnHold("Zap/16-1", "pap") in new stack
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Executing NoOp("Zap/16-1", "from-pap") in new stack
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Executing SetVar("Zap/16-1", "ACCQueue=PAP") in new stack
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Executing Goto("Zap/16-1", "aheeva-queue-general|s|1") in new stack
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Goto (aheeva-queue-general,s,1)
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Executing Answer("Zap/16-1", "") in new stack
+Nov 27 13:53:07 DEBUG[5677] chan_zap.c: Took Zap/16-1 off hook
+Nov 27 13:53:07 DEBUG[16052] channel.c: Avoiding initial deadlock for 'Zap/16-1'
+Nov 27 13:53:07 DEBUG[5677] chan_zap.c: Enabled echo cancellation on channel 16
+Nov 27 13:53:07 DEBUG[5677] chan_zap.c: Engaged echo training on channel 16
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Executing AHEventsProxy("Zap/16-1", "MSG_TYPE_GET_AHEEVA_TRACKNUM") in new stack
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- AHEventsProxy: Channel [Zap/16-1]. Data [MSG_TYPE_GET_AHEEVA_TRACKNUM]
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[135,Zap/16-1~]
+Nov 27 13:53:07 NOTICE[16069] app_ahEventsProxy.c: AHEventsProxy: recv() returned [30].
+Nov 27 13:53:07 VERBOSE[16069] logger.c:     -- AHEventsProxy: Thread ctiServerReceiver Received [30]-[135,Zap/16-1^1164653587.12036~].
+Nov 27 13:53:07 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [29]-[135,Zap/16-1^1164653587.12036].
+Nov 27 13:53:07 VERBOSE[16069] logger.c:     -- AHGetQueueAddress: getRequest(): Found request for channel [Zap/16-1]
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Executing AhAgentDistribute("Zap/16-1", "PAP|1164653587|42474722|2510353|1164653587.12036|||1|data:TEL=42474722") in new stack
+Nov 27 13:53:07 DEBUG[5677] app_ahagentdistribute.c: Timeout not activated for AhAgentDistribute
+Nov 27 13:53:07 DEBUG[5677] app_ahagentdistribute.c: Call on channel [Zap/16-1] need to be queued until the CTI sends an agent to distribute
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- AHEventsProxy: Channel [Zap/16-1]. Data [MSG_TYPE_QUEUE_CALL:1164653587.12036:42474722:PAP:1164653587:2510353]
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[38,1164653587^1164653587.12036^PAP^42474722^2510353~]
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- AHGetQueueAddress: Channel:[Zap/16-1]. Received Data:[PAP]
+Nov 27 13:53:07 NOTICE[5677] app_ahEventsProxy.c: CHAN INFOS UNIQUEID[1164653587.12036]
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[76,PAP^1164653587.12036^Zap/16-1@@@~]
+Nov 27 13:53:07 NOTICE[16069] app_ahEventsProxy.c: AHEventsProxy: recv() returned [27].
+Nov 27 13:53:07 VERBOSE[16069] logger.c:     -- AHEventsProxy: Thread ctiServerReceiver Received [27]-[76,Zap/16-1@@@^local^1020^~].
+Nov 27 13:53:07 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [26]-[76,Zap/16-1@@@^local^1020^].
+Nov 27 13:53:07 VERBOSE[16069] logger.c:     -- AHGetQueueAddress: getRequest(): Found request for channel [Zap/16-1]
+Nov 27 13:53:07 NOTICE[5677] app_ahEventsProxy.c: RESPONSE [local^1020^]
+Nov 27 13:53:07 NOTICE[5677] app_ahEventsProxy.c: queue_address[local] agent_id[1020] queue_port[(null)]
+Nov 27 13:53:07 NOTICE[5677] app_ahEventsProxy.c: Most idle agent[1020] located at[local]
+Nov 27 13:53:07 NOTICE[5677] app_ahEventsProxy.c: Channel [Zap/16-1] IP[local] Agent [1020]
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- AHEventsProxy: Channel [Zap/16-1]. Data [MSG_TYPE_QUEUE_DISTRIBUTE:1164653587.12036:1020:0:1164653587:42474722:data:TEL=42474722?ANI=42474722]
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[39,1164653587^1164653587.12036^1020^0^data:TEL=42474722?ANI=42474722^42474722~]
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- agent_call, call to agent '1020' call on 'IAX2/1020-16'
+Nov 27 13:53:07 DEBUG[5677] chan_agent.c: Playing beep, lang 'en'
+Nov 27 13:53:07 DEBUG[5677] channel.c: Scheduling timer at 160 sample intervals
+Nov 27 13:53:07 VERBOSE[5677] logger.c:     -- Playing 'beep' (language 'en')
+Nov 27 13:53:07 DEBUG[5677] chan_agent.c: Played beep, result '0'
+Nov 27 13:53:07 DEBUG[5677] channel.c: Scheduling timer at 0 sample intervals
+Nov 27 13:53:07 DEBUG[5677] channel.c: Scheduling timer at 0 sample intervals
+Nov 27 13:53:07 DEBUG[5677] chan_agent.c: Waited for stream, result '0'
+Nov 27 13:53:07 DEBUG[5677] chan_agent.c: Set read format, result '0'
+Nov 27 13:53:07 DEBUG[5677] chan_agent.c: Set write format, result '0'
+Nov 27 13:53:07 NOTICE[5677] app_ahagentdistribute.c: Bridging calls [Zap/16-1] and [Agent/1020]...
+Nov 27 13:53:07 DEBUG[5677] chan_agent.c: Bridge on 'IAX2/1020-16' being set to 'Agent/1020' (3)
+Nov 27 13:53:12 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:15 DEBUG[16063] acl.c: ##### Testing 192.168.200.33 with 0.0.0.0
+Nov 27 13:53:16 DEBUG[16063] acl.c: ##### Testing 192.168.200.38 with 0.0.0.0
+Nov 27 13:53:17 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:17 DEBUG[16063] acl.c: ##### Testing 192.168.200.40 with 0.0.0.0
+Nov 27 13:53:17 DEBUG[16063] acl.c: ##### Testing 192.168.200.41 with 0.0.0.0
+Nov 27 13:53:17 DEBUG[16063] chan_iax2.c: Immediately destroying 14, having received hangup
+Nov 27 13:53:17 DEBUG[5547] channel.c: Didn't get a frame from channel: Agent/1004
+Nov 27 13:53:17 DEBUG[5547] channel.c: Bridge stops bridging channels Zap/18-1 and Agent/1004
+Nov 27 13:53:17 NOTICE[5547] app_ahagentdistribute.c: End Bridging calls [Zap/18-1] and [Agent/1004]...
+Nov 27 13:53:17 DEBUG[5547] chan_agent.c: Hangup called for state Up
+Nov 27 13:53:17 VERBOSE[5547] logger.c:   == Spawn extension (aheeva-queue-general, s, 3) exited non-zero on 'Zap/18-1'
+Nov 27 13:53:17 VERBOSE[5197] logger.c:   == Agent '1004' logged out
+Nov 27 13:53:17 VERBOSE[5547] logger.c:     -- Executing AHEventsProxy("Zap/18-1", "MSG_TYPE_TERMINATE_CALL:1164653452.12029:42891189::1164653597") in new stack
+Nov 27 13:53:17 VERBOSE[5197] logger.c:   == Spawn extension (agents, AH1004, 3) exited non-zero on 'IAX2/1004-14'
+Nov 27 13:53:17 VERBOSE[5547] logger.c:     -- AHEventsProxy: Channel [Zap/18-1]. Data [MSG_TYPE_TERMINATE_CALL:1164653452.12029:42891189::1164653597]
+Nov 27 13:53:17 DEBUG[5197] chan_iax2.c: We're hanging up IAX2/1004-14 now...
+Nov 27 13:53:17 VERBOSE[5547] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[41,1164653597^1164653452.12029^42891189^^asterisk01~]
+Nov 27 13:53:17 DEBUG[5197] chan_iax2.c: Really destroying IAX2/1004-14 now...
+Nov 27 13:53:17 VERBOSE[5197] logger.c:     -- Hungup 'IAX2/1004-14'
+Nov 27 13:53:17 VERBOSE[5547] logger.c:     -- Executing Hangup("Zap/18-1", "") in new stack
+Nov 27 13:53:17 VERBOSE[5547] logger.c:   == Spawn extension (aheeva-queue-general, h, 2) exited non-zero on 'Zap/18-1'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '42891189'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '42891189'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is 's'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is 'aheeva-queue-general'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is 'Zap/18-1'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '(null)'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is 'Hangup'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '(null)'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '2006-11-27 13:50:52'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '2006-11-27 13:50:52'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '2006-11-27 13:53:17'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '145'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '145'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is 'ANSWERED'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is 'DOCUMENTATION'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '(null)'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '1164653451.37540'
+Nov 27 13:53:17 DEBUG[5547] pbx.c: Function result is '(null)'
+Nov 27 13:53:17 DEBUG[5547] cdr_addon_mysql.c: cdr_mysql: inserting a CDR record.
+Nov 27 13:53:17 DEBUG[5547] cdr_addon_mysql.c: cdr_mysql: SQL command as follows: INSERT INTO cdr (calldate,clid,src,dst,dcontext,channel,dstchannel,lastapp,lastdata,duration,billsec,disposition,amaflags,accountcode,uniqueid) VALUES ('2006-11-27 13:50:52','42891189','42891189','s','aheeva-queue-general', 'Zap/18-1','','Hangup','',145,145,'ANSWERED',3,'','1164653451.37540')
+Nov 27 13:53:17 DEBUG[5547] chan_zap.c: Hangup: channel: 18 index = 0, normal = 29, callwait = -1, thirdcall = -1
+Nov 27 13:53:17 DEBUG[5547] chan_zap.c: disabled echo cancellation on channel 18
+Nov 27 13:53:17 DEBUG[5547] chan_zap.c: Set option TDD MODE, value: OFF(0) on Zap/18-1
+Nov 27 13:53:17 DEBUG[5547] chan_zap.c: Updated conferencing on 18, with 0 conference users
+Nov 27 13:53:17 VERBOSE[5547] logger.c:     -- Hungup 'Zap/18-1'
+Nov 27 13:53:18 DEBUG[16063] acl.c: ##### Testing 192.168.200.40 with 0.0.0.0
+Nov 27 13:53:18 DEBUG[16063] acl.c: ##### Testing 192.168.200.34 with 0.0.0.0
+Nov 27 13:53:18 VERBOSE[16063] logger.c:     -- Accepting UNAUTHENTICATED call from 192.168.200.34:
+Nov 27 13:53:18 VERBOSE[5693] logger.c:     -- Executing NoCDR("IAX2/1004-27", "") in new stack
+Nov 27 13:53:18 WARNING[5693] cdr.c: CDR on channel 'IAX2/1004-27' not posted
+Nov 27 13:53:18 WARNING[5693] cdr.c: CDR on channel 'IAX2/1004-27' lacks end
+Nov 27 13:53:18 VERBOSE[5693] logger.c:     -- Executing Set("IAX2/1004-27", "AH_UNIQUEID=DUMMYID") in new stack
+Nov 27 13:53:18 VERBOSE[5693] logger.c:     -- Executing AgentLogin("IAX2/1004-27", "1004|s") in new stack
+Nov 27 13:53:18 WARNING[5693] res_musiconhold.c: No class: none
+Nov 27 13:53:18 VERBOSE[5693] logger.c:   == Agent '1004' logged in (format ulaw/ulaw)
+Nov 27 13:53:18 DEBUG[16063] chan_iax2.c: Ooh, voice format changed to 4
+Nov 27 13:53:22 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:22 DEBUG[16063] acl.c: ##### Testing 192.168.200.47 with 0.0.0.0
+Nov 27 13:53:24 DEBUG[16059] dsp.c: dsp busy pattern set to 0,0
+Nov 27 13:53:24 VERBOSE[5702] logger.c:     -- Starting simple switch on 'Zap/17-1'
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Executing SetVar("Zap/17-1", "DNIS=2510353") in new stack
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Executing SetMusicOnHold("Zap/17-1", "pap") in new stack
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Executing NoOp("Zap/17-1", "from-pap") in new stack
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Executing SetVar("Zap/17-1", "ACCQueue=PAP") in new stack
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Executing Goto("Zap/17-1", "aheeva-queue-general|s|1") in new stack
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Goto (aheeva-queue-general,s,1)
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Executing Answer("Zap/17-1", "") in new stack
+Nov 27 13:53:25 DEBUG[5702] chan_zap.c: Took Zap/17-1 off hook
+Nov 27 13:53:25 DEBUG[16052] channel.c: Avoiding initial deadlock for 'Zap/17-1'
+Nov 27 13:53:25 DEBUG[5702] chan_zap.c: Enabled echo cancellation on channel 17
+Nov 27 13:53:25 DEBUG[5702] chan_zap.c: Engaged echo training on channel 17
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Executing AHEventsProxy("Zap/17-1", "MSG_TYPE_GET_AHEEVA_TRACKNUM") in new stack
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- AHEventsProxy: Channel [Zap/17-1]. Data [MSG_TYPE_GET_AHEEVA_TRACKNUM]
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[135,Zap/17-1~]
+Nov 27 13:53:25 NOTICE[16069] app_ahEventsProxy.c: AHEventsProxy: recv() returned [30].
+Nov 27 13:53:25 VERBOSE[16069] logger.c:     -- AHEventsProxy: Thread ctiServerReceiver Received [30]-[135,Zap/17-1^1164653605.12037~].
+Nov 27 13:53:25 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [29]-[135,Zap/17-1^1164653605.12037].
+Nov 27 13:53:25 VERBOSE[16069] logger.c:     -- AHGetQueueAddress: getRequest(): Found request for channel [Zap/17-1]
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Executing AhAgentDistribute("Zap/17-1", "PAP|1164653605|97224127|2510353|1164653605.12037|||1|data:TEL=97224127") in new stack
+Nov 27 13:53:25 DEBUG[5702] app_ahagentdistribute.c: Timeout not activated for AhAgentDistribute
+Nov 27 13:53:25 DEBUG[5702] app_ahagentdistribute.c: Call on channel [Zap/17-1] need to be queued until the CTI sends an agent to distribute
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- AHEventsProxy: Channel [Zap/17-1]. Data [MSG_TYPE_QUEUE_CALL:1164653605.12037:97224127:PAP:1164653605:2510353]
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[38,1164653605^1164653605.12037^PAP^97224127^2510353~]
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- AHGetQueueAddress: Channel:[Zap/17-1]. Received Data:[PAP]
+Nov 27 13:53:25 NOTICE[5702] app_ahEventsProxy.c: CHAN INFOS UNIQUEID[1164653605.12037]
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[76,PAP^1164653605.12037^Zap/17-1@@@~]
+Nov 27 13:53:25 NOTICE[16069] app_ahEventsProxy.c: AHEventsProxy: recv() returned [27].
+Nov 27 13:53:25 VERBOSE[16069] logger.c:     -- AHEventsProxy: Thread ctiServerReceiver Received [27]-[76,Zap/17-1@@@^local^1002^~].
+Nov 27 13:53:25 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [26]-[76,Zap/17-1@@@^local^1002^].
+Nov 27 13:53:25 VERBOSE[16069] logger.c:     -- AHGetQueueAddress: getRequest(): Found request for channel [Zap/17-1]
+Nov 27 13:53:25 NOTICE[5702] app_ahEventsProxy.c: RESPONSE [local^1002^]
+Nov 27 13:53:25 NOTICE[5702] app_ahEventsProxy.c: queue_address[local] agent_id[1002] queue_port[(null)]
+Nov 27 13:53:25 NOTICE[5702] app_ahEventsProxy.c: Most idle agent[1002] located at[local]
+Nov 27 13:53:25 NOTICE[5702] app_ahEventsProxy.c: Channel [Zap/17-1] IP[local] Agent [1002]
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- AHEventsProxy: Channel [Zap/17-1]. Data [MSG_TYPE_QUEUE_DISTRIBUTE:1164653605.12037:1002:0:1164653605:97224127:data:TEL=97224127?ANI=97224127]
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[39,1164653605^1164653605.12037^1002^0^data:TEL=97224127?ANI=97224127^97224127~]
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- agent_call, call to agent '1002' call on 'IAX2/1002-24'
+Nov 27 13:53:25 DEBUG[5702] chan_agent.c: Playing beep, lang 'en'
+Nov 27 13:53:25 DEBUG[5702] channel.c: Scheduling timer at 160 sample intervals
+Nov 27 13:53:25 VERBOSE[5702] logger.c:     -- Playing 'beep' (language 'en')
+Nov 27 13:53:25 DEBUG[5702] chan_agent.c: Played beep, result '0'
+Nov 27 13:53:26 DEBUG[5702] channel.c: Scheduling timer at 0 sample intervals
+Nov 27 13:53:26 DEBUG[5702] channel.c: Scheduling timer at 0 sample intervals
+Nov 27 13:53:26 DEBUG[5702] chan_agent.c: Waited for stream, result '0'
+Nov 27 13:53:26 DEBUG[5702] chan_agent.c: Set read format, result '0'
+Nov 27 13:53:26 DEBUG[5702] chan_agent.c: Set write format, result '0'
+Nov 27 13:53:26 NOTICE[5702] app_ahagentdistribute.c: Bridging calls [Zap/17-1] and [Agent/1002]...
+Nov 27 13:53:26 DEBUG[5702] chan_agent.c: Bridge on 'IAX2/1002-24' being set to 'Agent/1002' (3)
+Nov 27 13:53:27 DEBUG[16063] chan_iax2.c: Immediately destroying 24, having received hangup
+Nov 27 13:53:27 DEBUG[5702] channel.c: Didn't get a frame from channel: Agent/1002
+Nov 27 13:53:27 DEBUG[5702] channel.c: Bridge stops bridging channels Zap/17-1 and Agent/1002
+Nov 27 13:53:27 NOTICE[5702] app_ahagentdistribute.c: End Bridging calls [Zap/17-1] and [Agent/1002]...
+Nov 27 13:53:27 DEBUG[5702] chan_agent.c: Hangup called for state Up
+Nov 27 13:53:27 VERBOSE[5702] logger.c:   == Spawn extension (aheeva-queue-general, s, 3) exited non-zero on 'Zap/17-1'
+Nov 27 13:53:27 VERBOSE[5535] logger.c:   == Agent '1002' logged out
+Nov 27 13:53:27 VERBOSE[5702] logger.c:     -- Executing AHEventsProxy("Zap/17-1", "MSG_TYPE_TERMINATE_CALL:1164653605.12037:97224127::1164653607") in new stack
+Nov 27 13:53:27 VERBOSE[5535] logger.c:   == Spawn extension (agents, AH1002, 3) exited non-zero on 'IAX2/1002-24'
+Nov 27 13:53:27 DEBUG[5535] chan_iax2.c: We're hanging up IAX2/1002-24 now...
+Nov 27 13:53:27 VERBOSE[5702] logger.c:     -- AHEventsProxy: Channel [Zap/17-1]. Data [MSG_TYPE_TERMINATE_CALL:1164653605.12037:97224127::1164653607]
+Nov 27 13:53:27 DEBUG[5535] chan_iax2.c: Really destroying IAX2/1002-24 now...
+Nov 27 13:53:27 VERBOSE[5702] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[41,1164653607^1164653605.12037^97224127^^asterisk01~]
+Nov 27 13:53:27 VERBOSE[5535] logger.c:     -- Hungup 'IAX2/1002-24'
+Nov 27 13:53:27 VERBOSE[5702] logger.c:     -- Executing Hangup("Zap/17-1", "") in new stack
+Nov 27 13:53:27 VERBOSE[5702] logger.c:   == Spawn extension (aheeva-queue-general, h, 2) exited non-zero on 'Zap/17-1'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '97224127'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '97224127'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is 's'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is 'aheeva-queue-general'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is 'Zap/17-1'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '(null)'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is 'Hangup'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '(null)'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '2006-11-27 13:53:25'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '2006-11-27 13:53:25'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '2006-11-27 13:53:27'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '2'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '2'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is 'ANSWERED'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is 'DOCUMENTATION'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '(null)'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '1164653604.37561'
+Nov 27 13:53:27 DEBUG[5702] pbx.c: Function result is '(null)'
+Nov 27 13:53:27 DEBUG[5702] cdr_addon_mysql.c: cdr_mysql: inserting a CDR record.
+Nov 27 13:53:27 DEBUG[5702] cdr_addon_mysql.c: cdr_mysql: SQL command as follows: INSERT INTO cdr (calldate,clid,src,dst,dcontext,channel,dstchannel,lastapp,lastdata,duration,billsec,disposition,amaflags,accountcode,uniqueid) VALUES ('2006-11-27 13:53:25','97224127','97224127','s','aheeva-queue-general', 'Zap/17-1','','Hangup','',2,2,'ANSWERED',3,'','1164653604.37561')
+Nov 27 13:53:27 DEBUG[5702] chan_zap.c: Hangup: channel: 17 index = 0, normal = 28, callwait = -1, thirdcall = -1
+Nov 27 13:53:27 DEBUG[5702] chan_zap.c: disabled echo cancellation on channel 17
+Nov 27 13:53:27 DEBUG[5702] chan_zap.c: Set option TDD MODE, value: OFF(0) on Zap/17-1
+Nov 27 13:53:27 DEBUG[5702] chan_zap.c: Updated conferencing on 17, with 0 conference users
+Nov 27 13:53:27 VERBOSE[5702] logger.c:     -- Hungup 'Zap/17-1'
+Nov 27 13:53:28 DEBUG[16063] acl.c: ##### Testing 192.168.200.47 with 0.0.0.0
+Nov 27 13:53:28 VERBOSE[16063] logger.c:     -- Accepting UNAUTHENTICATED call from 192.168.200.47:
+Nov 27 13:53:28 VERBOSE[5713] logger.c:     -- Executing NoCDR("IAX2/1002-15", "") in new stack
+Nov 27 13:53:28 WARNING[5713] cdr.c: CDR on channel 'IAX2/1002-15' not posted
+Nov 27 13:53:28 WARNING[5713] cdr.c: CDR on channel 'IAX2/1002-15' lacks end
+Nov 27 13:53:28 VERBOSE[5713] logger.c:     -- Executing Set("IAX2/1002-15", "AH_UNIQUEID=DUMMYID") in new stack
+Nov 27 13:53:28 VERBOSE[5713] logger.c:     -- Executing AgentLogin("IAX2/1002-15", "1002|s") in new stack
+Nov 27 13:53:28 WARNING[5713] res_musiconhold.c: No class: none
+Nov 27 13:53:28 VERBOSE[5713] logger.c:   == Agent '1002' logged in (format ulaw/ulaw)
+Nov 27 13:53:28 DEBUG[16063] chan_iax2.c: Ooh, voice format changed to 4
+Nov 27 13:53:30 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:32 DEBUG[16063] acl.c: ##### Testing 192.168.200.48 with 0.0.0.0
+Nov 27 13:53:35 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:39 DEBUG[16063] acl.c: ##### Testing 192.168.200.89 with 0.0.0.0
+Nov 27 13:53:40 DEBUG[16063] acl.c: ##### Testing 192.168.200.40 with 0.0.0.0
+Nov 27 13:53:40 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:40 DEBUG[16063] chan_iax2.c: Immediately destroying 25, having received hangup
+Nov 27 13:53:40 DEBUG[5573] channel.c: Didn't get a frame from channel: Agent/1001
+Nov 27 13:53:40 DEBUG[5573] channel.c: Bridge stops bridging channels Zap/11-1 and Agent/1001
+Nov 27 13:53:40 NOTICE[5573] app_ahagentdistribute.c: End Bridging calls [Zap/11-1] and [Agent/1001]...
+Nov 27 13:53:40 DEBUG[5573] chan_agent.c: Hangup called for state Up
+Nov 27 13:53:40 VERBOSE[5365] logger.c:   == Agent '1001' logged out
+Nov 27 13:53:40 VERBOSE[5573] logger.c:   == Spawn extension (aheeva-queue-general, s, 3) exited non-zero on 'Zap/11-1'
+Nov 27 13:53:40 VERBOSE[5365] logger.c:   == Spawn extension (agents, AH1001, 3) exited non-zero on 'IAX2/1001-25'
+Nov 27 13:53:40 DEBUG[5365] chan_iax2.c: We're hanging up IAX2/1001-25 now...
+Nov 27 13:53:40 VERBOSE[5573] logger.c:     -- Executing AHEventsProxy("Zap/11-1", "MSG_TYPE_TERMINATE_CALL:1164653495.12030:::1164653620") in new stack
+Nov 27 13:53:40 DEBUG[5365] chan_iax2.c: Really destroying IAX2/1001-25 now...
+Nov 27 13:53:40 VERBOSE[5573] logger.c:     -- AHEventsProxy: Channel [Zap/11-1]. Data [MSG_TYPE_TERMINATE_CALL:1164653495.12030:::1164653620]
+Nov 27 13:53:40 VERBOSE[5365] logger.c:     -- Hungup 'IAX2/1001-25'
+Nov 27 13:53:40 VERBOSE[5573] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[41,1164653620^1164653495.12030^^^asterisk01~]
+Nov 27 13:53:40 VERBOSE[5573] logger.c:     -- Executing Hangup("Zap/11-1", "") in new stack
+Nov 27 13:53:40 VERBOSE[5573] logger.c:   == Spawn extension (aheeva-queue-general, h, 2) exited non-zero on 'Zap/11-1'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '(null)'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '(null)'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is 's'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is 'aheeva-queue-general'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is 'Zap/11-1'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '(null)'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is 'Hangup'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '(null)'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '2006-11-27 13:51:35'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '2006-11-27 13:51:35'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '2006-11-27 13:53:40'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '125'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '125'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is 'ANSWERED'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is 'DOCUMENTATION'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '(null)'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '1164653491.37542'
+Nov 27 13:53:40 DEBUG[5573] pbx.c: Function result is '(null)'
+Nov 27 13:53:40 DEBUG[5573] cdr_addon_mysql.c: cdr_mysql: inserting a CDR record.
+Nov 27 13:53:40 DEBUG[5573] cdr_addon_mysql.c: cdr_mysql: SQL command as follows: INSERT INTO cdr (calldate,clid,src,dst,dcontext,channel,dstchannel,lastapp,lastdata,duration,billsec,disposition,amaflags,accountcode,uniqueid) VALUES ('2006-11-27 13:51:35','','','s','aheeva-queue-general', 'Zap/11-1','','Hangup','',125,125,'ANSWERED',3,'','1164653491.37542')
+Nov 27 13:53:40 DEBUG[5573] chan_zap.c: Hangup: channel: 11 index = 0, normal = 22, callwait = -1, thirdcall = -1
+Nov 27 13:53:40 DEBUG[5573] chan_zap.c: disabled echo cancellation on channel 11
+Nov 27 13:53:40 DEBUG[5573] chan_zap.c: Set option TDD MODE, value: OFF(0) on Zap/11-1
+Nov 27 13:53:40 DEBUG[5573] chan_zap.c: Updated conferencing on 11, with 0 conference users
+Nov 27 13:53:40 VERBOSE[5573] logger.c:     -- Hungup 'Zap/11-1'
+Nov 27 13:53:41 DEBUG[16063] acl.c: ##### Testing 192.168.200.40 with 0.0.0.0
+Nov 27 13:53:41 VERBOSE[16063] logger.c:     -- Accepting UNAUTHENTICATED call from 192.168.200.40:
+Nov 27 13:53:41 VERBOSE[5728] logger.c:     -- Executing NoCDR("IAX2/1001-21", "") in new stack
+Nov 27 13:53:41 WARNING[5728] cdr.c: CDR on channel 'IAX2/1001-21' not posted
+Nov 27 13:53:41 WARNING[5728] cdr.c: CDR on channel 'IAX2/1001-21' lacks end
+Nov 27 13:53:41 VERBOSE[5728] logger.c:     -- Executing Set("IAX2/1001-21", "AH_UNIQUEID=DUMMYID") in new stack
+Nov 27 13:53:41 VERBOSE[5728] logger.c:     -- Executing AgentLogin("IAX2/1001-21", "1001|s") in new stack
+Nov 27 13:53:41 WARNING[5728] res_musiconhold.c: No class: none
+Nov 27 13:53:41 VERBOSE[5728] logger.c:   == Agent '1001' logged in (format ulaw/ulaw)
+Nov 27 13:53:41 DEBUG[16063] chan_iax2.c: Ooh, voice format changed to 4
+Nov 27 13:53:45 DEBUG[16063] acl.c: ##### Testing 192.168.200.48 with 0.0.0.0
+Nov 27 13:53:45 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:48 DEBUG[16059] dsp.c: dsp busy pattern set to 0,0
+Nov 27 13:53:48 VERBOSE[5735] logger.c:     -- Starting simple switch on 'Zap/18-1'
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Executing SetVar("Zap/18-1", "DNIS=2510353") in new stack
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Executing SetMusicOnHold("Zap/18-1", "pap") in new stack
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Executing NoOp("Zap/18-1", "from-pap") in new stack
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Executing SetVar("Zap/18-1", "ACCQueue=PAP") in new stack
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Executing Goto("Zap/18-1", "aheeva-queue-general|s|1") in new stack
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Goto (aheeva-queue-general,s,1)
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Executing Answer("Zap/18-1", "") in new stack
+Nov 27 13:53:50 DEBUG[5735] chan_zap.c: Took Zap/18-1 off hook
+Nov 27 13:53:50 DEBUG[16052] channel.c: Avoiding initial deadlock for 'Zap/18-1'
+Nov 27 13:53:50 DEBUG[5735] chan_zap.c: Enabled echo cancellation on channel 18
+Nov 27 13:53:50 DEBUG[5735] chan_zap.c: Engaged echo training on channel 18
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Executing AHEventsProxy("Zap/18-1", "MSG_TYPE_GET_AHEEVA_TRACKNUM") in new stack
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- AHEventsProxy: Channel [Zap/18-1]. Data [MSG_TYPE_GET_AHEEVA_TRACKNUM]
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[135,Zap/18-1~]
+Nov 27 13:53:50 NOTICE[16069] app_ahEventsProxy.c: AHEventsProxy: recv() returned [30].
+Nov 27 13:53:50 VERBOSE[16069] logger.c:     -- AHEventsProxy: Thread ctiServerReceiver Received [30]-[135,Zap/18-1^1164653630.12038~].
+Nov 27 13:53:50 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [29]-[135,Zap/18-1^1164653630.12038].
+Nov 27 13:53:50 VERBOSE[16069] logger.c:     -- AHGetQueueAddress: getRequest(): Found request for channel [Zap/18-1]
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Executing AhAgentDistribute("Zap/18-1", "PAP|1164653630|97224127|2510353|1164653630.12038|||1|data:TEL=97224127") in new stack
+Nov 27 13:53:50 DEBUG[5735] app_ahagentdistribute.c: Timeout not activated for AhAgentDistribute
+Nov 27 13:53:50 DEBUG[5735] app_ahagentdistribute.c: Call on channel [Zap/18-1] need to be queued until the CTI sends an agent to distribute
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- AHEventsProxy: Channel [Zap/18-1]. Data [MSG_TYPE_QUEUE_CALL:1164653630.12038:97224127:PAP:1164653630:2510353]
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[38,1164653630^1164653630.12038^PAP^97224127^2510353~]
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- AHGetQueueAddress: Channel:[Zap/18-1]. Received Data:[PAP]
+Nov 27 13:53:50 NOTICE[5735] app_ahEventsProxy.c: CHAN INFOS UNIQUEID[1164653630.12038]
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[76,PAP^1164653630.12038^Zap/18-1@@@~]
+Nov 27 13:53:50 NOTICE[16069] app_ahEventsProxy.c: AHEventsProxy: recv() returned [27].
+Nov 27 13:53:50 VERBOSE[16069] logger.c:     -- AHEventsProxy: Thread ctiServerReceiver Received [27]-[76,Zap/18-1@@@^local^1012^~].
+Nov 27 13:53:50 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [26]-[76,Zap/18-1@@@^local^1012^].
+Nov 27 13:53:50 VERBOSE[16069] logger.c:     -- AHGetQueueAddress: getRequest(): Found request for channel [Zap/18-1]
+Nov 27 13:53:50 NOTICE[5735] app_ahEventsProxy.c: RESPONSE [local^1012^]
+Nov 27 13:53:50 NOTICE[5735] app_ahEventsProxy.c: queue_address[local] agent_id[1012] queue_port[(null)]
+Nov 27 13:53:50 NOTICE[5735] app_ahEventsProxy.c: Most idle agent[1012] located at[local]
+Nov 27 13:53:50 NOTICE[5735] app_ahEventsProxy.c: Channel [Zap/18-1] IP[local] Agent [1012]
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- AHEventsProxy: Channel [Zap/18-1]. Data [MSG_TYPE_QUEUE_DISTRIBUTE:1164653630.12038:1012:0:1164653630:97224127:data:TEL=97224127?ANI=97224127]
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- AHEventsProxy: Send To CtiServer: socket:[7]. message:[39,1164653630^1164653630.12038^1012^0^data:TEL=97224127?ANI=97224127^97224127~]
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- agent_call, call to agent '1012' call on 'IAX2/1012-30'
+Nov 27 13:53:50 DEBUG[5735] chan_agent.c: Playing beep, lang 'en'
+Nov 27 13:53:50 DEBUG[5735] channel.c: Scheduling timer at 160 sample intervals
+Nov 27 13:53:50 VERBOSE[5735] logger.c:     -- Playing 'beep' (language 'en')
+Nov 27 13:53:50 DEBUG[5735] chan_agent.c: Played beep, result '0'
+Nov 27 13:53:50 DEBUG[5735] channel.c: Scheduling timer at 0 sample intervals
+Nov 27 13:53:50 DEBUG[5735] channel.c: Scheduling timer at 0 sample intervals
+Nov 27 13:53:50 DEBUG[5735] chan_agent.c: Waited for stream, result '0'
+Nov 27 13:53:50 DEBUG[5735] chan_agent.c: Set read format, result '0'
+Nov 27 13:53:50 DEBUG[5735] chan_agent.c: Set write format, result '0'
+Nov 27 13:53:50 NOTICE[5735] app_ahagentdistribute.c: Bridging calls [Zap/18-1] and [Agent/1012]...
+Nov 27 13:53:50 DEBUG[5735] chan_agent.c: Bridge on 'IAX2/1012-30' being set to 'Agent/1012' (3)
+Nov 27 13:53:51 DEBUG[16063] acl.c: ##### Testing 192.168.200.87 with 0.0.0.0
+Nov 27 13:53:51 DEBUG[16063] acl.c: ##### Testing 192.168.200.40 with 0.0.0.0
+Nov 27 13:53:51 DEBUG[16063] acl.c: ##### Testing 192.168.200.34 with 0.0.0.0
+Nov 27 13:53:52 VERBOSE[5481] logger.c:   == Spying on channel Agent/1012
+Nov 27 13:53:52 NOTICE[5481] app_ahchanspy.c: Attaching IAX2/192.168.200.76:4569-17 to Agent/1012
+Nov 27 13:53:52 DEBUG[5481] channel.c: Spy AhChanSpy added to channel Agent/1012
+Nov 27 13:53:52 DEBUG[5481] channel.c: Scheduling timer at 160 sample intervals
+Nov 27 13:53:52 DEBUG[5735] channel.c: Building translator from ulaw to SLINEAR for spies on channel Agent/1012
+Nov 27 13:53:52 DEBUG[5735] channel.c: Building translator from ulaw to SLINEAR for spies on channel Agent/1012
+Nov 27 13:53:52 DEBUG[5481] channel.c: Generator got voice, switching to phase locked mode
+Nov 27 13:53:52 DEBUG[5481] channel.c: Scheduling timer at 0 sample intervals
+Nov 27 13:53:55 DEBUG[16063] acl.c: ##### Testing 192.168.200.33 with 0.0.0.0
+Nov 27 13:53:55 DEBUG[16069] app_ahEventsProxy.c: AHEventsProxy: Thread ctiServerReceiver Received [2]-[58].
+Nov 27 13:53:56 DEBUG[16063] acl.c: ##### Testing 192.168.200.88 with 0.0.0.0
+Nov 27 13:53:57 DEBUG[16063] acl.c: ##### Testing 192.168.200.35 with 0.0.0.0

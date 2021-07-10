@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>AheevaPhone</title>
+<link rel="stylesheet" type="text/css" href="css/aheevaphone.css">
+</head>
+<body>
+<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_Audio_device_selection"><p><fieldset><legend> Select audio device </legend><table class="ctable" border=0><tr><td align="left">Audio Input : </td><td align="left"><select id="audio_input_select" onChange="onChangeAudioInputOption(audio_input_select)" width=150 ></select></td></tr><tr><td align="left">Audio Output : </td><td align="left"><select id="audio_output_select" onChange="onChangeAudioOutputOption(audio_output_select)" width=150></select></td></tr></table></fieldset></DIV>
+<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_Audio_device_selected"></DIV>
+<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="dvObjectHolder_Audio_device_buttons"></DIV>
+<script>
+var audio_input_selected_index=0;
+var audio_output_selected_index=0;
+var audio_input_backup=0;
+var audio_output_backup=0;
+
+function onChangeAudioInputOption(selected){
+	var myindex  = selected.selectedIndex;
+	var option_value = selected.options[myindex].value;
+	var option_text = selected.options[myindex].text;
+	//alert("set input: "+option_text+" "+ option_value);
+	window.opener.set_audio_input_device(option_text, option_value);
+	//alert("get input: "+window.opener.get_audio_input_device().text+" "+window.opener.get_audio_input_device().value);
+	document.getElementById('dvObjectHolder_Audio_device_selected').innerHTML =
+	"<fieldset><legend> Current devices selected </legend><table class=\"ctable\">" +
+	"<tr><td>input: </td><td>"+
+		window.opener.get_audio_input_device().text +
+	"</td></tr>"+
+	"<tr><td>output:</td><td>"+
+		window.opener.get_audio_output_device().text +
+	"</td></tr>"+
+	"</table></fieldset>";
+}
+
+function onChangeAudioOutputOption(selected){
+	var myindex  = selected.selectedIndex;
+	var option_value = selected.options[myindex].value;
+	var option_text = selected.options[myindex].text;
+	//alert("set output: "+option_text+" "+ option_value);
+	window.opener.set_audio_output_device(option_text, option_value);
+	//alert("get output: "+window.opener.get_audio_output_device().text+" "+window.opener.get_audio_output_device().value);
+	document.getElementById('dvObjectHolder_Audio_device_selected').innerHTML =
+	"<fieldset><legend> Current devices selected </legend><table class=\"ctable\">" +
+	"<tr><td>input: </td><td>"+
+		window.opener.get_audio_input_device().text +
+	"</td></tr>"+
+	"<tr><td>output:</td><td>"+
+		window.opener.get_audio_output_device().text +
+	"</td></tr>"+
+	"</table></fieldset>";
+}
+
+function addAudioInputOption( text, id , sel)
+{
+	var optn = document.createElement("OPTION");
+	optn.text = text;
+	optn.value = id;
+	audio_input_select.options.add(optn);
+	optn.selected = null
+}
+
+function addAudioOutputOption( text, id , sel)
+{
+	var optn = document.createElement("OPTION");
+	optn.text = text;
+	optn.value = id;
+	audio_output_select.options.add(optn);
+	optn.selected = null
+}
+
+function cancelButtontOption()
+{
+	window.opener.set_audio_input_device("", audio_input_backup);
+	window.opener.set_audio_output_device("", audio_output_backup);
+	window.close();
+}
+
+var audio_name_array = new Array();
+var audio_number_array = new Array();
+var audio_capabilities_array = new Array();
+
+audio_name_array = window.opener.get_audio_device_name();
+audio_number_array = window.opener.get_audio_device_number();
+audio_capabilities_array = window.opener.get_audio_device_capabilities();
+
+for(var j=0;j<audio_name_array.length;j++)
+{
+	//check if input device is an output device and if its the selected one
+	if(audio_capabilities_array[j] == "input")
+	{
+		if(window.opener.get_audio_input_device().value == audio_number_array[j])
+		{
+			audio_input_selected_index = j;
+			addAudioInputOption(audio_name_array[j], audio_number_array[j],1);
+		}
+		else
+		{
+			addAudioInputOption(audio_name_array[j], audio_number_array[j],0);
+		}
+	}
+	//check if audio device is an output device and if its the selected one
+	if(audio_capabilities_array[j] == "output")
+	{
+		alert(window.opener.get_audio_output_device().value
+		if(window.opener.get_audio_output_device().value == audio_number_array[j])
+		{
+			audio_output_selected_index = j;
+			addAudioOutputOption(audio_name_array[j], audio_number_array[j],1);
+		}
+		else
+		{
+			addAudioOutputOption(audio_name_array[j], audio_number_array[j],0);
+		}
+	}
+}
+
+audio_input_select.selectedIndex = audio_input_selected_index;
+audio_output_select.selectedIndex = audio_output_selected_index ;
+
+document.getElementById('dvObjectHolder_Audio_device_selected').innerHTML =
+	"<fieldset><legend> Current devices selected </legend><table class=\"ctable\">" +
+	"<tr><td>input: </td><td>"+
+		window.opener.get_audio_input_device().text +
+	"</td></tr>"+
+	"<tr><td>output:</td><td>"+
+		window.opener.get_audio_output_device().text +
+	"</td></tr>"+
+	"</table></fieldset>";
+
+document.getElementById('dvObjectHolder_Audio_device_buttons').innerHTML =
+"<table class=\"ctable\" align=\"right\">"+
+"<tr><td><INPUT TYPE=\"button\" class=\"button_accept\" VALUE=\"ok\" onClick=\"window.close();\"></td>"+
+"<td><INPUT TYPE=\"button\" class=\"button_accept\" VALUE=\"cancel\" onClick=\"cancelButtontOption();\"></td></tr>"+
+"</table>";
+		
+</script>
+</body>
+</html>
+

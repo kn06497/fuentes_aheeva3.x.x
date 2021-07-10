@@ -1,0 +1,50 @@
+<html>
+
+<head>
+<title>Aheeva CTI Manager</title>
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<script language="JavaScript" src="../Resources_pages/jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript">
+	var record_loc='';
+	record_loc  = normalizeString(QueryString('file'));
+
+	function launchPlayer()
+	 {
+		//alert(record_loc)
+		//while(document.myPlayer.getStatus() != true)
+		//{
+		//}
+		//var v = window.rplayer.myPlayer.playRecord(record);
+                //document.myPlayer.playRecord(record);
+             //if ( (navigator.javaEnabled != null) && (navigator.javaEnabled()) )
+                document.myPlayer.playSoundtrack(record_loc);
+	}
+
+</script>
+</head>
+
+<body class="bottompagebody">
+<script language="javascript" type="text/javascript">
+    document.write("<frameset rows=\"50%,*\">");
+	document.write(" <frame name=\"rplayer\" >"); //src=\"./player.htm?record="+ record+ \"
+</script>
+
+<APPLET CODEBASE="../" CODE="Manager.java.SoundApplet.class"
+		ARCHIVE="sManager.jar"
+        NAME="myPlayer"
+        HEIGHT=200 WIDTH=500 hspace=0 align="top" style="margin-top: 0; margin-bottom: 0">
+ 		<PARAM NAME="host" VALUE="localhost">
+
+     <script language="javascript" type="text/javascript">
+         document.write(" <PARAM NAME=\"record_id\" VALUE=\""+ record_loc +"\"> ");
+     </script>
+</APPLET>
+<script language="javascript" type="text/javascript">
+	document.write(" <frame name=\"rformnote\" src=\"formulaire.htm\" >"); //src=\"./formulaire.htm?record="+ record+ \"
+    document.write("</frameset>");
+    launchPlayer();
+</script>
+
+</body>
+</html>

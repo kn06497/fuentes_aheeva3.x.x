@@ -1,0 +1,423 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<title>Set Agent Skill</title>
+
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript">
+var skill_id =  QueryString('skill_id') ? normalizeString(QueryString('skill_id')) : "";
+var skill_name = QueryString('skill_name') ? normalizeString(QueryString('skill_name')) : "";
+var step = QueryString('step') ? normalizeString(QueryString('step')) : "";
+var tenantDBID = QueryString('tenantDBID') ? normalizeString(QueryString('tenantDBID')) : "";
+
+//step=1&skill_id=3&skill_nameJapon
+var currentObj;
+function validateBefore()
+{
+	nb_agents = selected_agents.length;
+	nb_skills = selected_skills.length;
+	nb_selected_agents = 0;
+	nb_selected_skills = 0;
+	var selected_agents_list = new Array();
+	var selected_skills_list = new Array();
+	for(i = 0; i < nb_agents; i++)
+	{
+		if(selected_agents.options[i].selected == true)
+			{
+			selected_agents_list[nb_selected_agents] = selected_agents.options[i];
+			nb_selected_agents++;
+			}
+	}
+	for(i = 0; i < nb_skills; i++)
+	{
+		if(selected_skills.options[i].selected == true)
+			{
+			selected_skills_list[nb_selected_skills] = selected_skills.options[i];
+			nb_selected_skills++;
+			}
+	}	
+	
+	displaySkillTable(selected_agents_list, selected_skills_list);
+	
+}
+
+function setPopUpValues(agentLoginID, skillName, skillScore, obj)
+{		
+		setAgentDIVLoginID.innerText = agentLoginID;
+		setAgentDIVSkill.innerText = skillName;
+		score.value = skillScore;		
+		setAgentDIV.style.top = skillsMainTable.offsetTop+obj.clientTop+obj.offsetTop+obj.clientHeight;
+		setAgentDIV.style.left = skillsMainTable.offsetLeft+obj.clientLeft+obj.offsetLeft ;	
+}
+
+function displaySkillTable(selected_agents_list, selected_skills_list)
+{
+	agentList = "";
+	skillList = "";
+
+	html_string =  '<table border="0" align="center" id="skillsMainTable" cellspacing="2">';
+  	html_string += '<tr>';
+    html_string += '<td class="agentSkill_1">Agents</td>';
+	
+	for(j = 0; j < selected_skills_list.length; j++)
+		{
+		skillList += selected_skills_list[j].value+",";
+    	html_string += '<td class="agentSkill_1" nowrap>'+selected_skills_list[j].text+'</strong></td>';
+		}
+	for(i = 0; i < selected_agents_list.length; i++)   
+		{
+		agentList += selected_agents_list[i].value+",";
+		}
+	if(skillList.length > 1)
+		skillList = skillList.substring(0, skillList.length-1);
+	if(agentList.length > 1)
+		agentList = agentList.substring(0, agentList.length-1);
+		
+  	html_string += '</tr>';
+	
+	var jsAskedAgentSkills = String( appletObj.getAgentsSkills(skillList, agentList) );
+	jsAskedAgentSkillsArray = jsAskedAgentSkills.split("|");
+	
+	for(i = 0; i < selected_agents_list.length; i++)
+	{  
+		
+	  	html_string += '<tr>';
+		html_string += '<td class="agentSkill_2" nowrap>'+selected_agents_list[i].text+'</td>';
+		var jsListofSkills = jsAskedAgentSkillsArray[i].split("^");
+		for(j = 0; j < selected_skills_list.length; j++)
+			{
+			jsSkillCommaWeight = jsListofSkills[j].split(",");
+			//html_string += '<td id="td_id_'+selected_skills_list[j].value+'_'+selected_agents_list[i].value+'" ';
+			html_string += '<td id="td_agentSkillId" ';
+			html_string += 'class="agentSkill_3" onMouseOver="this.className=\'agentSkill_3_1\'; ';
+			html_string += 'setPopUpValues(\''+selected_agents_list[i].value+'\', \''+selected_skills_list[j].text+'\', \''+jsSkillCommaWeight[1]+'\', this);" ';
+			html_string += 'onMouseOut="this.className=\'agentSkill_3\';" ondblclick="setAgentSkill('+selected_skills_list[j].value+','+selected_agents_list[i].value+',this, \''+selected_skills_list[j].text+'\');" ';
+			html_string += 'bgcolor="'+getColor(jsSkillCommaWeight[1])+'" ';
+			html_string += ' agentDBID="'+jsSkillCommaWeight[2]+'" agentloginDBID="'+selected_agents_list[i].value+'" skillDBID="'+selected_skills_list[j].value+'" oldWeight="'+jsSkillCommaWeight[1]+'" dbid="'+jsSkillCommaWeight[0]+'" ';
+			html_string += '>'+jsSkillCommaWeight[1]+'</td>';			
+			}
+		
+	  	html_string += '</tr>';
+	}
+	html_string += '<tr><td>';
+	html_string += '<input name="UpdateButton" type="button" value="Update Skills" onClick="updateSkills()">';
+	html_string += '</td></tr>';
+	html_string += '</table>';
+	
+	document.getElementById('setSKILLTable').innerHTML = html_string;
+	document.getElementById('setSKILLTable').style.visibility = "visible";
+	document.location.href = "#ancre_STable";
+}
+
+function getColor(weight)
+{
+	if(weight == "N/A")
+		return "#FFFFFF";
+	var redcolor = (112-255)/100*weight+255;
+	var redcolor = dechex(redcolor);
+	var greencolor = (223-165)/100*weight+165;
+	var greencolor = dechex(greencolor);
+	//bluecolor = (108-59)/100*new_weight+59;
+	var bluecolor = '00';
+	//bluecolor = dechex(bluecolor);	
+	var color = "#"+redcolor+""+greencolor+""+bluecolor;	
+	return color;
+}
+
+
+function returnNewSkill()
+{
+	new_weight = score.value;
+	
+	if(new_weight >= 0 && new_weight <= 100 )
+	{
+		setAgentDIV.style.visibility = 'hidden';
+		currentObj.innerText = new_weight;
+		color = getColor(new_weight);			
+		currentObj.style.backgroundColor = color;
+		return new_weight;
+	}
+	else
+	{				
+		alert(MultiArray["Weight must be between 0 and 100"][lang]);
+		return -1;
+	}
+	//new_weight = prompt("Skill weight for agent #"+agent_dbid);  	
+}
+	
+	
+function sortSelectBytext(obj)
+{
+	var o = new Array();
+	if (obj.options==null) { return; }
+	for (var i=0; i<obj.options.length; i++) {
+		o[o.length] = new Option( obj.options[i].text, obj.options[i].value, obj.options[i].defaultSelected, obj.options[i].selected) ;
+		}
+	if (o.length==0) { return; }
+	o = o.sort(
+		function(a,b) {
+			if ((a.text+"") < (b.text+"")) { return -1; }
+			if ((a.text+"") > (b.text+"")) { return 1; }
+			return 0;
+			}
+		);
+
+	for (var i=0; i<o.length; i++) {
+		obj.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+		}
+}
+
+function sortSelectByValue(obj)
+{
+	var o = new Array();
+	if (obj.options==null) { return; }
+	for (var i=0; i<obj.options.length; i++) {
+		o[o.length] = new Option( obj.options[i].text, obj.options[i].value, obj.options[i].defaultSelected, obj.options[i].selected) ;
+		}
+	if (o.length==0) { return; }
+	o = o.sort(
+		function(a,b) {
+			if (parseInt(a.value+"") < parseInt(b.value+"")) { return -1; }
+			if (parseInt(a.value+"") > parseInt(b.value+"")) { return 1; }
+			return 0;
+			}
+		);
+
+	for (var i=0; i<o.length; i++) {
+		obj.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+		}
+}
+
+
+function changeAgentListView()
+{
+	if(chkBoxAllAgents.checked)
+	{
+		var jsAgents = String( appletObj.getAgentsByNameAndStatus(tenantDBID,1) );
+		jsAgents += "|" + String( appletObj.getAgentsByNameAndStatus(tenantDBID,0) );
+		arrayAgents = jsAgents.split("|");
+		//clearOptions
+		for(i = 0; i < selected_agents.options.length; i++)
+		{
+			selected_agents.options[i] = null;
+		}
+		
+		for(i = 0; i < arrayAgents.length; i++)
+		{
+			agentParts = arrayAgents[i].split("[");
+			agentParts = agentParts[1].split("]");					
+			agentLogin = agentParts[0];
+			tmpOption = new Option(arrayAgents[i], agentLogin);
+			selected_agents.options[i] = tmpOption;
+		}
+		
+		//selected_agents
+	}
+	else
+	{
+		var jsAgents = String( appletObj.getAgentsByNameAndStatus(tenantDBID,1) );
+		arrayAgents = jsAgents.split("|");
+		for(i = 0; i < arrayAgents.length; i++)
+		{
+			agentParts = arrayAgents[i].split("[");
+			agentParts = agentParts[1].split("]");					
+			agentLogin = agentParts[0];
+			selected_agents.options[i].text = arrayAgents[i];
+			selected_agents.options[i].value = agentLogin;			
+		}	
+	}
+	
+	if(chkBoxByID.checked)	
+		sortSelectByValue(selected_agents);
+	else
+		sortSelectBytext(selected_agents);
+}
+
+function setAgentSkill(skill_dbid, agent_dbid, obj, skill_name)
+{
+	
+	document.getElementById('setAgentDIV').style.visibility = 'visible';
+	currentObj = obj;
+	/*new_weight = 0;
+	new_weight = prompt("Skill weight for agent #"+agent_dbid);	
+	
+	if(new_weight != null)
+	{
+		if(new_weight >= 0 && new_weight <= 100)
+		{
+			obj.innerText = new_weight;
+			color = getColor(new_weight);			
+			obj.style.backgroundColor = color;	
+		}
+		else
+		{
+			alert("Weight must be between 0 and 100.");
+		}
+	}*/
+}
+
+function dechex(f1) {  
+  rhex = tohex(f1);
+  return rhex;
+}
+
+function tohex(i) {
+  a2 = ''
+  ihex = hexQuot(i);
+  idiff = eval(i + '-(' + ihex + '*16)')
+  a2 = itohex(idiff) + a2;
+  while( ihex >= 16) {
+	 itmp = hexQuot(ihex);
+	 idiff = eval(ihex + '-(' + itmp + '*16)');
+	 a2 = itohex(idiff) + a2;
+	 ihex = itmp;
+  } 
+  a1 = itohex(ihex);
+  return a1 + a2 ;
+}
+function hexQuot(i) {
+  return Math.floor(eval(i +'/16'));
+}
+function itohex(i) {
+		aa = '0';
+      if( i == 0) { aa = '0' } else { if( i== 1) { aa = '1'} else {if( i== 2) { aa = '2'} else {if( i == 3) { aa = '3' } else {if( i== 4) { aa = '4'} else {if( i == 5) { aa = '5' } else {if( i== 6) { aa = '6'} else {if( i == 7) { aa = '7' } else {if( i== 8) { aa = '8'} else {if( i == 9) { aa = '9'} else {if( i==10) { aa = 'A'} else {if( i==11) { aa = 'B'} else {if( i==12) { aa = 'C'} else {if( i==13) { aa = 'D'} else {if( i==14) { aa = 'E'}  else {if( i==15) { aa = 'F'} } } } } } } } } } } } } } } }
+      return aa
+   }
+   
+function updateSkills()
+{
+	var AgentSkillString = ""; 
+	for(i = 0; i < td_agentSkillId.length; i++)
+	{		
+		agentSkillDBID = td_agentSkillId[i].agentSkillDBID;
+		agentDBID = td_agentSkillId[i].agentDBID;		
+		skillDBID = td_agentSkillId[i].skillDBID;
+		olDWEight = td_agentSkillId[i].oldWeight;
+		NewWeight = td_agentSkillId[i].innerText;
+		mDBID	  = td_agentSkillId[i].dbid;
+		
+		if(olDWEight == "N/A") olDWEight = '0';
+		if(NewWeight == "N/A") NewWeight = '0';
+		
+				
+		if(olDWEight != NewWeight ) //alors un changement a eu lieu,
+		{
+			if(olDWEight == "0") //, donc NewWeight != "N/a" ==> ajout d'un nouvel element...					
+			{
+				AgentSkillString += "-1"+"^"+agentDBID+"^"+skillDBID+"^"+NewWeight;
+			}
+			else
+			{
+				if(NewWeight == '0') //donc olDWEight != "N/A" ==> delete d'un elemnt existant
+				{
+					AgentSkillString += "-2"+"^"+mDBID;
+				}
+				else  // le oldWeight est different de NewWeight et sont tous les deux non N/A, modify
+				{
+					AgentSkillString += mDBID+"^"+NewWeight;
+				}
+			}			
+			
+			AgentSkillString += "|";
+		}			
+	}
+	
+	//
+	if(AgentSkillString.length > 1)
+		AgentSkillString = AgentSkillString.substring(0, AgentSkillString.length-1);
+		
+	if(AgentSkillString != "")
+		appletObj.saveAgentSkills(AgentSkillString);
+	document.location.href = "../defaultpage.htm";
+	//alert("AgentSkillString="+AgentSkillString);
+}
+</script>
+</head>
+
+<body class="bottompagebody">
+<form name="theForm">
+	<table width="95%" align="center">
+		<tr><td colspan="3"><font class="contentTitles"><script>document.write(MultiArray["Agent skills"][lang])</script></font></td></tr>
+		<tr>
+			<td align="left" bgcolor="#F2F2F2" width="40%"> <script>document.write(MultiArray["Agents"][lang])</script> </td>
+			<td width="20%">&nbsp;</td>
+			<td align="right" bgcolor="#F2F2F2" width="40%"> <script>document.write(MultiArray["Skills"][lang])</script></td>
+		</tr>
+		<tr>
+			<td align="left">
+			<input id ="chkBoxAllAgents" type="checkbox" name="chkBoxAllAgents" onClick="changeAgentListView();"> <script>document.write(MultiArray["Show all agents"][lang])</script>  <input id ="chkBoxByID" type="checkbox" name="chkBoxByID" onClick="changeAgentListView();">  <script>document.write(MultiArray["Sort agents by ID"][lang])</script>
+			</td>
+			<td>&nbsp;</td>
+			<td align="right">&nbsp;</td>
+		</tr>
+		<tr>
+			<td align="left">
+			<script language="javascript" type="text/javascript">
+				var jsAgents = String( appletObj.getAgentsByNameAndStatus(tenantDBID,1) );
+				
+				arrayAgents = jsAgents.split("|");
+				document.write("<select multiple id=\"selected_agents\" size=\"10\" style=\"width:100% \">");
+				for(i = 0; i < arrayAgents.length; i++)
+				{					
+					agentParts = arrayAgents[i].split("[");
+					agentParts = agentParts[1].split("]");					
+					agentLogin = agentParts[0];					
+					document.write("<option value=\""+agentLogin+"\">"+arrayAgents[i]+"</option>");					
+				}
+				document.write("</select>");
+			</script>
+			</td>
+			<td>&nbsp;</td>
+			<td align="right">
+			<script language="javascript" type="text/javascript">
+				var jsSkillList = String( appletObj.getAllSkills(tenantDBID) );
+				jsSkillListArray = jsSkillList.split("|");
+				document.write("<select multiple id=\"selected_skills\" size=\"10\" style=\"width:100% \">");
+				for(i = 0; i < jsSkillListArray.length; i++)
+					{
+						thisSkill = jsSkillListArray[i].split(",");
+						document.write("<option value=\""+thisSkill[0]+"\">"+thisSkill[1]+"</option>");
+					}
+				document.write("</select>");
+			</script>			
+			</td>
+		</tr>
+		<tr><td></td><td align="center">
+
+		<script>document.write("<input type=\"button\" value=\""+MultiArray["Set agent's skills"][lang]+"\" onClick=\"validateBefore()\">")</script>
+		</td><td></td></tr>
+	</table>
+	</form>
+
+<br>
+<a name="ancre_STable"></a>
+<div id="setSKILLTable" style="visibility:hidden ">
+
+</div>
+
+
+
+<div id="setAgentDIV" style="visibility:hidden " class="setAgentDIV_style" >
+	<table width="100%" bgcolor="#FFFFFF">
+		<tr><td align="center" bgcolor="#CCCCCC" colspan="2"><strong><script>document.write(MultiArray["Set agent's skills"][lang])</script></strong></td></tr>
+		<tr><td><em><script>document.write(MultiArray["Agent Login ID"][lang])</script>:</em> </td><td id="setAgentDIVLoginID"></td></tr>
+		<tr><td><em><script>document.write(MultiArray["Skill"][lang])</script>:</em> </td><td id="setAgentDIVSkill"></td></tr>
+		<tr><td><em><script>document.write(MultiArray["Score"][lang])</script>:</em> </td><td><input name="score" type="text" size="4" maxlength="3"></td></tr>
+		<tr>
+			<td colspan="2" align="center">
+
+			<script>document.write("<input type=\"button\" value=\""+MultiArray["Submit"][lang]+"\" onClick=\"returnNewSkill()\">")</script>
+			&nbsp;
+			<script>document.write("<input type=\"button\" value=\""+MultiArray["Cancel"][lang]+"\" onClick=\"setAgentDIV.style.visibility='hidden';\">")</script>
+			</td></tr>
+	</table>
+</div>	
+</body>
+</html>

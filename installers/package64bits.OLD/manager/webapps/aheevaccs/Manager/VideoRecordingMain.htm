@@ -1,0 +1,79 @@
+<html>
+
+<head>
+<script language="JavaScript" src="Resources_pages/jsUtil.js"> </script>
+<script>
+//var user = '1';
+
+function setUserConfig()
+{
+  user  = normalizeString(QueryString('user'));
+  var tenant = normalizeString(QueryString('tenant_dbid'));
+  //alert(user)
+  //window.top.comm.myApplet.setUserType(user);
+  if(user == 10)
+     {
+     	document.write("<frameset rows=\"77,*\">");
+     	document.write(" <frame name=\"rtop\" noresize scrolling=\"no\" target=\"rtop\" src=\"VideoRecordingTop.htm?user="+user+"\">");
+        document.write("<frameset cols=\"293,*\">");
+		document.write(" <frame name=\"left\" scrolling=\"no\" target=\"rmiddle\" src=\"VideoRecordingMenu.htm?user="+user+"&tenant_dbid="+tenant+"\">");
+        document.write("  <frameset rows=\"55%,45%,*\">");
+        document.write("   <frame name=\"rmiddle\" target=\"rmiddle\" src=\"VideoRecordingContents.htm\" >");
+        document.write("   <frame name=\"rbottom\" target=\"rbottom\" src=\"VideoRecordingBottom.htm\" >");
+        document.write("   <frame name=\"rhidden\" target=\"rbottom\" src=\"VideoRecordingBottom.htm\" >");
+
+        document.write("  </frameset>");
+        document.write("  </frameset>");
+        document.write("  </frameset>");
+     }
+  else if(user =='2')
+     {
+        document.write(" <frameset rows=\"100%,*\">");
+        document.write("    <frame name=\"rtop\" target=\"rbottom\" src=\"VideoRecordingTop.htm\" >");
+        document.write("    <frame name=\"rbottom\" target=\"rbottom\" src=\"VideoRecordingContents.htm\" >");
+        document.write(" </frameset>");
+
+     }
+    else if(user =='3')
+     {
+        document.write("<frameset cols=\"293,*\">");
+	document.write(" <frame name=\"left\" scrolling=\"no\" noresize target=\"rtop\" src=\"VideoRecordingMenu.htm?user="+user+"\">");
+        document.write("  <frameset rows=\"35%,*\">");
+        document.write("   <frame name=\"rtop\" target=\"rbottom\" src=\"VideoRecordingTop.htm\" >");
+        document.write("   <frame name=\"rbottom\" target=\"rbottom\" src=\"VideoRecordingContents.htm\" >");
+        document.write("  </frameset>");
+        document.write("  </frameset>");
+     }
+     else if(user =='4')
+     {
+        document.write(" <frameset rows=\"100%,*\">");
+        document.write("    <frame name=\"rtop\" target=\"rbottom\" src=\"VideoRecordingTop.htm\" >");
+        document.write("    <frame name=\"rbottom\" target=\"rbottom\" src=\"VideoRecordingContents.htm\" >");
+        document.write(" </frameset>");
+     }
+	 else
+	 	alert("TODO: set the users correctly!");
+
+
+}
+
+</script>
+<title>Atelka CTI Manager</title>
+</head>
+
+<script>
+    setUserConfig()
+</script>
+<!-- <frameset cols="293,*">
+ <frame name="left" scrolling="no" noresize target="rtop" src="menu.htm">
+  <frameset rows="35%,*">
+    <frame name="rtop" target="rbottom" src="top.htm" >
+    <frame name="rbottom" target="rbottom" src="Contents.htm" >
+  </frameset>
+<script>
+if(user =='1')
+  document.write("</frameset>")
+</script>
+-->
+
+</html>

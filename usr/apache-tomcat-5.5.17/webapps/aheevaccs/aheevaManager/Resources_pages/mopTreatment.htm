@@ -1,0 +1,276 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="tab_luna.css">
+			<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="style_2.css">
+				<LINK href="style.css" rel="stylesheet" type="text/css">
+					<LINK href="livestats.css" rel="stylesheet" type="text/css">
+						<meta http-equiv="Content-Language" content="en-us">
+						<style type="text/css"> .dynamic-tab-pane-control .tab-page { height: 100%; overflow: auto; }
+	.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page { /*height: 100px; }
+	html, body { /* background: ThreeDFace; */ }
+	form { margin: 0; padding: 0; }
+	/* over ride styles from webfxlayout */ body { margin: 10px; width: auto; height: auto; }
+	.dynamic-tab-pane-control h2 { text-align: center; width: auto; }
+	.dynamic-tab-pane-control h2 a { display: inline; width: auto; }
+	.dynamic-tab-pane-control a:hover { background: transparent; }
+	</style>
+						<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+						<script language="javascript" type="text/javascript" src="../language.js"></script>
+						<script language="JavaScript" type="text/javascript" src="jsUtil.js"></script>
+						<script language="javascript" type="text/javascript" src="Browser.js"></script>
+						<script language="javascript" type="text/javascript" src="tabpane.js"></script>
+						<script language="javascript" type="text/javascript" src="mopTreatmentsFunctions.js"></script>
+						<script language="javascript" type="text/javascript"></script>
+						<script>
+var nrows = 1 ;
+var maxrow = 1;
+						</script>
+						
+<style type="text/css"> tr.main_line{ vertical-align:top; }
+	td.main1{ text-align:center; width:33%; }
+	td.main2{ text-align:center; width:25%; }
+	td.main3{ text-align:center; /*prend le width restant*/ }
+	td.element_right{ text-align:right; }
+	td.element_center{ text-align:center; }
+	table.main_line_case{ display:"none"; }
+	a.delete{ text-decoration:underline; color:000000; }
+	a.delete:hover{ text-decoration:underline; color:000000; }
+	a.delete:active{ text-decoration:underline; color:000000; }
+	</style>
+	</head>
+	
+	<body class="bottompagebody" onLoad="displayMopTreatmentInfo()">
+		<div class="tab-pane" id="tabPane1">
+			<form name="mop_treatment_form" onKeyDown="KeyDownHandler(save)">
+				<script type="text/javascript">
+tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+				</script>
+				<div class="tab-page" id="tabGeneral">
+					<h2 class="tab"><script>document.write(MultiArray["General"][lang])</script></h2>
+					<fieldset>
+						<legend>
+							<script>document.write(MultiArray["General settings"][lang])</script>
+						</legend>
+						<table border="0">
+							<tr>
+								<td height="22">&nbsp;
+								</td>
+								<td>
+								</td>
+							</tr>
+							<tr>
+								<td width="197" height="22"><script>document.write(MultiArray["Commission name"][lang])</script><br>
+									<script>document.write(MultiArray["(associated to a MOP)"][lang])</script>
+								</td>
+								<td width="292" height="22" align="left"><input type="text" name="mopTreatmentName" onClick="enabledUpdateButton()" size="20"></td>
+							</tr>
+							<tr>
+								<td width="197" height="24"><script>document.write(MultiArray["Description"][lang])</script></td>
+								<td width="292" height="50"><textarea rows="3" name="mopTreatmentDescription" cols="41" onClick="enabledUpdateButton()"></textarea></td>
+							</tr>
+							<tr>
+								<td width="197" height="25">
+									<script>document.write(MultiArray["Max commission value"][lang])</script>
+								</td>
+								<td>
+									<input id="maxCommissionValue" type="text" name="maxCommissionValue" size="10" value="0.00"
+										onClick="enabledUpdateButton()">
+									<script>document.write(MultiArray["per work hour"][lang])</script>
+								</td>
+							</tr>
+							<tr>
+								<td width="197" height="25">
+									<script>document.write(MultiArray["Active"][lang])</script>
+									<input id="mopTreatmentStatus" type="checkbox" name="mopTreatmentStatus" value="ON" onClick="enabledUpdateButton()"
+										checked>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+				<!------------ TAB COMMISSION ----------------------------
+				-Fixed commission
+				-Sales-based commission:-Average sales per hour
+										-Sales per week
+										-Sales per unit
+				-Commission based on group average:	-Net conversion rate
+													-Sales per week
+				-Performance-based commission:	-Net conversion rate
+												-Sales per week
+				-->
+				<div class="tab-page" id="tabCommissions">
+					<h2 class="tab"><script>document.write(MultiArray["Commissions"][lang])</script></h2>
+					<fieldset id="FIELDSET2">
+						<legend>
+							<script>document.write(MultiArray["Commissions settings"][lang])</script>
+						</legend>
+						<table border="0" width="100%" height="100%" ID="Table1">
+							<tr class="main_line">
+								<td class="main1">
+									<fieldset>
+										<!--
+										Premier field set: Choose commission type
+							
+										-->
+										<legend><script>document.write(MultiArray["Step"][lang])</script> #1</legend>
+										<b><script>document.write(MultiArray["Choose commission type"][lang])</script></b>
+										<table  class="main_line_case2">
+											<tr>
+												<td align="right" height="21"><script>document.write(MultiArray["Fixed commission"][lang])</script>
+													<input id="Radio1.1" type="radio" name="Radio1" value="1"
+														onClick="javascript:toggleLayer('fixed')" onChange="enabledUpdateButton()">
+												</td>
+											</tr>
+											<tr>
+												<td align="right" height="20"><script>document.write(MultiArray["Sales-based commissions"][lang])</script>
+													<input id="Radio1.2" type="radio" name="Radio1" value="2" onClick="javascript:toggleLayer('sales')"
+														onChange="enabledUpdateButton()">
+												</td>
+											</tr>
+											<tr>
+												<td align="right" height="20"><script>document.write(MultiArray["Commissions based on group average"][lang])</script>
+													<input id="Radio1.3" type="radio" name="Radio1" value="3" onClick="javascript:toggleLayer('group')"
+														onChange="enabledUpdateButton()">
+												</td>
+											</tr>
+											<tr>
+												<td align="right" height="20"><script>document.write(MultiArray["Performance-based commission"][lang])</script>
+													<input id="Radio1.4" type="radio" name="Radio1" value="4" onClick="javascript:toggleLayer('group')"
+														onChange="enabledUpdateButton()">
+												</td>
+											</tr>
+										</table>
+									</fieldset>
+								</td>
+								<td class="main2">
+									<!--
+								2è fieldset: Contient toutes les options relatives au choix du premier field set
+								-->
+									<fieldset>
+										<legend><script>document.write(MultiArray["Step"][lang])</script> #2</legend>
+										<table id="Sales-based_table" class="main_line_case">
+											<tr>
+												<td class="element_center"><b><script>document.write(MultiArray["Based on"][lang])</script></b></td>
+											</tr>
+											<tr>
+												<td class="element_right"><script>document.write(MultiArray["Average sales per hour"][lang])</script>
+													<input id="Radio2.1.1" type="radio" name="Radio2_1" value="1" onChange="enabledUpdateButton()" onClick="javascript:toggleLayer('range')">
+												</td>
+											</tr>
+											<tr>
+												<td class="element_right"><script>document.write(MultiArray["Sales per week"][lang])</script>
+													<input id="Radio2.1.2" type="radio" name="Radio2_1" value="2" onChange="enabledUpdateButton()" onClick="javascript:toggleLayer('range')">
+												</td>
+											</tr>
+											<tr>
+												<td class="element_right"><script>document.write(MultiArray["Sales per unit"][lang])</script>
+													<input id="Radio2.1.3" type="radio" name="Radio2_1" value="3" onChange="enabledUpdateButton()" onClick="javascript:toggleLayer('unit')">
+												</td>
+											</tr>
+										</table>
+										<table id="group_average" class="main_line_case">
+											<tr>
+												<td class="element_center"><b><script>document.write(MultiArray["Based on"][lang])</script></b></td>
+											</tr>
+											<tr>
+												<td class="element_right"><script>document.write(MultiArray["Net conversion rate"][lang])</script>
+													<input id="Radio2.2.1" type="radio" name="Radio2_2" value="1" onChange="enabledUpdateButton()" onClick="javascript:toggleLayer('range')">
+												</td>
+											</tr>
+											<tr>
+												<td class="element_right"><script>document.write(MultiArray["Sales per week"][lang])</script>
+													<input id="Radio2.2.2" type="radio" name="Radio2_2" value="2" onChange="enabledUpdateButton()" onClick="javascript:toggleLayer('range')">
+												</td>
+											</tr>
+										</table>
+									</fieldset>
+								</td>
+								<td  class="main3">
+								<!--
+								3è fieldset: Les box pour entrer les données
+								-->
+									<fieldset>
+										<legend><script>document.write(MultiArray["Step"][lang])</script> #3</legend>
+										<table ID="field3.1" class="main_line_case">
+											<tr><td class="element_center"><b>Set the amount</b></td></tr>
+											<tr><td class="element_center">Pay:<input type="text" size="5" id="amount" NAME="amount"></td></tr>
+										</table>
+										<table ID="field3.2" class="main_line_case">
+											<tr>
+												<td class="element_center"><b><script>document.write(MultiArray["Set your ranges"][lang])</script></b></td>
+											</tr>
+											<tr>
+												<td class="element_center">
+													<script>document.write("<input id=\"addRowButton4\" name=\"addRowButton4\" type=\"button\" value=\""+MultiArray["Add a new range"][lang]+"\" onClick=\"addMyRow('', '', '');enabledUpdateButton()\">");</script>
+												</td>
+											</tr>
+											<tr>
+												<td class="element_center">
+													<div id="ranges" style="MARGIN: 0px 5px">
+													</div>
+												</td>
+											</tr>
+										</table>
+									</fieldset>
+								</td>
+							</tr>
+						</table>						
+					</fieldset>
+				</div>
+				<!------------------------------- tab HELP ------------------------------------------->
+				<div class="tab-page" id="tabHelp">
+					<h2 class="tab"><script>document.write(MultiArray["Help"][lang])</script></h2>
+					<fieldset>
+						<legend>
+							<script>document.write(MultiArray["Help for commissions"][lang])</script>
+						</legend>
+						<table border="0">
+							<tr>
+								<td height="21">&nbsp;
+								</td>
+								<td>
+								</td>
+							</tr>
+							<tr>
+								<td width="600">
+									<br>
+									<b>
+										<script>document.write(MultiArray["General"][lang])</script>
+									</b>
+									<br>
+									<script>document.write(MultiArray["This tab allows you to set a name(mandatory) for your MOP treatment. You can also set a description and a status (active by default) for your MOP treatment."][lang])</script>
+									<br>
+									<br>
+									<b>
+										<script>document.write(MultiArray["Commissions"][lang])</script>
+									</b>
+									<br>
+									<script>document.write(MultiArray["This tab allows you to set the type of commission for your treatment. If your treatment doesn't need a commission, you must select a fixed commission and set its value to 0."][lang])</script>
+									<br>
+									<br>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+				<tr>
+					<td align="center">
+						<script>document.write("<input disabled id=\"save\" name=\"updateInfo\" type=\"button\" value=\""+MultiArray["Update"][lang]+"\" onClick=\"validateInfo()\">")</script>
+						<script>document.write("<input class=\"delete-button\" name=\"deleteMopTreatment\" type=\"hidden\" value=\""+MultiArray["Delete"][lang]+"\" onClick=\"askDelete()\">")</script>
+					</td>
+				</tr>
+			</form>
+		</div>
+		<!-- Statistiques -->
+		<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabGeneral" ) );</script>
+		<script type="text/javascript">
+		document.getElementById( "tabHelp" ).style.display = "none";
+			if(QueryString('mop_treatment_name') != ""){
+				tp1.addTabPage( document.getElementById( "tabCommissions" ) );		
+				tp1.addTabPage( document.getElementById( "tabHelp" ) );
+			document.getElementById( "tabHelp" ).style.display = "block";		
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,448 @@
+<html>
+
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<script language="JavaScript" src="pupdate.js"></script>
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+
+<!-- Calendrier début -->
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<!-- Calendrier fin -->
+<script>
+
+
+function loadAgent(){
+
+  while(objects.length > 0){
+    objects.options[0]= null;
+  }
+  var vValue = normalizeString(QueryString('type'));
+  var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+  if (ckbox.checked == true) //the_box.checked == true)
+  {
+    var agents = appletObj.getAgentsByName(tenant_dbid);
+    var jsAgents = agents + "";
+    arrayAgents = jsAgents .split("|");
+    for (j = 0; j <arrayAgents.length; j++){
+      var iStartPos = arrayAgents[j].indexOf('[');
+      var iEndPos   = arrayAgents[j].indexOf(']');
+      var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+      myOption = new Option(arrayAgents [j],login)
+      optionPos = objects.options.length
+      objects.options[optionPos]=myOption
+    }
+  } else {
+    var agents = appletObj.getAgentsByNameActif(tenant_dbid);
+    var jsAgents = agents + "";
+    arrayAgents = jsAgents .split("|");
+    for (j = 0; j <arrayAgents.length; j++){
+      var iStartPos = arrayAgents[j].indexOf('[');
+      var iEndPos   = arrayAgents[j].indexOf(']');
+      var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+      myOption = new Option(arrayAgents [j],login)
+      optionPos = objects.options.length
+      objects.options[optionPos]=myOption
+    }
+  }
+
+}
+
+function fillObjectCombo()
+{
+	var vValue = normalizeString(QueryString('type'));
+	var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+
+	if((vValue == 'Agents') || (vValue == 'AgentPerformance') ||(vValue =='AgentPerformanceDetails'))
+	{
+		var agents = appletObj.getAgentsByNameActif(tenant_dbid);
+		var jsAgents = agents + "";
+    	arrayAgents = jsAgents .split("|");
+    	for (j = 0; j <arrayAgents.length; j++){
+    		var iStartPos = arrayAgents[j].indexOf('[');
+    		var iEndPos   = arrayAgents[j].indexOf(']');
+    		var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+    		myOption = new Option(arrayAgents [j],login)
+			optionPos = objects.options.length
+			objects.options[optionPos]=myOption
+    	}
+    }else if((vValue == 'AgentGroups')||(vValue =='AgentPerformanceByGrp')||(vValue =='AgentPerformanceDetailsByGrp')){
+   		var agentGroups = appletObj.getAgentGroupByName(tenant_dbid);
+		var jsAgentGroups = agentGroups + "";
+    	arrayGroups = jsAgentGroups.split("|");
+    	for (j = 0; j <arrayGroups.length; j++){
+    		myOption = new Option(arrayGroups[j],arrayGroups[j])
+			optionPos = objects.options.length
+			objects.options[optionPos]=myOption
+    	}
+    }else if(vValue == 'AgentLoginReport'){
+   		var agentGroups = appletObj.getAgentGroupByName(tenant_dbid);
+		var jsAgentGroups = agentGroups + "";
+    	arrayGroups = jsAgentGroups.split("|");
+    	for (j = 0; j <arrayGroups.length; j++){
+    		myOption = new Option(arrayGroups[j],arrayGroups[j])
+			optionPos = objects.options.length
+			objects.options[optionPos]=myOption
+    	}
+    }else if(vValue == 'Campaigns'){
+    	var campaigns = appletObj.getCampaignsByName(tenant_dbid);
+		var jsCampaigns = campaigns + "";
+    	arrayCampaigns = jsCampaigns.split("|");
+        for (j = 0; j <arrayCampaigns .length; j++){
+    		myOption = new Option(arrayCampaigns [j],arrayCampaigns [j])
+			optionPos = objects.options.length
+			objects.options[optionPos]=myOption
+    	}
+    }else if(vValue == 'CallingsLists'){
+    	var calling_lists = appletObj.getCallingListByName(tenant_dbid,1);
+		var jsCallingList = calling_lists+ "";
+    	arrayCallingList = jsCallingList.split("|");
+        for (j = 0; j <arrayCallingList .length; j++){
+    		myOption = new Option(arrayCallingList [j],arrayCallingList [j])
+			optionPos = objects.options.length
+			objects.options[optionPos]=myOption
+    	}
+    }else if(vValue == 'Queues'){
+    	var queues = appletObj.getQueueByName(tenant_dbid);
+		var jsQueues = queues + "";
+    	arrayQueues = jsQueues.split("|");
+        for (j = 0; j <arrayQueues .length; j++){
+    		myOption = new Option(arrayQueues [j],arrayQueues [j])
+			optionPos = objects.options.length
+			objects.options[optionPos]=myOption
+    	}
+
+
+    }
+    if(objects.options.length >= 10)
+	   	objects.size = 10;
+	else
+		objects.size = objects.options.length;
+
+}
+function getSelectedObjects()
+{
+	selectedObjects = new Array()
+	for (i=objects.selectedIndex;i<objects.options.length;i++) {
+  		if (objects.options[i].selected) {
+  			selectedObjects[selectedObjects.length]=objects.options[i].value;
+  		}
+  	}
+	var url = '';
+	if (selectedObjects.length > 0)
+	{
+		url= escape(selectedObjects.join('/'))
+	}
+	return url;
+}
+function getRequestedReport()
+{
+	var vValue = normalizeString(QueryString('type'));
+	var destination = '';
+	if(period[2].checked){
+		if(startingDateDaily.value.length == 0)
+		{
+			alert(MultiArray["Please enter a starting date"][lang]);
+			return false;
+		}
+		if(endingDateDaily.value.length == 0)
+		{
+			alert(MultiArray["Please enter an ending date"][lang]);
+			return false;
+		}
+	}
+	if(objects.selectedIndex == -1)
+	{
+		alert(MultiArray["Please select at least one object"][lang]);
+		return;
+	}
+	if(dateChecker() == false)
+	{
+		return;
+	}
+	if(vValue == 'Agents'){
+		destination = "../jsp/agentReports.jsp"
+	}else if(vValue == 'AgentGroups'){
+		destination = "../jsp/agentGroupReports.jsp"
+	}else if(vValue == 'AgentLoginReport'){
+                destination = "../jsp/agentLoginReports.jsp"
+	}else if(vValue == 'Campaigns'){
+		destination = "../jsp/campaignReports.jsp"
+	}else if(vValue == 'CallingsLists'){
+		destination = "../jsp/callingListReports.jsp"
+	}else if(vValue == 'Queues'){
+		destination = "../jsp/queueReports.jsp"
+	}else if(vValue == 'AgentPerformance'){
+		destination = "../jsp/agentPerformanceReports.jsp"
+	}else if(vValue == 'AgentPerformanceByGrp'){
+		destination = "../jsp/agentPerformanceReportsByGrp.jsp"
+	}else if(vValue == 'AgentPerformanceDetailsByGrp'){
+		destination = "../jsp/agentPerformanceDetailsByGrp.jsp"
+	}else if(vValue == 'AgentPerformanceDetails'){
+		destination = "../jsp/agentPerformanceDetails.jsp"
+	}
+	destination += "?startingDateDaily="
+	destination += startingDateDaily.value;
+	destination +="&endingDateDaily=";
+	destination += endingDateDaily.value;
+	destination +="&starting_year_yearly=";
+	destination += starting_year_yearly.value
+	destination +="&ending_year_yearly=";
+	destination += ending_year_yearly.value
+	destination +="&starting_month_monthly=";
+	destination += starting_month_monthly.value
+	destination +="&starting_year_monthly=";
+	destination += starting_year_monthly.value
+	destination +="&ending_month_monthly=";
+	destination += ending_month_monthly.value
+	destination +="&ending_year_monthly=";
+	destination += ending_year_monthly.value
+
+	destination +="&reportType=";
+	if(period[0].checked){
+		destination += "Yearly";
+	} else if(period[1].checked){
+		destination += "Monthly";
+	} else if(period[2].checked){
+		destination += "Daily";
+	}
+	destination +="&objects=";
+	destination += getSelectedObjects();
+//	alert(destination);
+	//document.location = destination;
+	window.open(destination);
+}
+function dateChecker()
+{
+var startDate=new Date(startingDateDaily.value);
+var endDate = new Date(endingDateDaily.value);
+
+	if(endDate < startDate)
+	{
+		alert(MultiArray["Your ending date cannnot be smaller than your starting date"][lang]);
+		return false;
+	}
+return true;
+}
+
+function changeDisabled(){
+	if(period[0].checked){
+		startingDateDaily.disabled = true;
+		endingDateDaily.disabled = true;
+		starting_year_yearly.disabled = false;
+		ending_year_yearly.disabled = false;
+		starting_month_monthly.disabled = true;
+		starting_year_monthly.disabled = true;
+		ending_month_monthly.disabled = true;
+		ending_year_monthly.disabled = true;
+	} else if(period[1].checked){
+		startingDateDaily.disabled = true;
+		endingDateDaily.disabled = true;
+		starting_year_yearly.disabled = true;
+		ending_year_yearly.disabled = true;
+		starting_month_monthly.disabled = false;
+		starting_year_monthly.disabled = false;
+		ending_month_monthly.disabled = false;
+		ending_year_monthly.disabled = false;
+	} else if(period[2].checked){
+		startingDateDaily.disabled = false;
+		endingDateDaily.disabled = false;
+		starting_year_yearly.disabled = true;
+		ending_year_yearly.disabled = true;
+		starting_month_monthly.disabled = true;
+		starting_year_monthly.disabled = true;
+		ending_month_monthly.disabled = true;
+		ending_year_monthly.disabled = true;
+	}
+}
+
+</script>
+<style type="text/css">
+<!--
+.style1 {
+	font-size: 16px;
+	font-weight: bold;
+}
+-->
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></head>
+
+<body class="bottompagebody" onload="fillObjectCombo()">
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="69%"  >
+  <tr >
+    <td valign="top" width="28%" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" colspan="3">
+      <div align="center">
+      <span class="style1"><script>document.write(MultiArray["Agent report"][lang])</script></span>
+      </div></td>
+  </tr>
+  <tr height="45">
+    <td width="34%" valign="top" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1" >
+    	<select name="objects" multiple>
+    	</select>
+    </td>
+
+<script language="JavaScript">
+    var vValue = normalizeString(QueryString('type'));
+    if ((vValue == 'Agents') || (vValue == 'AgentPerformance') ||(vValue =='AgentPerformanceDetails')){
+     document.write('<td valign="top" width="38%" style="border-top-style: none; border-top-width: 1" >')
+     document.write('<b>')
+     document.write(MultiArray["Show all agents"][lang])
+     document.write('<input type=checkbox name=ckbox onClick="loadAgent()" >')
+     document.write('</b>')
+     document.write('</td>')
+
+    } else {
+       document.write('<td valign="top" width="38%" style="border-top-style: none; border-top-width: 1" >&nbsp;</td>')
+    }
+    </script>
+
+    <td width="28%" valign="top" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >&nbsp;
+    </td>
+  </tr>
+  <tr height="25" valign="top" >
+    <td width="34%" style="border-left-style: none; border-left-width: 1; border-top-style: none; border-top-width: 1" >
+   <b><script>document.write(MultiArray["Report type"][lang])</script></b>
+    </td>
+    <td width="38%" style="border-top-style: none; border-top-width: 1" >
+    <b><script>document.write(MultiArray["Starting date"][lang])</script></b>
+    </td>
+    <td width="28%" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >
+     <b><script>document.write(MultiArray["Ending date"][lang])</script></b>
+    </td>
+  </tr>
+  <tr height="25">
+  	<td>
+		<input name="period" type="radio" value="yearly" onClick="changeDisabled()"><script>document.write(MultiArray["detail for each year"][lang])</script>
+
+   </td>
+    <td valign="top" width="34%" style="border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1" >
+     <select name="starting_year_yearly" disabled="true">
+    		<option value="2004">2004</option>
+    		<option value="2005">2005</option>
+    		<option value="2006">2006</option>
+			<option value="2007">2007</option>
+			<option value="2008">2008</option>
+			<option value="2009">2009</option>
+			<option value="2010">2010</option>
+			<option value="2011">2011</option>
+			<option value="2012">2012</option>
+			<option value="2013">2013</option>
+			<option value="2014">2014</option>
+			<option value="2015">2015</option>
+    </select>
+    </td>
+    <td valign="top" width="38%" style="border-bottom-style: none; border-bottom-width: 1">
+	<select name="ending_year_yearly" disabled="true">
+    		<option value="2004">2004</option>
+    		<option value="2005">2005</option>
+    		<option value="2006">2006</option>
+			<option value="2007">2007</option>
+			<option value="2008">2008</option>
+			<option value="2009">2009</option>
+			<option value="2010">2010</option>
+			<option value="2011">2011</option>
+			<option value="2012">2012</option>
+			<option value="2013">2013</option>
+			<option value="2014">2014</option>
+			<option value="2015">2015</option>
+    </select>
+
+    </td>
+  </tr>
+  <tr>
+   <td>
+   	<input name="period" type="radio" value="monthly" onClick="changeDisabled()"><script>document.write(MultiArray["detail for each month"][lang])</script>
+   </td>
+   <td valign="top" width="34%" style="border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1" >
+     <select name="starting_month_monthly" disabled="true">
+    		<option value="01">01</option>
+    		<option value="02">02</option>
+    		<option value="03">03</option>
+			<option value="04">04</option>
+			<option value="05">05</option>
+			<option value="06">06</option>
+			<option value="07">07</option>
+			<option value="08">08</option>
+			<option value="09">09</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+    </select>
+	 <select name="starting_year_monthly" disabled="true">
+    		<option value="2004">2004</option>
+    		<option value="2005">2005</option>
+    		<option value="2006">2006</option>
+			<option value="2007">2007</option>
+			<option value="2008">2008</option>
+			<option value="2009">2009</option>
+			<option value="2010">2010</option>
+			<option value="2011">2011</option>
+			<option value="2012">2012</option>
+			<option value="2013">2013</option>
+			<option value="2014">2014</option>
+			<option value="2015">2015</option>
+    </select>
+    </td>
+    <td valign="top" width="38%" style="border-bottom-style: none; border-bottom-width: 1">
+     <select name="ending_month_monthly" disabled="true">
+    		<option value="01">01</option>
+    		<option value="02">02</option>
+    		<option value="03">03</option>
+			<option value="04">04</option>
+			<option value="05">05</option>
+			<option value="06">06</option>
+			<option value="07">07</option>
+			<option value="08">08</option>
+			<option value="09">09</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+    </select>
+	 <select name="ending_year_monthly" disabled="true">
+    		<option value="2004">2004</option>
+    		<option value="2005">2005</option>
+    		<option value="2006">2006</option>
+			<option value="2007">2007</option>
+			<option value="2008">2008</option>
+			<option value="2009">2009</option>
+			<option value="2010">2010</option>
+			<option value="2011">2011</option>
+			<option value="2012">2012</option>
+			<option value="2013">2013</option>
+			<option value="2014">2014</option>
+			<option value="2015">2015</option>
+    </select>
+    </td>
+  </tr>
+   <tr>
+   <td>
+   		<input name="period" type="radio" value="daily"  onClick="changeDisabled()" checked><script>document.write(MultiArray["detail for each day"][lang])</script>
+   </td>
+   <td id="id_startingDateDaily" valign="top" width="34%" style="border-left-style: none; border-left-width: 1; border-bottom-style:none; border-bottom-width:1" >
+   	 <input type="text" size="20" onFocus="showCalendar('',this,this,'','id_startingDateDaily',0,30,1);this.blur()" name="startingDateDaily" />
+
+    </td>
+    <td id="id_endingDateDaily" valign="top" width="38%" style="border-bottom-style: none; border-bottom-width: 1">
+     	<input type="text" size="20" onFocus="showCalendar('',this,this,'','id_endingDateDaily',0,30,1);this.blur()" name="endingDateDaily"/>
+    </td>
+  <tr>
+   <td width="34%" valign"top" style="border-right-style: none; border-right-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1" align="right" >
+     <button onClick="getRequestedReport()"><script>document.write(MultiArray["Submit"][lang])</script></button>
+   </td>
+   <td width="38%" style="border-left-style: none; border-left-width: 1; border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1" >&nbsp;
+   </td>
+   <td width="28%" style="border-bottom-style: none; border-bottom-width: 1; border-top-style:none; border-top-width:1">&nbsp;
+   </td>
+  </tr>
+</table>
+
+</body>
+
+</html><body></body>

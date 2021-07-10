@@ -1,0 +1,808 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>Add an agent</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="tab_luna.css" />
+<link id="luna-tab-style-sheet" type="text/css" rel="stylesheet" href="style_2.css" />
+<link type="text/css" rel="StyleSheet" href="slider/css/luna.css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<style type="text/css">
+.dynamic-tab-pane-control .tab-page {
+	height:		200px;
+}
+.dynamic-tab-pane-control .tab-page .dynamic-tab-pane-control .tab-page {
+	height:		100px;
+}
+html, body {
+	/*background:	ThreeDFace;*/
+}
+form {
+	margin:		0;
+	padding:	0;
+}
+/* over ride styles from webfxlayout */
+body {
+	margin:		10px;
+	width:		auto;
+	height:		auto;
+}
+.dynamic-tab-pane-control h2 {
+	text-align:	center;
+	width:		auto;
+}
+.dynamic-tab-pane-control h2 a {
+	display:	inline;
+	width:		auto;
+}
+.dynamic-tab-pane-control a:hover {
+	background: transparent;
+}
+</style>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language=JavaScript src="jsUtil.js"></script>
+<script language=javascript src="Browser.js" type=text/javascript></script>
+<script language="javascript" type="text/javascript" src="../Resources_pages/tabpane.js"></script>
+<!-- Calendar required javascript -->
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;xcDateFormat="yyyy-mm-dd";</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<!-- End of calendar required section -->
+<script type="text/javascript" src="slider/js/range.js"></script>
+<script type="text/javascript" src="slider/js/timer.js"></script>
+<script type="text/javascript" src="slider/js/slider.js"></script>
+
+
+<script language=javascript type=text/javascript>
+var queueName       	= '';
+var threshold_answered          	= '';
+var threshold_abandonned		= '';
+var serviceLevel_answered		= '';
+var serviceLevel_abandonned   = '';
+var dbid   = '';
+var tenant_dbid ='';
+
+function enableUpdateButton()
+{
+	//alert("enableUpdateButton");
+	document.getElementById("updateInfo").disabled = false;
+}
+
+function checkOnUnload()
+{
+	//document.nrr.updateInfo.disabled = false;
+}
+
+function enableReload()
+{
+   appletObj.fReloadMenu = true;
+}
+
+function AddPreferredABDLevel()
+{
+	var i;
+	var o;
+	var value_min ;
+	var value_max ;
+	//alert("AddPreferredABDLevel");
+	// Move them over
+	for (i = 0; i < document.queue.availableABD_Level.options.length; i++)
+	{
+		o = document.queue.availableABD_Level.options[i];
+		if (o.selected)
+		{
+			value_min = o;
+			document.queue.serviceLevel_abandonned.options[document.queue.serviceLevel_abandonned.options.length] = new Option(o.text, o.value);
+
+		    //alert("--------nb_abd_for_svl_select avant= " + document.queue.nb_abd_for_svl_select.value);
+			document.queue.nb_abd_for_svl_select.value = parseInt(document.queue.nb_abd_for_svl_select.value) + 1;
+		    //alert("--------nb_abd_for_svl_select apres= " + document.queue.nb_abd_for_svl_select.value);
+			//order fields...
+			var j = document.queue.serviceLevel_abandonned.options.length-1;
+			while( j > 0)
+			{
+				value_max = document.queue.serviceLevel_abandonned.options[j-1];
+				//alert("--------value_min = " + value_min.value +"--------value_max = " + value_max.value);
+				if(parseInt(value_min.value)<  parseInt(value_max.value)) //permutte
+				{
+					document.queue.serviceLevel_abandonned.options[j] = new Option(value_max.text, value_max.value);
+					document.queue.serviceLevel_abandonned.options[j-1] = new Option(value_min.text,value_min.value);
+				}
+				j--;
+			}
+		}
+	}
+
+	// Delete them from original
+	for (i = (document.queue.availableABD_Level.options.length - 1); i >= 0; i--)
+	{
+		o = document.queue.availableABD_Level.options[i];
+		if (o.selected)
+			document.queue.availableABD_Level.options[i] = null;
+	}
+	document.queue.availableABD_Level.selectedIndex = -1;
+	document.queue.serviceLevel_abandonned.selectedIndex = -1;
+}
+
+function RemovePreferredABDLevel()
+{
+	var i;
+	var o;
+	var value_min ;
+	var value_max ;
+	// Move them over
+	for (i = 0; i < document.queue.serviceLevel_abandonned.options.length; i++)
+	{
+		o = document.queue.serviceLevel_abandonned.options[i];
+		//alert("level" + o.value);
+		if (o.selected)
+		{
+			value_min = o;
+			document.queue.availableABD_Level.options[document.queue.availableABD_Level.options.length] = new Option(o.text, o.value);
+		    //alert("--------nb_abd_for_svl_select avant= " + document.queue.nb_abd_for_svl_select.value);
+			document.queue.nb_abd_for_svl_select.value = parseInt(document.queue.nb_abd_for_svl_select.value) - 1;
+		    //alert("--------nb_abd_for_svl_select apres= " + document.queue.nb_abd_for_svl_select.value);
+
+			//order fields...
+			var j = document.queue.availableABD_Level.options.length-1;
+			while( j > 0)
+			{
+				value_max = document.queue.availableABD_Level.options[j-1];
+				//alert("--------value_min = " + value_min.value +"--------value_max = " + value_max.value);
+				if(parseInt(value_min.value)<  parseInt(value_max.value)) //permutte
+				{
+					document.queue.availableABD_Level.options[j] = new Option(value_max.text, value_max.value);
+					document.queue.availableABD_Level.options[j-1] = new Option(value_min.text,value_min.value);
+				}
+				j--;
+			}
+		}
+	}
+
+	// Delete them from original
+	for (i = (document.queue.serviceLevel_abandonned.options.length - 1); i >= 0; i--)
+	{
+		o = document.queue.serviceLevel_abandonned.options[i];
+		if (o.selected)
+			document.queue.serviceLevel_abandonned.options[i] = null;
+	}
+	document.queue.availableABD_Level.selectedIndex = -1;
+	document.queue.serviceLevel_abandonned.selectedIndex = -1;
+}
+
+function AddPreferredANSLevel()
+{
+	var i;
+	var o;
+	var value_min ;
+	var value_max ;
+	// Move them over
+	//alert("AddPreferredANSLevel");
+	for (i = 0; i < document.queue.availableANS_Level.options.length; i++)
+	{
+		o = document.queue.availableANS_Level.options[i];
+		//alert("level" + o.value);
+		if (o.selected){
+			value_min = o;
+			document.queue.serviceLevel_answered.options[document.queue.serviceLevel_answered.options.length] = new Option(o.text, o.value);
+			document.queue.nb_ans_for_svl_select.value = parseInt(document.queue.nb_ans_for_svl_select.value) + 1;
+
+			//order fields...
+			var j = document.queue.serviceLevel_answered.options.length-1;
+			while( j > 0)
+			{
+				value_max = document.queue.serviceLevel_answered.options[j-1];
+				//alert("--------value_min = " + value_min.value +"--------value_max = " + value_max.value);
+				if(parseInt(value_min.value)<  parseInt(value_max.value)) //permutte
+				{
+					document.queue.serviceLevel_answered.options[j] = new Option(value_max.text, value_max.value);
+					document.queue.serviceLevel_answered.options[j-1] = new Option(value_min.text,value_min.value);
+				}
+				j--;
+			}
+		}
+	}
+
+	// Delete them from original
+	for (i = (document.queue.availableANS_Level.options.length - 1); i >= 0; i--)
+	{
+		o = document.queue.availableANS_Level.options[i];
+		if (o.selected)
+			document.queue.availableANS_Level.options[i] = null;
+	}
+	document.queue.availableANS_Level.selectedIndex = -1;
+	document.queue.serviceLevel_answered.selectedIndex = -1;
+
+}
+
+function RemovePreferredANSLevel()
+{
+	var i;
+	var o;
+	var value_min ;
+	var value_max ;
+	// Move them over
+	for (i = 0; i < document.queue.serviceLevel_answered.options.length; i++)
+	{
+		o = document.queue.serviceLevel_answered.options[i];
+		if (o.selected)
+		{
+			value_min = o;
+			//move it to the good place
+			document.queue.availableANS_Level.options[document.queue.availableANS_Level.options.length] = new Option(o.text, o.value);
+			document.queue.nb_ans_for_svl_select.value = parseInt(document.queue.nb_ans_for_svl_select.value)- 1;
+			//order fields...
+			var j = document.queue.availableANS_Level.options.length-1;
+			while( j > 0)
+			{
+				value_max = document.queue.availableANS_Level.options[j-1];
+				//alert("--------value_min = " + value_min.value +"--------value_max = " + value_max.value);
+				if(parseInt(value_min.value) <  parseInt(value_max.value)) //permutte
+				{
+					document.queue.availableANS_Level.options[j] = new Option(value_max.text, value_max.value);
+					document.queue.availableANS_Level.options[j-1] = new Option(value_min.text,value_min.value);
+				}
+				j--;
+			}
+		}
+	}
+
+	// Delete them from original
+	for (i = (document.queue.serviceLevel_answered.options.length - 1); i >= 0; i--)
+	{
+		o = document.queue.serviceLevel_answered.options[i];
+		if (o.selected)
+			document.queue.serviceLevel_answered.options[i] = null;
+	}
+	document.queue.availableANS_Level.selectedIndex = -1;
+	document.queue.serviceLevel_answered.selectedIndex = -1;
+}
+
+function writeSVL_answeredTenValue()
+{
+//alert("--------writeSVL_answeredTenValue ");
+
+	var i;
+	var j;
+	var obj1;
+	var obj2;
+	var continuer = 1;
+
+	document.queue.serviceLevel_answered.options[0] = new Option(" "+MultiArray["Within"][lang]+"  10 sec", "10");
+	document.queue.serviceLevel_answered.options[1] = new Option(" "+MultiArray["Within"][lang]+"  20 sec", "20");
+	document.queue.serviceLevel_answered.options[2] = new Option(" "+MultiArray["Within"][lang]+"  30 sec", "30");
+	document.queue.serviceLevel_answered.options[3] = new Option(" "+MultiArray["Within"][lang]+"  40 sec", "40");
+	document.queue.serviceLevel_answered.options[4] = new Option(" "+MultiArray["Within"][lang]+"  50 sec", "50");
+	document.queue.serviceLevel_answered.options[5] = new Option(" "+MultiArray["Within"][lang]+"  60 sec", "60");
+	document.queue.serviceLevel_answered.options[6] = new Option(" "+MultiArray["Within"][lang]+"  90 sec", "90");
+	document.queue.serviceLevel_answered.options[7] = new Option(" "+MultiArray["Within"][lang]+"  120 sec", "120");
+	document.queue.serviceLevel_answered.options[8] = new Option(" "+MultiArray["Within"][lang]+"  150 sec", "150");
+	document.queue.serviceLevel_answered.options[9] = new Option(" "+MultiArray["Within"][lang]+"  180 sec", "180");
+	// Delete them from original
+	for (j =0; j<(document.queue.serviceLevel_answered.options.length ); j++)
+	{
+		obj1 = document.queue.serviceLevel_answered.options[j];
+		//alert("ouiiiiiiiii for 1 continuer===== "+ continuer);
+
+		for (i =0; parseInt(continuer)== 1 && i < parseInt((document.queue.availableANS_Level.options.length )); i++ )
+		{
+			//alert("ouiiiiiiiii while continuer===== "+ continuer);
+			obj2 = document.queue.availableANS_Level.options[i];
+			//alert("serviceLevel_abandonned obj1.value=== " + obj1.value);
+			//alert("availableABD_Level obj2.value======= " + obj2.value);
+			if (parseInt(obj1.value) == parseInt(obj2.value))
+			{
+				//alert("ouiiiiiiiii if =====");
+				document.queue.availableANS_Level.options[i] = null;
+				continuer =0;
+			}
+		}
+		continuer =1;
+	}
+	document.queue.availableANS_Level.selectedIndex = -1;
+	document.queue.serviceLevel_answered.selectedIndex = -1;
+
+}
+
+function writeSVL_abandonnedTenValue()
+{
+//alert("--------writeSVL_abandonnedTenValue ");
+var i;
+var j;
+var obj1;
+var obj2;
+var continuer = 1;
+
+	document.queue.serviceLevel_abandonned.options[0] = new Option(" "+MultiArray["Within"][lang]+"  10 sec", "10");
+	document.queue.serviceLevel_abandonned.options[1] = new Option(" "+MultiArray["Within"][lang]+"  20 sec", "20");
+	document.queue.serviceLevel_abandonned.options[2] = new Option(" "+MultiArray["Within"][lang]+"  30 sec", "30");
+	document.queue.serviceLevel_abandonned.options[3] = new Option(" "+MultiArray["Within"][lang]+"  40 sec", "40");
+	document.queue.serviceLevel_abandonned.options[4] = new Option(" "+MultiArray["Within"][lang]+"  50 sec", "50");
+	document.queue.serviceLevel_abandonned.options[5] = new Option(" "+MultiArray["Within"][lang]+"  60 sec", "60");
+	document.queue.serviceLevel_abandonned.options[6] = new Option(" "+MultiArray["Within"][lang]+"  90 sec", "90");
+	document.queue.serviceLevel_abandonned.options[7] = new Option(" "+MultiArray["Within"][lang]+"  120 sec", "120");
+	document.queue.serviceLevel_abandonned.options[8] = new Option(" "+MultiArray["Within"][lang]+"  150 sec", "150");
+	document.queue.serviceLevel_abandonned.options[9] = new Option(" "+MultiArray["Within"][lang]+"  180 sec", "180");
+
+	// Delete them from original
+	//alert("length of serviceLevel_abandonned "+document.queue.serviceLevel_abandonned.options.length);
+	//alert("length of availableABD_Level "+document.queue.availableABD_Level.options.length);
+
+	for (j =0; j<(document.queue.serviceLevel_abandonned.options.length ); j++)
+	{
+		obj1 = document.queue.serviceLevel_abandonned.options[j];
+		//alert("ouiiiiiiiii for 1 continuer===== "+ continuer);
+
+		for (i =0; parseInt(continuer)== 1 && i < parseInt((document.queue.availableABD_Level.options.length )); i++ )
+		{
+			//alert("ouiiiiiiiii while continuer===== "+ continuer);
+			obj2 = document.queue.availableABD_Level.options[i];
+			//alert("serviceLevel_abandonned obj1.value=== " + obj1.value);
+			//alert("availableABD_Level obj2.value======= " + obj2.value);
+			if (parseInt(obj1.value) == parseInt(obj2.value))
+			{
+				//alert("ouiiiiiiiii if =====");
+				document.queue.availableABD_Level.options[i] = null;
+				continuer =0;
+			}
+		}
+		continuer =1;
+	}
+	document.queue.availableABD_Level.selectedIndex = -1;
+	document.queue.serviceLevel_abandonned.selectedIndex = -1;
+
+
+}
+
+/***********************************************************************
+************************************************************************/
+
+function displayQueueInfo()
+{
+	//var queueName;
+	var i =0;
+	var j =0;
+	var o;
+	var k=0;
+	var text ;
+//alert ('  displayQueueInfo  ');
+	tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+	queueName   = normalizeString(QueryString('queue_name'));
+
+	//document.getElementById("queue_name").value = queueName;
+	//alert ('  queueName   ' + queueName);
+	var queueDetails  =  String( appletObj.getQueueInfo(queueName) );
+	var jsDetails = queueDetails + "";
+	arrayDetails = jsDetails.split("|");
+	//alert ('  jsDetails   ' + jsDetails);
+	//alert("begin-----------");
+	for (i = 0; i <arrayDetails.length; i++)
+	{
+
+		if(i==4)
+		{
+			dbid = arrayDetails[i];
+			//alert ('  dbid ' + dbid);
+		}
+		if(i == 0)
+		{
+			threshold_answered = arrayDetails[i];
+			document.queue.threshold_answered.value = threshold_answered;
+			//alert ('  threshold_answered ' + threshold_answered);
+		}
+		if(i == 1)
+		{
+			threshold_abandonned = arrayDetails[i];
+			document.queue.threshold_abandonned.value = threshold_abandonned;
+			//alert ('  threshold_abandonned ' + threshold_abandonned);
+		}
+		if (i == 2)
+		{
+			serviceLevel_answered = arrayDetails[i];
+			//alert ('  serviceLevel_answered ' + serviceLevel_answered);
+			var jsSVL_ans = serviceLevel_answered + "";
+			arraySVL_ans = jsSVL_ans.split("/");
+			for (j = 0; j <arraySVL_ans.length; j++)
+			{
+				text ="Within "+arraySVL_ans[j]+" sec";
+				document.queue.serviceLevel_answered.options[document.queue.serviceLevel_answered.options.length] = new Option(text, arraySVL_ans[j]);
+			}
+			j=0;
+			// Delete them from original
+			for (j=0; j < document.queue.serviceLevel_answered.options.length; j++)
+			{
+				o = document.queue.serviceLevel_answered.options[j].value;
+				//find this value on availableANS_Level
+				for (k=0;k < document.queue.availableANS_Level.options.length ; k++)
+				{
+					if (document.queue.availableANS_Level.options[k].value == o)
+					{
+						//alert ('  queue.availableANS_Level.options ' + document.queue.availableANS_Level.options[k].value);
+						document.queue.availableANS_Level.options[k] = null;
+					}
+				}
+			}
+			document.queue.availableANS_Level.selectedIndex = -1;
+			document.queue.serviceLevel_answered.selectedIndex = -1;
+
+
+		}
+		if (i == 3)
+		{
+			serviceLevel_abandonned = arrayDetails[i];
+			//alert ('  serviceLevel_abandonned ' + serviceLevel_abandonned);
+			var jsSVL_abd = serviceLevel_abandonned + "";
+			arraySVL_abd = jsSVL_abd.split("/");
+			for (j = 0; j <arraySVL_abd.length; j++)
+			{
+				text ="Within "+arraySVL_abd[j]+" sec";
+				document.queue.serviceLevel_abandonned.options[document.queue.serviceLevel_abandonned.options.length] = new Option(text, arraySVL_abd[j]);
+			}
+
+			// Delete them from original
+			for (j=0; j < document.queue.serviceLevel_abandonned.options.length; j++)
+			{
+				o = document.queue.serviceLevel_abandonned.options[j].value;
+				//find this value on availableABD_Level
+				for (k=0;k < document.queue.availableABD_Level.options.length ; k++)
+				{
+					if (document.queue.availableABD_Level.options[k].value == o)
+					{
+						//alert ('  queue.availableABD_Level.options ' + document.queue.availableABD_Level.options[k].value);
+						document.queue.availableABD_Level.options[k] = null;
+					}
+				}
+			}
+			document.queue.availableABD_Level.selectedIndex = -1;
+			document.queue.serviceLevel_abandonned.selectedIndex = -1;
+		}
+	}
+
+
+//alert("serviceLevel_answered-----------" +document.queue.serviceLevel_answered.length );
+//alert("serviceLevel_abandonned-----------" +document.queue.serviceLevel_abandonned.length );
+	if(document.queue.threshold_answered.value == "")
+	{
+		document.queue.threshold_answered.value = "20";
+	}
+	if(document.queue.threshold_abandonned.value =="")
+	{
+		document.queue.threshold_abandonned.value = "5";
+	}
+	if(parseInt(document.queue.serviceLevel_answered.length) == 0)
+		writeSVL_answeredTenValue();
+	if(parseInt(document.queue.serviceLevel_abandonned.length) == 0)
+		writeSVL_abandonnedTenValue();
+
+}
+
+/***********************************************************************
+************************************************************************/
+
+function validateInfo()
+{
+	var i =0;
+	var o;
+	var SVL_answered ='';
+	var SVL_abandonned='';
+
+	var	queueName   = normalizeString(QueryString('queue_name'));
+	tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+
+	// Verify that the schedule name is set
+
+//alert ('validateInfo.');
+
+
+	if (! IsInteger(document.getElementById("threshold_answered").value))
+	{
+		alert(MultiArray["The longest waiting time for response must be in seconds"][lang]);
+	}
+	else if(! IsInteger(document.getElementById("threshold_abandonned").value))
+	{
+		alert(MultiArray["The abandoned shortest time must be in seconds"][lang]);
+	}
+	else if( parseInt(document.getElementById("threshold_abandonned").value) >= parseInt(document.getElementById("threshold_answered").value))
+	{
+		alert(MultiArray["The abandoned shortest time must be less than the longuest waiting time for response"][lang]);
+	}
+	else if(document.queue.serviceLevel_answered.options.length !=10)
+	{
+		alert(MultiArray["Select 10 values for service level answered times"][lang]);
+	}
+	else if(document.queue.serviceLevel_abandonned.options.length !=10)
+	{
+		alert(MultiArray["Select 10 values for service level answered times"][lang]);
+	}
+	else
+	{
+		while(i < 10)
+		{
+			//alert ('  i:  ' +i);
+			o = document.queue.serviceLevel_answered.options[i];
+			if(i == 9)
+				SVL_answered =SVL_answered+ o.value ;
+			else
+				SVL_answered =SVL_answered+ o.value +"/";
+			 i=i+1;
+			//alert ('  SVL_answered:  ' +SVL_answered);
+		}
+		for (i = 0; i < 10; i++)
+		{
+			o = document.queue.serviceLevel_abandonned.options[i];
+			if(i == 9)
+				SVL_abandonned = SVL_abandonned + o.value ;
+			else
+				SVL_abandonned =SVL_abandonned+ o.value +"/";
+			//alert ('  SVL_abandonned:  ' +SVL_abandonned);
+		}
+
+//alert ('AFTER saveQueue. SVL_abandonned:  ' +SVL_abandonned+'  SVL_answered:  ' +SVL_answered);
+
+		appletObj.saveQueue(dbid,tenant_dbid,queueName,document.getElementById("threshold_answered").value,
+							document.getElementById("threshold_abandonned").value,
+							SVL_answered,SVL_abandonned	);
+//alert ('BEFORE saveQueue.');
+		document.getElementById("updateInfo").disabled=true;	// reset the button to disabled
+		document.location.href = "../defaultpage.htm";
+	}
+
+}
+</script>
+</head>
+
+<body class="bottompagebody" onLoad="displayQueueInfo()"><!--  onUnload=" return checkOnUnload()" -->
+<div>
+<fieldset>
+	<legend><script>document.write(normalizeString(QueryString('queue_name')))</script></legend>
+	<br />
+
+<div class="tab-pane" id="tabPane1">
+<form name="queue" >
+<script type="text/javascript">
+tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
+</script>
+<div class="tab-page" id="tabGeneral">
+	<h2 class="tab"><script>document.write(MultiArray["Service factor"][lang]);</script></h2>
+	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabGeneral" ) );</script>
+	<fieldset>
+	<legend class="contentTitles"><script>document.write(MultiArray["General information for service factor"][lang]);</script></legend>
+
+	  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="80%">
+		<tr>
+		  <td width='40%' height="25"></td>
+		  <td></td>
+		</tr>
+		<tr>
+		  <td width='40%' height=25><script>document.write(MultiArray["Longest waiting time for response"][lang]);</script></td>
+		  <td align=left width='60%' height=25>
+			<input id="threshold_answered" type=text onChange="enableUpdateButton()"  size=10 name="threshold_answered">sec
+		  </td>
+		</tr>
+		<tr>
+		  <td width='40%' height="15"></td>
+		  <td></td>
+		</tr>
+		<tr>
+		  <td width='40%' height=25><script>document.write(MultiArray["Shortest time for abandon"][lang]);</script></td>
+		  <td align=left width='60%' height=25>
+			<input id="threshold_abandonned" type=text onChange="enableUpdateButton()" size=10 name="threshold_abandonned">sec
+		  </td>
+		</tr>
+		<tr><td height="30"></td> <td></td></tr>
+	</table>
+	</fieldset>
+</div>
+<div class="tab-page" id="tabAns">
+	<h2 class="tab"><script>document.write(MultiArray["Service level"][lang]);</script> </h2>
+	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabAns" ) );</script>
+	<fieldset>
+	<legend class="contentTitles"><script>document.write(MultiArray["Answered times"][lang]);</script></legend>
+	  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="80%">
+		<tr><td height="10"></td> </tr>
+		<tr>
+			<td align="center" width="45%">
+				<select name="availableANS_Level" multiple="multiple" onchange="enableUpdateButton()" style="width:50mm; height:20mm; ">
+				<option value="1"><script>document.write(MultiArray["Within"][lang]);</script> 1 sec</option>
+				<option value="2"><script>document.write(MultiArray["Within"][lang]);</script> 2 sec</option>
+				<option value="3"><script>document.write(MultiArray["Within"][lang]);</script> 3 sec</option>
+				<option value="4"><script>document.write(MultiArray["Within"][lang]);</script> 4 sec</option>
+				<option value="5"><script>document.write(MultiArray["Within"][lang]);</script> 5 sec</option>
+				<option value="6"><script>document.write(MultiArray["Within"][lang]);</script> 6 sec</option>
+				<option value="7"><script>document.write(MultiArray["Within"][lang]);</script> 7 sec</option>
+				<option value="8"><script>document.write(MultiArray["Within"][lang]);</script> 8 sec</option>
+				<option value="9"><script>document.write(MultiArray["Within"][lang]);</script> 9 sec</option>
+				<option value="10"><script>document.write(MultiArray["Within"][lang]);</script> 10 sec</option>
+				<option value="11"><script>document.write(MultiArray["Within"][lang]);</script> 11 sec</option>
+				<option value="12"><script>document.write(MultiArray["Within"][lang]);</script> 12 sec</option>
+				<option value="13"><script>document.write(MultiArray["Within"][lang]);</script> 13 sec</option>
+				<option value="14"><script>document.write(MultiArray["Within"][lang]);</script> 14 sec</option>
+				<option value="15"><script>document.write(MultiArray["Within"][lang]);</script> 15 sec</option>
+				<option value="16"><script>document.write(MultiArray["Within"][lang]);</script> 16 sec</option>
+				<option value="17"><script>document.write(MultiArray["Within"][lang]);</script> 17 sec</option>
+				<option value="18"><script>document.write(MultiArray["Within"][lang]);</script> 18 sec</option>
+				<option value="19"><script>document.write(MultiArray["Within"][lang]);</script> 19 sec</option>
+				<option value="20"><script>document.write(MultiArray["Within"][lang]);</script> 20 sec</option>
+				<option value="21"><script>document.write(MultiArray["Within"][lang]);</script> 21 sec</option>
+				<option value="22"><script>document.write(MultiArray["Within"][lang]);</script> 22 sec</option>
+				<option value="23"><script>document.write(MultiArray["Within"][lang]);</script> 23 sec</option>
+				<option value="24"><script>document.write(MultiArray["Within"][lang]);</script> 24 sec</option>
+				<option value="25"><script>document.write(MultiArray["Within"][lang]);</script> 25 sec</option>
+				<option value="26"><script>document.write(MultiArray["Within"][lang]);</script> 26 sec</option>
+				<option value="27"><script>document.write(MultiArray["Within"][lang]);</script> 27 sec</option>
+				<option value="28"><script>document.write(MultiArray["Within"][lang]);</script> 28 sec</option>
+				<option value="29"><script>document.write(MultiArray["Within"][lang]);</script> 29 sec</option>
+				<option value="30"><script>document.write(MultiArray["Within"][lang]);</script> 30 sec</option>
+				<option value="31"><script>document.write(MultiArray["Within"][lang]);</script> 31 sec</option>
+				<option value="32"><script>document.write(MultiArray["Within"][lang]);</script> 32 sec</option>
+				<option value="33"><script>document.write(MultiArray["Within"][lang]);</script> 33 sec</option>
+				<option value="34"><script>document.write(MultiArray["Within"][lang]);</script> 34 sec</option>
+				<option value="35"><script>document.write(MultiArray["Within"][lang]);</script> 35 sec</option>
+				<option value="36"><script>document.write(MultiArray["Within"][lang]);</script> 36 sec</option>
+				<option value="37"><script>document.write(MultiArray["Within"][lang]);</script> 37 sec</option>
+				<option value="38"><script>document.write(MultiArray["Within"][lang]);</script> 38 sec</option>
+				<option value="39"><script>document.write(MultiArray["Within"][lang]);</script> 39 sec</option>
+				<option value="40"><script>document.write(MultiArray["Within"][lang]);</script> 40 sec</option>
+				<option value="41"><script>document.write(MultiArray["Within"][lang]);</script> 41 sec</option>
+				<option value="42"><script>document.write(MultiArray["Within"][lang]);</script> 42 sec</option>
+				<option value="43"><script>document.write(MultiArray["Within"][lang]);</script> 43 sec</option>
+				<option value="44"><script>document.write(MultiArray["Within"][lang]);</script> 44 sec</option>
+				<option value="45"><script>document.write(MultiArray["Within"][lang]);</script> 45 sec</option>
+				<option value="46"><script>document.write(MultiArray["Within"][lang]);</script> 46 sec</option>
+				<option value="47"><script>document.write(MultiArray["Within"][lang]);</script> 47 sec</option>
+				<option value="48"><script>document.write(MultiArray["Within"][lang]);</script> 48 sec</option>
+				<option value="49"><script>document.write(MultiArray["Within"][lang]);</script> 49 sec</option>
+				<option value="50"><script>document.write(MultiArray["Within"][lang]);</script> 50 sec</option>
+				<option value="51"><script>document.write(MultiArray["Within"][lang]);</script> 51 sec</option>
+				<option value="52"><script>document.write(MultiArray["Within"][lang]);</script> 52 sec</option>
+				<option value="53"><script>document.write(MultiArray["Within"][lang]);</script> 53 sec</option>
+				<option value="54"><script>document.write(MultiArray["Within"][lang]);</script> 54 sec</option>
+				<option value="55"><script>document.write(MultiArray["Within"][lang]);</script> 55 sec</option>
+				<option value="56"><script>document.write(MultiArray["Within"][lang]);</script> 56 sec</option>
+				<option value="57"><script>document.write(MultiArray["Within"][lang]);</script> 57 sec</option>
+				<option value="58"><script>document.write(MultiArray["Within"][lang]);</script> 58 sec</option>
+				<option value="59"><script>document.write(MultiArray["Within"][lang]);</script> 59 sec</option>
+				<option value="60"><script>document.write(MultiArray["Within"][lang]);</script> 60 sec</option>
+				<option value="75"><script>document.write(MultiArray["Within"][lang]);</script> 75 sec</option>
+				<option value="90"><script>document.write(MultiArray["Within"][lang]);</script> 90 sec</option>
+				<option value="105"><script>document.write(MultiArray["Within"][lang]);</script> 105 sec</option>
+				<option value="120"><script>document.write(MultiArray["Within"][lang]);</script> 120 sec</option>
+				<option value="135"><script>document.write(MultiArray["Within"][lang]);</script> 135 sec</option>
+				<option value="150"><script>document.write(MultiArray["Within"][lang]);</script> 150 sec</option>
+				<option value="165"><script>document.write(MultiArray["Within"][lang]);</script> 165 sec</option>
+				<option value="180"><script>document.write(MultiArray["Within"][lang]);</script> 180 sec</option>
+				</select>
+			</td>
+			<td align="center" width="5%">
+				<img src="../img/left_to_right.gif" alt=">>" style="cursor:pointer " onClick="AddPreferredANSLevel()" /><br><br>
+				<img src="../img/right_to_left.gif" alt="<<" style="cursor:pointer " onClick="RemovePreferredANSLevel()"/>
+			</td>
+			<td align="center" width="45%">
+				<select name="serviceLevel_answered" multiple onChange="enableUpdateButton()" style="width:50mm; height:20mm; ">
+				</select>
+			</td>
+		</tr>
+		<tr><td height="10"></td> </tr>
+	</table>
+	  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="80%">
+		<tr>
+		<td width="100%" align="right">
+			<input name="nb_ans_for_svl_select" id="nb_ans_for_svl_select" type="text" size="2" disabled value="10">
+		</td>
+		</tr>
+	</table>
+	</fieldset>
+	<br>
+	<fieldset>
+	<legend><script>document.write(MultiArray["Abandonned times"][lang]);</script></legend>
+	  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="80%">
+		<tr><td height="10"></td> </tr>
+		<tr>
+			<td align="center" width="45%">
+				<select name="availableABD_Level" multiple onChange="enableUpdateButton()" style="width:50mm; height:20mm; ">
+				<option value="1"><script>document.write(MultiArray["Within"][lang]);</script> 1 sec</option>
+				<option value="2"><script>document.write(MultiArray["Within"][lang]);</script> 2 sec</option>
+				<option value="3"><script>document.write(MultiArray["Within"][lang]);</script> 3 sec</option>
+				<option value="4"><script>document.write(MultiArray["Within"][lang]);</script> 4 sec</option>
+				<option value="5"><script>document.write(MultiArray["Within"][lang]);</script> 5 sec</option>
+				<option value="6"><script>document.write(MultiArray["Within"][lang]);</script> 6 sec</option>
+				<option value="7"><script>document.write(MultiArray["Within"][lang]);</script> 7 sec</option>
+				<option value="8"><script>document.write(MultiArray["Within"][lang]);</script> 8 sec</option>
+				<option value="9"><script>document.write(MultiArray["Within"][lang]);</script> 9 sec</option>
+				<option value="10"><script>document.write(MultiArray["Within"][lang]);</script> 10 sec</option>
+				<option value="11"><script>document.write(MultiArray["Within"][lang]);</script> 11 sec</option>
+				<option value="12"><script>document.write(MultiArray["Within"][lang]);</script> 12 sec</option>
+				<option value="13"><script>document.write(MultiArray["Within"][lang]);</script> 13 sec</option>
+				<option value="14"><script>document.write(MultiArray["Within"][lang]);</script> 14 sec</option>
+				<option value="15"><script>document.write(MultiArray["Within"][lang]);</script> 15 sec</option>
+				<option value="16"><script>document.write(MultiArray["Within"][lang]);</script> 16 sec</option>
+				<option value="17"><script>document.write(MultiArray["Within"][lang]);</script> 17 sec</option>
+				<option value="18"><script>document.write(MultiArray["Within"][lang]);</script> 18 sec</option>
+				<option value="19"><script>document.write(MultiArray["Within"][lang]);</script> 19 sec</option>
+				<option value="20"><script>document.write(MultiArray["Within"][lang]);</script> 20 sec</option>
+				<option value="21"><script>document.write(MultiArray["Within"][lang]);</script> 21 sec</option>
+				<option value="22"><script>document.write(MultiArray["Within"][lang]);</script> 22 sec</option>
+				<option value="23"><script>document.write(MultiArray["Within"][lang]);</script> 23 sec</option>
+				<option value="24"><script>document.write(MultiArray["Within"][lang]);</script> 24 sec</option>
+				<option value="25"><script>document.write(MultiArray["Within"][lang]);</script> 25 sec</option>
+				<option value="26"><script>document.write(MultiArray["Within"][lang]);</script> 26 sec</option>
+				<option value="27"><script>document.write(MultiArray["Within"][lang]);</script> 27 sec</option>
+				<option value="28"><script>document.write(MultiArray["Within"][lang]);</script> 28 sec</option>
+				<option value="29"><script>document.write(MultiArray["Within"][lang]);</script> 29 sec</option>
+				<option value="30"><script>document.write(MultiArray["Within"][lang]);</script> 30 sec</option>
+				<option value="31"><script>document.write(MultiArray["Within"][lang]);</script> 31 sec</option>
+				<option value="32"><script>document.write(MultiArray["Within"][lang]);</script> 32 sec</option>
+				<option value="33"><script>document.write(MultiArray["Within"][lang]);</script> 33 sec</option>
+				<option value="34"><script>document.write(MultiArray["Within"][lang]);</script> 34 sec</option>
+				<option value="35"><script>document.write(MultiArray["Within"][lang]);</script> 35 sec</option>
+				<option value="36"><script>document.write(MultiArray["Within"][lang]);</script> 36 sec</option>
+				<option value="37"><script>document.write(MultiArray["Within"][lang]);</script> 37 sec</option>
+				<option value="38"><script>document.write(MultiArray["Within"][lang]);</script> 38 sec</option>
+				<option value="39"><script>document.write(MultiArray["Within"][lang]);</script> 39 sec</option>
+				<option value="40"><script>document.write(MultiArray["Within"][lang]);</script> 40 sec</option>
+				<option value="41"><script>document.write(MultiArray["Within"][lang]);</script> 41 sec</option>
+				<option value="42"><script>document.write(MultiArray["Within"][lang]);</script> 42 sec</option>
+				<option value="43"><script>document.write(MultiArray["Within"][lang]);</script> 43 sec</option>
+				<option value="44"><script>document.write(MultiArray["Within"][lang]);</script> 44 sec</option>
+				<option value="45"><script>document.write(MultiArray["Within"][lang]);</script> 45 sec</option>
+				<option value="46"><script>document.write(MultiArray["Within"][lang]);</script> 46 sec</option>
+				<option value="47"><script>document.write(MultiArray["Within"][lang]);</script> 47 sec</option>
+				<option value="48"><script>document.write(MultiArray["Within"][lang]);</script> 48 sec</option>
+				<option value="49"><script>document.write(MultiArray["Within"][lang]);</script> 49 sec</option>
+				<option value="50"><script>document.write(MultiArray["Within"][lang]);</script> 50 sec</option>
+				<option value="51"><script>document.write(MultiArray["Within"][lang]);</script> 51 sec</option>
+				<option value="52"><script>document.write(MultiArray["Within"][lang]);</script> 52 sec</option>
+				<option value="53"><script>document.write(MultiArray["Within"][lang]);</script> 53 sec</option>
+				<option value="54"><script>document.write(MultiArray["Within"][lang]);</script> 54 sec</option>
+				<option value="55"><script>document.write(MultiArray["Within"][lang]);</script> 55 sec</option>
+				<option value="56"><script>document.write(MultiArray["Within"][lang]);</script> 56 sec</option>
+				<option value="57"><script>document.write(MultiArray["Within"][lang]);</script> 57 sec</option>
+				<option value="58"><script>document.write(MultiArray["Within"][lang]);</script> 58 sec</option>
+				<option value="59"><script>document.write(MultiArray["Within"][lang]);</script> 59 sec</option>
+				<option value="60"><script>document.write(MultiArray["Within"][lang]);</script> 60 sec</option>
+				<option value="75"><script>document.write(MultiArray["Within"][lang]);</script> 75 sec</option>
+				<option value="90"><script>document.write(MultiArray["Within"][lang]);</script> 90 sec</option>
+				<option value="105"><script>document.write(MultiArray["Within"][lang]);</script> 105 sec</option>
+				<option value="120"><script>document.write(MultiArray["Within"][lang]);</script> 120 sec</option>
+				<option value="135"><script>document.write(MultiArray["Within"][lang]);</script> 135 sec</option>
+				<option value="150"><script>document.write(MultiArray["Within"][lang]);</script> 150 sec</option>
+				<option value="165"><script>document.write(MultiArray["Within"][lang]);</script> 165 sec</option>
+				<option value="180"><script>document.write(MultiArray["Within"][lang]);</script> 180 sec</option>
+				</select>
+			</td>
+			<td align="center" width="5%">
+				<img src="../img/left_to_right.gif" alt=">>" style="cursor:pointer " onClick="AddPreferredABDLevel()" /><br><br>
+				<img src="../img/right_to_left.gif" alt="<<" style="cursor:pointer " onClick="RemovePreferredABDLevel()"/>
+			</td>
+			<td align="center" width="45%">
+				<select name="serviceLevel_abandonned" multiple onChange="enableUpdateButton()" style="width:50mm; height:20mm; ">
+				</select>
+			</td>
+		</tr>
+		<tr><td height="10"></td> </tr>
+	  </table>
+	  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="80%">
+		<tr>
+		<td width="100%" align="right">
+			<input name="nb_abd_for_svl_select" id="nb_abd_for_svl_select" type="text" size="2" disabled value="10">
+		</td>
+		</tr>
+	</table>
+
+  </fieldset>
+</div>
+<script>document.write("<input disabled name=\"updateInfo\" type=\"button\" value=\""+MultiArray["Update"][lang]+"\" onClick=\"validateInfo()\">")</script>
+</form>
+<script type="text/javascript">
+	setupAllTabs();
+</script>
+</div>
+
+</fieldset>
+</div>
+</body>
+</html>

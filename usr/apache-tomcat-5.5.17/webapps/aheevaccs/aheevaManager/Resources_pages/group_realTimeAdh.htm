@@ -1,0 +1,371 @@
+<html>
+
+<head>
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<!-- Calendrier début -->
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<!-- Calendrier fin -->
+<script language="JavaScript" src="jsUtil.js"></script>
+<script>
+
+var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+
+function sortSelect(o)
+{
+	if (o.length==0) { return; }
+	if(document.theForm.viewckbox.checked == false){
+		o = o.sort(
+			function(a,b) {
+				if ((a.text+"") < (b.text+"")) { return -1; }
+				if ((a.text+"") > (b.text+"")) { return 1; }
+				return 0;
+				}
+			);
+	}
+	else{
+		o = o.sort(
+			function(a,b) {
+
+					if (parseInt(a.value) < parseInt(b.value)) { return -1; }
+					if (parseInt(a.value) > parseInt(b.value)) { return 1; }
+					return 0;
+				}
+			);
+	}
+}
+// end function sortSelect(o) ----------------------------------------------------
+
+function sortSelect2(obj)
+{
+	var o = new Array();
+	if (obj.options==null) { return; }
+	for (var i=0; i<obj.options.length; i++) {
+		o[o.length] = new Option( obj.options[i].text, obj.options[i].value, obj.options[i].defaultSelected, obj.options[i].selected) ;
+		}
+	if (o.length==0) { return; }
+	if(document.theForm.viewckbox.checked == false){
+		o = o.sort(
+			function(a,b) {
+
+					if ((a.text+"") < (b.text+"")) { return -1; }
+					if ((a.text+"") > (b.text+"")) { return 1; }
+					return 0;
+					}
+			);
+     }
+    else{
+		o = o.sort(
+			function(a,b) {
+
+					if (parseInt(a.value) < parseInt(b.value)) { return -1; }
+					if (parseInt(a.value) > parseInt(b.value)) { return 1; }
+					return 0;
+					}
+			);
+    }
+	for (var i=0; i<o.length; i++) {
+		obj.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
+		}
+
+}
+//end function sortSelect2(obj) ----------------------------------------------
+
+function fillObjectCombo()
+{
+   		var agentGroups = String( appletObj.getAgentGroupByName(tenant_dbid) );
+		var jsAgentGroups = agentGroups + "";
+    	arrayGroups = jsAgentGroups.split("|");
+    	for (j = 0; j <arrayGroups.length; j++){
+    		myOption = new Option(arrayGroups[j],arrayGroups[j])
+			optionPos = document.theForm.objects.options.length;
+			document.theForm.objects.options[optionPos]=myOption;
+    	}
+
+    if(document.theForm.objects.options.length >= 10)
+	   	document.theForm.objects.size = 10;
+	else
+		document.theForm.objects.size = document.theForm.objects.options.length;
+
+
+}
+//end function fillObjectCombo() ----------------------------------------------------
+
+function getSelectedObjects()
+{
+
+	selectedObjects = new Array()
+	for (i=0;i<document.theForm.objects.options.length;i++) {
+  		if (document.theForm.objects.options[i].selected) {
+  			selectedObjects[selectedObjects.length]=document.theForm.objects.options[i].value;
+  		}
+  	}
+    var url = '';
+	if (selectedObjects.length > 0)
+	{
+		url= escape(selectedObjects.join('/'))
+	}
+
+	return url;
+}
+// end function getSelectedObjects() -------------------------------------------------
+
+function saveAdhViewData()
+{
+	var selectObjects;
+	
+	if (appletObj.getShowAdhValue() != 'true')
+	{
+		alert(MultiArray["Please click the Adherence tab before updating the group."][lang]);
+		return;
+	}
+	
+	if(document.theForm.objects.selectedIndex == -1)
+	{
+		selectObjects='None'; //no object selected for adherence
+		alert("Please select one agent group, before vizualizing adherence.");
+	}
+	else
+	{
+		  selectObjects = document.theForm.objects.value;
+		  var adhRunning= appletObj.isAdherenceStarted();
+			
+		  if(adhRunning=="true")
+		  { 
+				appletObj.sendRTAStopReq();
+		  }
+		 //get current time
+		  var curTime = new Date();
+		  var curHour = curTime.getHours(); 
+		  var curMin = curTime.getMinutes() ;
+		  var periodStart, periodEnd;// start and end of period
+		  var minute, starHr, endHr, minuteStr, starHrStr, endHrStr ; 
+		  minute =(curMin + 30) % 60;		  
+		  if(curMin < 30)
+		  {
+		  	starHr = (curHour -1) %24;
+		  	endHr = curHour %24;		
+		  }
+		  else
+		  {
+		  	starHr = curHour %24;
+			endHr  = (curHour + 1) %24; 
+		  }
+		  //set start and end points of period in format "hh:mm"
+		  if(starHr <= 9)//one digit
+			starHrStr = "0" + starHr;
+		  else
+			starHrStr = "" + starHr;
+		  if(endHr <= 9)
+			endHrSTr = "0" + endHr;
+		  else
+			endHrSTr = "" + endHr;			
+		  if( minute <= 9 )
+			minuteStr = ":0" + minute;
+		  else
+		  	minuteStr = ":" + minute;
+		
+		  periodStart = "" +starHrStr + minuteStr;
+		  periodEnd = "" + endHrSTr + minuteStr;
+		  
+		  		  
+		  appletObj.updateRTAViewInfo(periodStart,periodEnd,"1",selectObjects);
+		 
+		  appletObj.m_ScheduleAdherenceData="";
+		   if(adhRunning=="true" )
+		  { 			
+				appletObj.sendRTAStartReq();
+		  }		  
+		  
+		  if(document.theForm.saveButton.disabled == false)
+				document.theForm.saveButton.disabled = true;
+			
+		  window.top.main.rtop.stats.firstLoad = true;		
+		  window.top.main.rtop.stats.src = "rtaview1.jsp";
+		  
+		  if(appletObj.isAdherenceStarted() == "true")
+		  		enableStopping();
+		  else
+		  		enableStarting();
+	}  
+}
+// end function saveAdhViewData() --------------------------------------------------
+
+//var autoUpdateRTA;
+
+function sendRTAStartRequest()
+{	
+		if (appletObj.getShowAdhValue() != 'true')
+		{	
+			alert(MultiArray["Please click the Adherence tab before starting the Real-time adherence viewing feature."][lang]);
+			return;
+		}
+		
+		saveAdhViewData();
+		appletObj.sendRTAStartReq();//alert("sendRTAStartRequest() --- sendRTAStartReq");
+		window.top.main.rtop.stats.src = "rtaview1.jsp";
+		enableStopping();
+}
+// end function sendRTAStartRequest() ------------------------------------------------
+
+
+function sendRTAStopRequest()
+{
+ 	//sends the stop request to the CTI
+	appletObj.sendRTAStopReq();	
+	//clearTimeout(autoUpdateRTA);//stop updating the endpoints of RTA period   
+	enableStarting();
+}
+// end function sendRTAStopRequest() -------------------------------------------------
+
+function updateStartButton()
+{
+
+	 if(document.theForm.startButton.disabled == true){
+		document.theForm.startButton.disabled = false;
+		document.theForm.stopButton.disabled = true;
+	  }
+	 else{
+		document.theForm.startButton.disabled = true;
+		document.theForm.stopButton.disabled = false;
+	 }
+}
+//end function updateStartButton() -------------------------------------------------
+
+function updateStopButton()
+{
+ 	if(document.theForm.stopButton.disabled == true){
+		document.theForm.startButton.disabled = true;
+		document.theForm.stopButton.disabled = false;
+	 }
+ else{
+		document.theForm.startButton.disabled = false;
+		document.theForm.stopButton.disabled = true;
+	 }
+}
+//end function updateStopButton() -------------------------------------------------
+
+function selectAll()
+{
+  for (j = 0; j <document.theForm.objects.options.length; j++)
+	  document.theForm.objects.options[j].selected = true;
+}
+
+function unSelectAll()
+{
+  for (j = 0; j <document.theForm.objects.options.length; j++)
+	  document.theForm.objects.options[j].selected = false;
+
+}
+
+function enableUpdateButton()
+ {
+	    document.theForm.saveButton.value = MultiArray["Update group"][lang];
+		document.theForm.saveButton.disabled = false;
+  }
+  
+function enableStarting()
+{
+	document.theForm.startButton.disabled = false;
+	document.theForm.stopButton.disabled = true;
+}
+
+function enableStopping()
+{
+	document.theForm.startButton.disabled = true;
+	document.theForm.stopButton.disabled = false;
+}
+
+
+</script>
+<style type="text/css">
+<!--
+.style1 {
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}
+-->
+</style>
+</head>
+
+<body class="adher_body" onLoad="fillObjectCombo()">
+<form name="theForm">
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="574"  >
+  <tr >
+    <td  valign="top"  style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" colspan="8">
+      <div align="center">
+
+     <span class="style1">
+    <script language="JavaScript">   
+       document.write(MultiArray["Agent Group Real-Time Adherence View"][lang])    
+    </script>
+    </span>
+      </div>
+    </td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>  
+  <tr><td><script language="JavaScript">document.write(MultiArray["Select agent group"][lang])</script>:</td>
+  <tr><td>&nbsp;</td></tr>
+  
+  <tr height="45" >
+<script language="JavaScript">
+   		document.write('<td width="34%" colspan="2" valign="top" style="border-left-width: 1; border-top-width: 1" >')
+		document.write('<select name="objects" onClick="enableUpdateButton()">')
+		document.write('</select>')
+		document.write('</td>')
+       	document.write('<td valign="top" width="38%" style="border-top-style: none; border-top-width: 1" >&nbsp;</td>')
+  		document.write('<td>&nbsp;</td>')
+  		document.write('<td>&nbsp;</td>')
+  		document.write('<td>&nbsp;</td>')
+</script>
+
+ <td width="54"  valign="top" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" >
+ </td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+
+
+ <script language="javascript" type="text/javascript">
+  	document.writeln(" <tr>");
+	
+	var showAdherenceValue = appletObj.getShowAdhValue();
+	if (showAdherenceValue == 'true'){		
+	  if(appletObj.isAdhGot() == 'false')
+	  {
+		document.writeln("	<td  style=\"border-bottom-width: 1; border-top-width:1\"><button name=\"saveButton\" disabled onClick=\"saveAdhViewData();enableStarting()\">"+MultiArray["Save group"][lang]+"</button></td></tr>")
+		document.writeln("<tr><td>&nbsp;</td></tr>")
+		document.writeln("<tr><td colspan=\"2\">"+MultiArray["Adherence processing"][lang]+":</td>")
+		//document.writeln("<td>&nbsp;</td>")
+		document.writeln("<td><button name=\"startButton\" onClick=\"sendRTAStartRequest()\">"+MultiArray["Start"][lang]+"</button> &nbsp;&nbsp;&nbsp;&nbsp;<button  name=\"stopButton\" onClick=\"sendRTAStopRequest()\">"+MultiArray["Stop"][lang]+"</button> </td>");
+		}
+	  else
+	  {
+	   	document.writeln("	<td  style=\"border-bottom-width: 1; border-top-width:1\"><button name=\"saveButton\" disabled onClick=\"saveAdhViewData()\">"+MultiArray["Save group"][lang]+"</button></td></tr>")
+		document.writeln("<tr><td>&nbsp;</td></tr>")
+		document.writeln("<tr><td colspan=\"2\">"+MultiArray["Adherence processing"][lang]+":</td>")
+		//document.writeln("<td>&nbsp;</td>")
+		document.writeln("<td><button name=\"startButton\" disabled  onClick=\"sendRTAStartRequest()\">"+MultiArray["Start"][lang]+"</button> &nbsp;&nbsp;&nbsp;&nbsp;<button  name=\"stopButton\" onClick=\"sendRTAStopRequest()\">"+MultiArray["Stop"][lang]+"</button> </td>");
+		}
+	 }//if (showAdherenceValue == 'true')
+	else {
+		
+		document.writeln("	<td  style=\"border-bottom-width: 1; border-top-width:1\"><button name=\"saveButton\" disabled onClick=\"saveAdhViewData()\">"+MultiArray["Save group"][lang]+"</button></td></tr>")
+		document.writeln("<tr><td>&nbsp;</td></tr>")
+		document.writeln("<tr><td colspan=\"2\">"+MultiArray["Adherence processing"][lang]+":</td>")
+		//document.writeln("<td>&nbsp;</td>")
+		document.writeln("<td><button name=\"startButton\" onClick=\"sendRTAStartRequest()\">"+MultiArray["Start"][lang]+"</button> &nbsp;&nbsp;&nbsp;&nbsp;<button  name=\"stopButton\" disabled onClick=\"sendRTAStopRequest()\">"+MultiArray["Stop"][lang]+"</button> </td>");
+	}
+document.writeln(" </tr>");	
+  </script>
+</table>
+ </form>
+</body>
+
+</html>

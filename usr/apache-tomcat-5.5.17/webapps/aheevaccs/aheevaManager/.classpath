@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.5.0_01"/>
+	<classpathentry kind="lib" path="WebInfJars/activation.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/excelInterface.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/fileupload.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/inifile.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/jmf.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/jxl.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/mail.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/poi-3.0-alpha2.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/servlet-api.jar"/>
+	<classpathentry kind="lib" path="WebInfJars/uploadbean.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

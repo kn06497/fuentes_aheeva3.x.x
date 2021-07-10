@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+<head>
+
+<title>Aheeva Softphone</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<script type="text/javascript" src="script/scripts.js"></script>
+<script type="text/javascript" src="script/jsXMLParser/xmlsax.js"></script>
+<script type="text/javascript" src="script/ah_js_functions.js"></script>
+<script type="text/javascript" src="script/ah_graph_functions.js"></script>
+<script type="text/javascript" src="script/disablekey.js"></script>
+
+
+<title>StarPhone</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+
+<script language="javascript" type="text/javascript">
+
+
+ 
+
+function startAheevaPhone() {
+
+
+ var mine = window.open('','','width=1,height=1,left=0,top=0,scrollbars=no');
+ var popUpsBlocked = true;
+
+	 if(mine)
+	 {
+		popUpsBlocked = true
+		mine.close();
+	 }
+	 else
+	 {
+	   popUpsBlocked = false
+	 }
+
+	if( popUpsBlocked == true )
+	{
+		if(window.open('','_parent',''))
+		{
+			aheevaphonePopup();
+			window.close();
+		}
+	}
+	else
+	{
+		var content='<div style=" #position: absolute;  _top: 50%;display: table-cell; vertical-align: middle;">';
+			content+='<div class="greenBorder" style=" #position: relative; #top: -50%">';
+     		content+='<marquee><font color="red"><b>It seems a popup blocker is enabled in your browser. Please allow popups for this page.</b></font></marquee>';
+			content+=' </div></div>';        
+    
+		document.getElementById('text_content').innerHTML = content;
+	}	
+}
+
+</script>
+
+
+</head>
+
+
+<body onload="javascript:startAheevaPhone();">
+
+
+
+
+<DIV bgcolor='#eeeeee' frameborder="0" border=0 framespacing=0 topmargin=0 marginheight=0 leftmargin=0 rightmargin=0 marginwidth=0 id="text_content"></DIV>
+
+</body>
+</html>

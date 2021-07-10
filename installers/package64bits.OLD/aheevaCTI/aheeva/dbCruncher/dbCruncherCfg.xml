@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<dbCruncher>
+	<hostcti name="192.168.XXX.XXX"/>
+	<databaseInfo>
+		<host name ="192.168.XXX.XXX"/>
+		<db name="aheevaccs"/>
+		<db username="aheevaccs"/>
+		<db password= "aheevaccs"/>
+	</databaseInfo>
+</dbCruncher>

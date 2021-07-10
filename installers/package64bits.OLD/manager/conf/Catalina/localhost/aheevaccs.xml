@@ -1,0 +1,3 @@
+<Context docBase="aheevaccs" path="/aheevaccs">
+  <ResourceLink name="jdbc/aheevaccs" global="jdbc/aheevaccs" type="javax.sql.DataSource" />
+</Context>

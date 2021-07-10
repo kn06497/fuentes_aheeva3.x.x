@@ -1,0 +1,2 @@
+g++ -lstdc++ abcd.cpp -o abcd.so -shared -fPIC
+

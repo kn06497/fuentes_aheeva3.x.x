@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<LINK href="style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="xc2_default.css" type="text/css">
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+
+<!-- Calendrier début -->
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="javascript" src="xc2_default.js"></script>
+<script language="javascript">xcAutoHide=1000;</script>
+<script language="javascript" src="xc2_inpage.js"></script>
+<!-- Calendrier fin -->
+<script language="JavaScript" src="jsUtil.js" type="text/javascript"></script>
+<script type="text/javascript">
+var type = normalizeString(QueryString('type'));
+var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+function setUserId()
+{
+	if(type != "exception")
+		document.frmLoginProduction.userid.value = appletObj.getCurrentUserDBID();
+}
+
+function validateDataToSubmit()
+{
+	if(document.frmLoginProduction.reportDate.value.length == 0)
+	{
+		alert(MultiArray["Please enter a date"][lang]);
+		return false;
+	}
+	if(type != "exception")
+	{
+		if(!document.frmLoginProduction.agents.checked && !document.frmLoginProduction.supervisors.checked)
+		{
+			alert(MultiArray["You must include at least agents or supervisors"][lang]);
+			return false;
+		}
+	}
+
+	return true;
+}
+
+</script>
+<style type="text/css">
+<!--
+.style1 {
+	font-size: 16px;
+	font-weight: bold;
+}
+-->
+</style>
+</head>
+
+<body class="bottompagebody" onload="setUserId();">
+<script language="javascript" type="text/javascript">
+	if(type != "exception")
+	{
+		document.write('<form action="../jsp/agentLoginProduction.jsp" method="get" name="frmLoginProduction" target="_blank">');
+		document.write('<input type="hidden" name="userid" value="">');
+	}
+	else
+	{
+		document.write('<form action="../jsp/agentLoginProductionException.jsp" method="get" name="frmLoginProduction" target="_blank">');
+	}
+	document.write('<input type="hidden" name="tenant_dbid" value="'+tenant_dbid+'">');
+</script>
+
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="80%">
+  <tr >
+    <td valign="top" style="border-right-style: none; border-right-width: 1; border-top-style: none; border-top-width: 1" colspan="4">
+      <div align="center">
+	  	<span class="style1">
+			<script>document.write(MultiArray["Agent Login and Production time"][lang])</script>
+			<script language="javascript" type="text/javascript">
+				if(type == "exception")
+					document.write(MultiArray["Exception Report"][lang]);
+			</script>
+		</span>
+	  </div>
+    </td>
+  </tr>
+  <tr><td colspan="4">&nbsp;</td></tr>
+  <tr>
+	<td>
+		<script language="javascript" type="text/javascript">
+			if(type == "exception"){document.write('<b>'+MultiArray["Over Percentage"][lang]+'</b>');}else{document.write('&nbsp;')}
+		</script>
+	</td>
+	<td>
+		<script>document.write(MultiArray["Select a date"][lang])</script>
+	</td>
+	<td>&nbsp;</td>
+  </tr>
+  <tr>
+		<td width="29%" valign="top">
+		<script language="javascript" type="text/javascript">
+		if(type != "exception")
+		{
+			document.write(''+MultiArray["Include agents"][lang]+'<input type="checkbox" name="agents"><br>');
+			document.write(''+MultiArray["Include supervisors"][lang]+'<input type="checkbox" name="supervisors">');
+		}
+		else
+		{
+			document.write('<select name="percentage">');
+			for(i = 0; i <= 100; i++)
+			{
+				if(i == 15)
+					document.write('<option value="' + i / 100 + '" selected>' + i + '%</option>');
+				else
+					document.write('<option value="' + i / 100 + '">' + i + '%</option>');
+			}
+			document.write('</select>');
+		}
+		</script>
+			<br><br><br><br><br>
+		</td>
+
+    <td id="id_reportDate" valign="top" width="15%" style="border-top-style: none; border-top-width: 1" >&nbsp; 
+		<input type="text" size="15" onFocus="showCalendar('',this,this,'','id_reportDate',0,30,1);this.blur()" name="reportDate" />
+    </td>
+	<td valign="bottom"><script>
+		document.write("<input name=\"getReport\" type=\"submit\" value=\""+MultiArray["Submit"][lang]+"\" onClick=\"return validateDataToSubmit()\">");</script>
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<html>
+<head>
+<LINK href="style.css" type=text/css rel=stylesheet >
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<meta http-equiv=Content-Language content=en-us>
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language=JavaScript src="jsUtil.js"></script>
+<script language=javascript src="Browser.js" type=text/javascript></script>
+
+<script language=javascript type=text/javascript>
+var NRR_DBID       	= '';
+var NRRName          	= '';
+var notReadyReasonName		= '';
+var tenant_dbid		= "NULL";
+
+function enabledUpdateButton()
+{
+	document.nrr.updateInfo.disabled = false;
+}
+
+function checkOnUnload()
+{
+	document.nrr.updateInfo.disabled = false;
+}
+
+function enableReload()
+{
+   appletObj.fReloadMenu = true;
+}
+
+
+
+/***********************************************************************
+************************************************************************/
+
+function displayNRRInfo()
+{
+	var notReadyReasonName;
+	
+	tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+	notReadyReasonName   = normalizeString(QueryString('NRR_name'));
+	ourCaption  = document.getElementById("caption");
+
+	if(notReadyReasonName== '')
+	{
+		ourCaption.innerHTML = "<h3>Add new Not Ready Reason</h3>";
+		document.nrr.updateInfo.value = "Save";
+		document.nrr.deleteNRR.disabled = true;
+	}
+	else
+		ourCaption.innerHTML = "<h3>Modify Not Ready Reason</h3>";
+		
+	document.nrr.NRRName.value = notReadyReasonName;
+	var NRRDetails  =  String( appletObj.getNotReadyReasonInfo(notReadyReasonName) );
+	// parse info received
+	var jsDetails = NRRDetails + "";
+	arrayDetails = jsDetails.split("|");
+
+	for (i = 0; i <arrayDetails.length; i++)
+	{
+		if(i == 0) // DBID
+		{
+			NRR_DBID = arrayDetails[i];
+			document.nrr.NRRId.value = NRR_DBID;
+		}
+		if(i == 1) //State
+		{
+			if(arrayDetails[i] == '1')
+			{
+				document.nrr.deleteNRR.disabled = true;
+				document.nrr.NRRState.checked = true;
+			}
+			else
+			{
+				document.nrr.deleteNRR.disabled = false;
+				document.nrr.NRRState.checked = false;
+			}
+		}
+	}
+	//updateStatisticsOptions();
+}
+
+
+/***********************************************************************
+************************************************************************/
+
+function validateInfo()
+{
+	var	notReadyReasonName   = normalizeString(QueryString('NRR_name'));
+	// Verify that the schedule name is set
+	
+	if (document.nrr.NRRName.value =='')
+	{
+		alert(MultiArray["You must enter a not ready reason name"][lang]);			
+	}
+	else if(validation(document.nrr.NRRName.value)==0)
+	{
+		alert(MultiArray["Invalid use of character"][lang]);
+		document.nrr.NRRName.focus();
+	}
+	else 
+	{
+		var alReadyExist = false;
+		var reasons = String( appletObj.getAllNotReadyReasons(tenant_dbid) );
+		jsReasons = reasons.split("|");
+
+			for(q = 0; q < jsReasons.length; q++)
+			{
+				thisReason = jsReasons[q];
+				thisReasonArray = thisReason.split(",");
+		
+				if( document.nrr.NRRName.value == thisReasonArray[1] && notReadyReasonName != document.nrr.NRRName.value) //la reason existe deja
+				{
+					alReadyExist = true;
+					break;
+				}
+			}
+		if(alReadyExist)
+			alert(MultiArray["Not ready reason already exists!"][lang]);
+			//alert("Not Ready Reason " + document.nrr.NRRName.value +" already exists.");
+		else
+		{
+			appletObj.saveNotReadyReason(	NRR_DBID,
+											tenant_dbid,
+											document.nrr.NRRName.value,
+											document.nrr.NRRState.checked == true ? '1':'0');
+			document.nrr.updateInfo.disabled=true;	// reset the button to disabled
+		}
+	}
+}
+
+
+/***********************************************************************
+************************************************************************/
+
+function askDelete()
+{
+	answer = confirm("Are you sure, you wish to delete this Reason? This can affect your reports")
+	if(answer)
+	{
+		appletObj.deleteNotReadyReason(NRR_DBID);
+		// refresh the current page
+		document.location = "../defaultpage.htm";
+	}
+	
+}
+
+
+</script>
+
+<!--<body BGCOLOR="#C0C0C0" TEXT="#000000" LINK="#000066" VLINK="#666666" onLoad="displayCampaignInfo()" onUnload=" return checkOnUnload()"> -->
+<script language=javascript id=clientEventHandlersJS>
+<!--
+//function Checkbox4_onclick() {}
+//-->
+</script>
+</head>
+<body class="bottompagebody" onload="displayNRRInfo()" onUnload=" return checkOnUnload()">
+<form id=Form1 name=nrr>
+
+<!--Group name with description -->
+	<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#c0c0c0  cellSpacing=0 cellPadding=0 width="100%" border=0 border-style="inset">
+		<tr name="mainrow">
+			<td id=caption width=424 colSpan=4 height=40 text-align:center; font-weight:bold;>&nbsp;</td>
+			<!--<td width="197" height="40" align="right" valign="top" style="border-right-style: solid; border-right-width: 1; border-left-style:none; border-left-width:none; border-top-style:none; border-top-width:none"  >&nbsp;</td>
+			<td id="caption" width="363" height="40" valign="top" colspan="2" style="border-left-style: solid; border-left-width: 1; font-weight:bold; text-align:left; border-right-style:none; border-right-width:none; border-top-style:none; border-top-width:none">&nbsp;</td>
+			--></tr>
+			
+		<tr>
+			<td width=197 height=25><script>document.write(MultiArray["Active"][lang])</script>
+				<input id="Checkbox1" onclick="enableReload(); enabledUpdateButton()" type=checkbox CHECKED value=ON name=NRRState> </td>
+		<tr>
+			<td height=20 ></td></tr>
+		<tr>
+			<td width=197 height=25 style="color:#aca899";><script>document.write(MultiArray["Not ready reason ID"][lang])</script></td>
+			<td align=left width=292 height=25>
+				<input id="NRRId" type=text disabled size=20 name=NRRId> 
+			</td> 
+		</tr>
+		<tr>
+			<td width=197 height=25><script>document.write(MultiArray["Not ready reason name"][lang])</script></td>
+			<td align=left width=292 height=25>
+				<input id=Text1 type=text onchange=enabledUpdateButton() onclick=enabledUpdateButton() size=20 name=NRRName> 
+			</td> 
+		</tr>
+	</table>
+	
+	<!-- update or delete your the changes -->
+	<table ID="Table2">
+		<tr><td height=20 ></td></tr>
+		<tr>
+			<td align=center width=540>
+				<button id=Button3 style="WIDTH: 59px; HEIGHT: 26px" disabled onclick=validateInfo() name=updateInfo type=button><script>document.write(MultiArray["Update"][lang])</script></button> &nbsp;&nbsp;
+				<button id=Button4 style="WIDTH: 59px; HEIGHT: 26px" onclick=askDelete()  name=deleteNRR type=button ><script>document.write(MultiArray["Delete"][lang])</script></button> </td></tr></tr>
+	</table>
+
+</form> </body> </html>

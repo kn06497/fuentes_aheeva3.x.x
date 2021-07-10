@@ -1,0 +1,176 @@
+<HTML>
+<head>
+<LINK href="./Resources_pages/style.css" type=text/css rel=stylesheet>
+
+<style>
+<!--
+.hide { position:absolute; visibility:hidden; }
+.show { position:absolute; visibility:visible; }
+
+.wait {cursor: wait}
+.normal {cursor: default
+-->
+}
+
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+var duration=5 // Specify duration of progress bar in seconds
+var _progressWidth = 50;	// Display width of progress bar
+
+var _progressBar = new String("");
+var _progressEnd = 10;
+var _progressAt = 0;
+
+
+// Create and display the progress dialog.
+// end: The number of steps to completion
+function ProgressCreate(end) {
+	// Initialize state variables
+	_progressEnd = end;
+	_progressAt = 0;
+
+	// Move layer to center of window to show
+	if (document.all) {	// Internet Explorer
+		progress.className = 'show';
+		progress.style.left = (document.body.clientWidth/2) - (progress.offsetWidth/2);
+		progress.style.top = document.body.scrollTop+(document.body.clientHeight/2) - (progress.offsetHeight/2);
+	} else if (document.layers) {	// Netscape
+		document.progress.visibility = true;
+		document.progress.left = (window.innerWidth/2) - 100;
+		document.progress.top = pageYOffset+(window.innerHeight/2) - 40;
+	} else if (document.getElementById) {	// Netscape 6+
+		document.getElementById("progress").className = 'show';
+		document.getElementById("progress").style.left = (window.innerWidth/2)- 100;
+		document.getElementById("progress").style.top = pageYOffset+(window.innerHeight/2) - 40;
+	}
+
+	ProgressUpdate();	// Initialize bar
+}
+
+// Hide the progress layer
+function ProgressDestroy() {
+ if(window.top.left != undefined)
+ {
+ 	for (var i=0;i < window.top.left.document.all.length; i++)
+ 		window.top.left.document.all(i).style.cursor = 'hand';
+ }
+
+    if (document.all)
+        for (var i=0;i < document.all.length; i++)
+             document.all(i).style.cursor = 'default';
+
+
+	// Move off screen to hide
+	if (document.all) {	// Internet Explorer
+		progress.className = 'hide';
+	} else if (document.layers) {	// Netscape
+		document.progress.visibility = false;
+	} else if (document.getElementById) {	// Netscape 6+
+		document.getElementById("progress").className = 'hide';
+	}
+}
+
+// Increment the progress dialog one step
+function ProgressStepIt() {
+	_progressAt++;
+	if(_progressAt > _progressEnd) _progressAt = _progressAt % _progressEnd;
+	ProgressUpdate();
+}
+
+// Update the progress dialog with the current state
+function ProgressUpdate() {
+	var n = (_progressWidth / _progressEnd) * _progressAt;
+	if (document.all) {	// Internet Explorer
+		var bar = dialog.bar;
+ 	} else if (document.layers) {	// Netscape
+		var bar = document.layers["progress"].document.forms["dialog"].bar;
+		n = n * 0.55;	// characters are larger
+	} else if (document.getElementById){
+                var bar=document.dialog.bar
+        }
+	var temp = _progressBar.substring(0, n);
+	bar.value = temp;
+}
+
+// Demonstrate a use of the progress dialog.
+function Demo() {
+	ProgressCreate(10);
+	window.setTimeout("Click()", 100);
+}
+
+function Click() {
+	if(_progressAt >= _progressEnd) {
+		ProgressDestroy();
+		return;
+	}
+	ProgressStepIt();
+	window.setTimeout("Click()", (duration-1)*1000/10);
+}
+
+function CallJS(jsStr) {
+ if(window.top.left != undefined)
+ {
+ 	for (var i=0;i < window.top.left.document.all.length; i++)
+ 		window.top.left.document.all(i).style.cursor = 'wait';
+ }
+
+    if (document.all)
+        for (var i=0;i < document.all.length; i++)
+             document.all(i).style.cursor = 'wait';
+  return eval(jsStr)
+}
+
+function displayAgentSchedule(){
+  var starttime = window.top.rtop.bdate.value
+	out.println("!!!!!!!!!!!!!!!!!STARTIME = " + starttime);
+  var endtime = window.top.rtop.edate.value
+  var agt = window.top.rtop.edate.value
+  var loc  = "./jsp/agent.jsp?agt=";
+      loc += 1
+  document.location =loc;
+}
+</script>
+
+<SCRIPT LANGUAGE="JavaScript">
+//#98A6E9
+//#FFFFCC
+// Create layer for progress dialog
+document.write("<span id=\"progress\" class=\"hide\">");
+	document.write("<FORM name=dialog>");
+	document.write("<TABLE border=2  bgcolor=\"#98A6E9\">");
+	document.write("<TR><TD ALIGN=\"center\">");
+	document.write("Please wait...Loading Configuration Data<BR>");
+	document.write("<input type=text name=\"bar\" size=\"" + _progressWidth/2 + "\"");
+	if(document.all||document.getElementById) 	// Microsoft, NS6
+		document.write(" bar.style=\"color:navy;\">");
+	else	// Netscape
+		document.write(">");
+	document.write("</TD></TR>");
+	document.write("</TABLE>");
+	document.write("</FORM>");
+document.write("</span>");
+
+
+ProgressDestroy();	// Hides
+
+</script>
+<base target="rbottom">
+</head>
+
+<body onload="CallJS('Demo()');">
+<div align="center">
+  <center>
+  <table width="100%" height="100%" bgcolor="#CCCCCC">
+    <tr>
+      <td >&nbsp;</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<script>
+  <!--displayAgentSchedule();-->
+</script>
+
+</body>
+</HTML>

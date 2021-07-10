@@ -1,0 +1,558 @@
+div {
+	height:16px;
+}
+
+
+/*-------------------------- top right frame styles --------------------------*/
+
+/************ navigation and rollovers ************/
+
+#kwicks_container {
+	height: 30px;
+	width: 820px;
+	padding-left: 0px;
+	cursor: default;
+}
+#kwicks a {
+	text-decoration: none;
+}
+
+.kwick {
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #999484;
+}
+
+
+.kwick:hover {
+	color: #B36307;
+
+}
+
+#0 {
+	background-image: url(../img/tab01_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 55px;
+	overflow: hidden;
+}
+
+#0.kwickover {
+	background-image: url(../img/tab01_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 55px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#0.koff {
+	background-image: url(../img/tab01_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 55px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#1 {
+	background-image: url(../img/tab02_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 100px;
+	overflow: hidden;
+}
+
+#1.kwickover {
+	background-image: url(../img/tab02_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 100px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#1.koff {
+	background-image: url(../img/tab02_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 100px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#2 {
+	background-image: url(../img/tab03_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 85px;
+	overflow: hidden;
+}
+
+#2.kwickover {
+	background-image: url(../img/tab03_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 85px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#2.koff {
+	background-image: url(../img/tab03_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 85px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#3 {
+	background-image: url(../img/tab04_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 70px;
+	overflow: hidden;
+}
+
+#3.kwickover {
+	background-image: url(../img/tab04_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 70px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#3.koff {
+	background-image: url(../img/tab04_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 70px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#4 {
+	background-image: url(../img/tab05_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 105px;
+	overflow: hidden;
+}
+
+#4.kwickover {
+	background-image: url(../img/tab05_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 105px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#4.koff {
+	background-image: url(../img/tab05_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 105px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#5 {
+	background-image: url(../img/tab06_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 75px;
+	overflow: hidden;
+}
+
+#5.kwickover {
+	background-image: url(../img/tab06_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 75px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#5.koff {
+	background-image: url(../img/tab06_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 75px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#6 {
+	background-image: url(../img/tab07_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 55px;
+	overflow: hidden;
+}
+
+#6.kwickover {
+	background-image: url(../img/tab07_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 55px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#6.koff {
+	background-image: url(../img/tab07_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 55px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#7 {
+	background-image: url(../img/tab08_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 75px;
+	overflow: hidden;
+}
+
+#7.kwickover {
+	background-image: url(../img/tab08_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 75px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#7.koff {
+	background-image: url(../img/tab08_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 75px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#8 {
+	background-image: url(../img/tab09_i.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 115px;
+	overflow: hidden;
+}
+
+#8.kwickover {
+	background-image: url(../img/tab09_r.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 115px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 14px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #B36307;
+}
+
+#8.koff {
+	background-image: url(../img/tab09_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	cursor: pointer;
+	width: 115px;
+	overflow: hidden;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-right: 1px;
+	font-weight: bold;
+	position: relative;
+	top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 2px;
+	color: #ffffff;
+	padding-top: 2px;
+}
+
+#9 {
+	background-image: url(../img/tab10_a.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-left: 3px;
+	font-weight: bold;
+	position: relative;
+	top: 1px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 0px;
+	width: 25px;
+	cursor: pointer;
+}
+
+#9.logoover {
+	background-image: url(../img/tab10_anim.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	display: block;
+	height: 25px;
+	margin-left: 3px;
+	font-weight: bold;
+	position: relative;
+	top: 1px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	text-indent: 0px;
+	width: 25px;
+	cursor: pointer;
+}
+
+
+/************ end navigation and rollovers ************/
+
+/************ logo page ************/
+
+.startback {
+	background-image: url(../img/intro_bg01.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	background-color: #EE901F;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+#wrapper {
+	background-image: url(../img/intro_bg03.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+	height:100%;
+	width:100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	text-align: center;
+}
+
+
+/************ end logo page ************/
+
+
+/*------------------------ end top right frame styles ------------------------*/

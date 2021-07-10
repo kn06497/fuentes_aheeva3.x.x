@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<LINK href="style.css" rel="stylesheet" type="text/css" />
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<title>Add tenant</title>
+<script language="JavaScript" src="jsUtil.js"> </script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<base target="rbottom">
+
+<script language="javascript" type="text/javascript">
+function validateInfo()
+	{
+	
+	if(document.tenant.tname.value == "")
+		alert("Please enter tenant name.");
+	else
+		{
+		already_use = false;
+		var tenants 	= appletObj.getTenantInfo();
+		var jsTenants	= tenants + "";
+		arrayTenants	= jsTenants .split("|")
+		for(h=0; h < arrayTenants.length && !already_use; h++)
+			{
+			thisTenantInfos = arrayTenants[h].split(",");			
+			if(thisTenantInfos[1] == document.tenant.tname.value)
+				{
+				alert("Tenant name "+document.tenant.tname.value+" already exists. \n Please retry !");
+				already_use = true;
+				}			
+			}
+		
+		if(validation(document.tenant.tname.value)==0)
+		{
+			alert("You cannot use ~ or ^ or | !");
+			document.tenant.tname.value.focus();
+		}
+		else if(!already_use)
+			{
+			appletObj.saveTenant(document.tenant.tname.value);
+			//alert("New Tenant has been created");
+			}
+		}	
+	}
+
+</script>
+</head>
+
+<body class="bottompagebody" TEXT="#000000" LINK="#000066" VLINK="#666666" >
+<form onSubmit="validateInfo()" name="tenant" method="get">
+		<table border="0">
+		  <tr>
+			<td>&nbsp;</td>
+			<td><h3>Add new tenant</h3></td>
+		  </tr>
+		  <tr>
+			<td>&nbsp;Name</td>
+			<td>&nbsp;<input name="tname" type="text"></td>
+		  </tr>
+		  <tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;<input name="submit" type="submit" value="Submit">
+		  </tr>
+		</table></form>
+</body>
+</html>

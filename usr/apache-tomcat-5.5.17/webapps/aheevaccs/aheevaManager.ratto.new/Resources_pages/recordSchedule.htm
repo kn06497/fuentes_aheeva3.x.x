@@ -1,0 +1,247 @@
+<html>
+
+<head>
+
+<LINK href="style.css" rel="stylesheet" type="text/css" >
+<LINK href="livestats.css" 	rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" src="../lang_browser.js"></script>
+<script language="javascript" type="text/javascript" src="../language.js"></script>
+<script language="JavaScript" src="pupdate.js"></script>
+<script language="JavaScript" src="jsUtil.js"></script>
+<script language="javascript" type="text/javascript" src="Browser.js"></script>
+<script language="JavaScript">
+
+function fillObjectCombo()
+{
+	//var vValue = normalizeString(QueryString('type'));
+	var tenant_dbid = normalizeString(QueryString('tenant_dbid'));
+
+		var agents = appletObj.getAgentsByName(tenant_dbid);
+		var jsAgents = agents + "";
+    	arrayAgents = jsAgents .split("|");
+    	for (j = 0; j <arrayAgents.length; j++){
+    		var iStartPos = arrayAgents[j].indexOf('[');
+    		var iEndPos   = arrayAgents[j].indexOf(']');
+    		var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+    		myOption = new Option(arrayAgents [j],login)
+			optionPos = objects.options.length
+			objects.options[optionPos]=myOption
+    	}
+
+  		/*Fill agents group combo box with agent group name*/
+   		var agentGroups = appletObj.getAgentGroupByName(tenant_dbid);
+		var jsAgentGroups = agentGroups + "";
+    	arrayGroups = jsAgentGroups.split("|");
+    	for (j = 0; j <arrayGroups.length; j++){
+    		myOption = new Option(arrayGroups[j],arrayGroups[j])
+			optionPos = agtGrp.options.length
+			agtGrp.options[optionPos]=myOption
+    	}
+
+}
+
+
+function getAgentsInGroup()
+{
+//alert(agtGrp.value)
+	if(agtGrp.value =='AllGroups')
+	{
+		//Empty the agent group combo box
+		var i=agtGrp.options.length;
+        if (i>1){
+    	    for (i-1; i>=1; i--)
+               agtGrp.options[i] = null;
+        }
+		//Empty the agents combo box
+		var j=objects.options.length;
+        if (j>0){
+    	    for (j-1; j>=0; j--)
+               objects.options[i] = null;
+        }
+        var defaultvalue =  "- All Agents -" ;
+		myOption = new Option(defaultvalue,"AllAgents")
+		optionPos = objects.options.length
+		objects.options[optionPos]=myOption
+
+		fillObjectCombo();
+	}
+	else
+	{
+
+		var agents = appletObj.getAvailableAgentListInGroup(agtGrp.value);
+		var jsAgents = agents + "";
+
+		// Remove all agents from agents option field
+		var i=objects.options.length;
+        if (i>0){
+    	    for (i-1; i>=0; i--)
+               objects.options[i] = null;
+        }
+        var defaultvalue =  "- All Agents -" ;
+		myOption = new Option(defaultvalue,"AllAgents")
+		optionPos = objects.options.length
+		objects.options[optionPos]=myOption
+
+    	arrayAgents = jsAgents .split("|");
+    	for (j = 0; j <arrayAgents.length; j++){
+    		var iStartPos = arrayAgents[j].indexOf('[');
+    		var iEndPos   = arrayAgents[j].indexOf(']');
+    		var login	  = arrayAgents[j].substr(iStartPos+1,iEndPos-iStartPos-1);
+    		myOption = new Option(arrayAgents [j],arrayAgents [j])
+			//myOption = new Option(arrayAgents [j],arrayAgents [j])
+			optionPos = objects.options.length
+			objects.options[optionPos]=myOption
+    	}
+	}
+	return;
+
+}
+
+
+
+function getSelectedObjects()
+{
+	selectedAgents = new Array()
+	for (i=objects.selectedIndex;i<objects.options.length;i++) {
+  		if (objects.options[i].selected) {
+  			selectedAgents[selectedAgents.length]=objects.options[i].value;
+  		}
+  	}
+	var url = '';
+	if (selectedAgents.length > 0)
+	{
+		url= escape(selectedAgents.join('/'))
+	}
+	return url;
+}
+
+function submitInfo()
+{
+	var nb_rec_gen = nb_recording.value;
+	var rec_gen_period = rec_period.value;
+	if(objects.value =='AllAgents')
+		var grpChosen = agtGrp.value;
+	else
+		var vAgent = objects.value;
+	var destination = "../jsp/recordingScedule.jsp?grp="+grpChosen+"&agent="+ vAgent +"&nb_rec_gen="+nb_rec_gen+"&rec_period="+ rec_gen_period;
+	alert(destination)
+	//document.location = destination;
+}
+
+
+function enabledFullTimeSchedBox(){
+	ftweeksched.disabled = false;
+	ftweekendsched.disabled = false;
+	ptweeksched.disabled = true;
+	ptweekendsched.disabled = true;
+}
+
+function enabledPartTimeSchedBox(){
+	ftweeksched.disabled = true;
+	ftweekendsched.disabled = true;
+	ptweeksched.disabled = false;
+	ptweekendsched.disabled = false;
+}
+
+function enableSpecificItems(){
+	//textfield.type = 'text'
+
+}
+
+</script>
+</head>
+
+<body class="bottompagebody" onload="fillObjectCombo()">
+<p align="center">  <script>document.write(MultiArray["Agent's recording schedule"][lang])</script></p>
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="77%"  >
+  <tr>
+    <td style="border-left-style: solid; border-left-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td width="32%" style="border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td style="border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td style="border-right-style: solid; border-right-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="19%" height="23" style="border-left-style: solid; border-left-width: 1; border-top-style: solid; border-top-width: 1" >
+	 <script>document.write(MultiArray["Agent group"][lang])</script></td>
+    <td style="border-top-style: solid; border-top-width: 1" > <select name="agtGrp"  onChange="getAgentsInGroup()">
+        <option value="AllGroups">-  <script>document.write(MultiArray["All groups"][lang])</script> -</option>
+      </select></td>
+    <td width="37%" style="border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td width="12%" style="border-right-style: solid; border-right-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="19%" height="23" style="border-left-style: solid; border-left-width: 1; border-top-style: solid; border-top-width: 1" >
+	<script>document.write(MultiArray["Agents"][lang])</script></td>
+    <td style="border-top-style: solid; border-top-width: 1" > <select name="objects" >
+        <option value="AllAgents">- All Agents -</option>
+      </select></td>
+    <td width="37%" style="border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td width="12%" style="border-right-style: solid; border-right-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="20" style="border-left-style: solid; border-left-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td style="border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td style="border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td style="border-right-style: solid; border-right-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="26" style="border-left-style: solid; border-left-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td colspan="3" style="border-top-style: solid; border-top-width: 1; border-right-style: solid; border-right-width: 1" ><div align="center">
+       <script>document.write(MultiArray["General scheduling"][lang])</script></div></td>
+  </tr>
+  <tr>
+    <td height="20" style="border-left-style: solid; border-left-width: 1; border-top-style: solid; border-top-width: 1" ></td>
+    <td style="border-top-style: solid; border-top-width: 1" ><script>document.write(MultiArray["Number of recording"][lang])</script>:
+      <select name="nb_recording">
+      	<option value="All"><script>document.write(MultiArray["All"][lang])</script></option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+      </select> </td>
+    <td style="border-top-style: solid; border-top-width: 1" ><script>document.write(MultiArray["Choose period"][lang])</script> :
+      <select name="rec_period">
+        <option><script>document.write(MultiArray["Daily"][lang])</script></option>
+        <option><script>document.write(MultiArray["Weekly"][lang])</script></option>
+        <option><script>document.write(MultiArray["Monthly"][lang])</script></option>
+      </select></td>
+    <td style="border-right-style: solid; border-right-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="20" style="border-left-style: solid; border-left-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td style="border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td style="border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td style="border-right-style: solid; border-right-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="20" style="border-left-style: solid; border-left-width: 1; border-top-style: solid; border-top-width: 1" >&nbsp;</td>
+    <td colspan="3" style="border-top-style: solid; border-top-width: 1; border-right-style: solid; border-right-width: 1" ><div align="left"><script>document.write(MultiArray["Add specific scheduling"][lang])</script>:
+        <input type="checkbox" name="checkbox" value="checkbox" onClick="enableSpecificItems()" >
+      </div></td>
+  </tr>
+
+  <tr>
+    <td width="19%" style="border-left-style: solid; border-left-width: 1; border-bottom-style: solid; border-bottom-width: 1; border-top-style:solid; border-top-width:1" ><div align="right"></div></td>
+    <td style="border-bottom-style: solid; border-bottom-width: 1; border-top-style:solid; border-top-width:1"></td>
+    <td width="37%" style="border-bottom-style: solid; border-bottom-width: 1; border-top-style:solid; border-top-width:1"></td>
+    <td width="12%" style="border-right-style: solid; border-right-width: 1; border-bottom-style: solid; border-bottom-width: 1; border-top-style:solid; border-top-width:1" align="right" >
+      <button onClick="submitInfo()"><script>document.write(MultiArray["Submit"][lang])</script></button></td>
+  </tr>
+</table>
+
+
+
+</body>
+
+</html><body></body>

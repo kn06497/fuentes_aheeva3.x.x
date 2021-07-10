@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Record Trigger</title>
+<script language="JavaScript1.2">
+function newTrigger(){
+	var recordType = document.getElementById("recordingType").value;
+	var key = document.getElementById("recordValue").value;
+	var subKey = document.getElementById("dataName").value;
+	var typeR = document.getElementById("type").value;
+	if (typeR == "userData"){
+		//alert("is userdata");
+		window.top.opener.appletObj.sendTriggerToServer(typeR,subKey,key,recordType);	
+	} else{
+		//alert("is not userdata");
+		window.top.opener.appletObj.sendTriggerToServer(typeR,key,subKey,recordType);
+	}
+}
+</script>
+</head>
+
+<body>
+<script language="JavaScript1.2" src="Resources_pages/jsUtil.js"> </script>
+
+<SCRIPT>
+
+
+
+function showhide(id, property)
+	{
+	if(document.getElementById)
+		document.getElementById(id).style.visibility = property;
+	}
+</SCRIPT> 
+
+	ADD RECORD ON TRIGGER<br />
+	<table width="200" border="0">  
+	  <tr>
+		<td>Record Type</td>
+		<td id="name_sh" style="visibility:hidden">Name</td>
+		<td>Value</td>
+	  </tr>  
+	  <tr>
+		<td>
+			<select id="type" name="type" onChange="if(this.value!='userData') {showhide('name_sh', 'hidden');showhide('data_name_sh', 'hidden');} else {showhide('name_sh', 'visible');showhide('data_name_sh', 'visible');}">
+				<option value="ani">ANI</option>
+				<option value="dnis">DNIS</option>
+				<option value="agent_ID">AgentID</option>
+				<option value="userData">AttachedData</option>
+			</select>
+		</td>
+		<td id="data_name_sh" style="visibility:hidden"><input id="dataName" name="data_name" type="text"></td>
+		<td><input id="recordValue" name="recordValue" type="text" ></td>
+		<td>
+			<select id="recordingType" name="recordingType" >
+				<option value="audio">Audio</option>
+				<option value="video">Video</option>
+				<option value="both">Both</option>
+			</select>
+		</td>
+		
+	  </tr>
+	  
+	  <tr><td></td><td align="center"><input name="submit" type="button"  onClick="newTrigger()" value="Add Record"></td></tr>
+	  
+	</table>
+
+
+</body>
+</html>

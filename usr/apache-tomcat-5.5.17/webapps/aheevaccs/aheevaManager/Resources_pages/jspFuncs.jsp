@@ -1,0 +1,5 @@
+
+
+<%
+	out.write("alert('allegra');");
+%>

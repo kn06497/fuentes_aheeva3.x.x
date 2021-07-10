@@ -1,0 +1,205 @@
+
+; -------------------------------------------------------------------------------------
+; -------------------------------------------------------------------------------------
+; ----------------------------< AHEEVA DIALPLAN SECTION >------------------------------
+; -------------------------------------------------------------------------------------
+; -------------------------------------------------------------------------------------
+
+
+[aheeva_inbound]
+exten => 8478,1,Answer
+exten => 8478,n,AHEventsProxy(MSG_TYPE_GET_AHEEVA_TRACKNUM)
+exten => 8478,n,AhAgentDistribute(grp1|${EPOCH}|${CALLERIDNUM}|${EXTEN}|${AHEEVA_TRACKNUM}|||1|data:test)
+
+exten => h,1,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:${CALLERIDNUM}:${AH_RECORDID}:${EPOCH})
+exten => h,n,Hangup
+
+[agentbarge]
+exten => h,1,Hangup
+
+exten => _AB.,1,NoCDR()
+exten => _AB.,n,Answer
+exten => _AB.,n,AgentBarge(${EXTEN:2})
+exten => _AB.,n,Hangup
+
+exten => ${AH_BARGE_EXTEN},1,NoCDR()
+exten => ${AH_BARGE_EXTEN},n,Ringing
+exten => ${AH_BARGE_EXTEN},n,Answer
+exten => ${AH_BARGE_EXTEN},n,AgentBarge()
+exten => ${AH_BARGE_EXTEN},n,Hangup
+
+[agents]
+; Requests coming from the StarPhone
+exten => _AH.,1,NoCDR()
+exten => _AH.,2,Set(AH_UNIQUEID=DUMMYID)
+exten => _AH.,3,AgentLogin(${EXTEN:2},s)
+
+; Requests coming from the StarPhone (Backward compatibility)
+exten => _AK.,1,NoCDR()
+exten => _AK.,2,Set(AH_UNIQUEID=DUMMYID)
+exten => _AK.,3,AgentLogin(${EXTEN:2},s)
+
+;exten => _XXXX,1,Dial(Sip/${EXTEN})
+
+exten => _77.,n,Dial(IAX2/iax_r2/${EXTEN},20,tTwW)
+
+
+[aheeva]
+include => agents
+include => ccsr
+include => agentbarge
+;include => aheeva_inbound
+;include => from-pstn
+;include => from-ecutel
+
+[aheeva_sbr]
+;exten => 8478,1,Goto(aheeva_sbr,s,1)
+
+exten => s,1,AHEventsProxy(MSG_TYPE_SBR_ROUTING_REQUEST)
+exten => s,n,Goto(aheeva_ccs, aheeva_sbr-${SBRSTATUS},1)
+
+exten => _s.,1,AHEventsProxy(MSG_TYPE_SBR_ROUTING_REQUEST${EXTEN:1})
+exten => _s.,n,Goto(aheeva_ccs, aheeva_sbr-${SBRSTATUS},1)
+
+exten => _BR.,1,Wait(0.5)
+exten => _BR.,2,Set(LIST_NAME=${CUT(AH_URL,*,2)})
+exten => _BR.,3,GotoIf($["${LIST_NAME}" = ""]?4:6)
+exten => _BR.,4,AHEventsProxy(MSG_TYPE_SBR_ROUTING_REQUEST^broadcast=true^phone_num=${EXTEN:2}^amdstatus=${AMDSTATUS})
+exten => _BR.,5,Goto(7)
+exten => _BR.,6,AHEventsProxy(MSG_TYPE_SBR_ROUTING_REQUEST^broadcast=true^phone_num=${EXTEN:2}^${LIST_NAME}^amdstatus=${AMDSTATUS})
+exten => _BR.,7,Goto(aheeva_ccs, aheeva_sbr-${SBRSTATUS},1)
+
+exten => aheeva_sbr-NORMAL,1,Hangup
+exten => aheeva_sbr-NO_SCRIPT_DEFINED,1,Hangup
+exten => aheeva_sbr-NO_ONE_AVAILABLE,1,Hangup
+
+exten => h,1,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:0:0:${EPOCH})
+exten => h,n,Hangup
+
+[ccssbr]
+exten => _CCSSBR_.,1,NoOp([${EXTEN}])
+exten => _CCSSBR_.,n,AHEventsProxy(MSG_TYPE_SBR_DISTRIBUTE_NOW:${EXTEN:7})
+exten => _CCSSBR_.,n,Hangup
+
+[aheeva_ccs]
+exten => h,1,Set(AH_TECHNOLOGY=${CUT(CHANNEL,/,1)})
+exten => h,2,GotoIf($["${AH_TECHNOLOGY}" = "Local"]?20:3)
+exten => h,3,GotoIf($["${AH_ANSWERING_MACHINE}" = "1"]?20:4)
+exten => h,4,GotoIf($["${AH_QUEUESTATUS}" = "UNKNOWN"]?7:5)
+exten => h,5,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => h,6,Goto(10)
+exten => h,7,AHEventsProxy(MSG_TYPE_CALL_ANSWERED:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => h,8,AHEventsProxy(MSG_TYPE_QUEUE_CALL:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_QUEUE}:${EPOCH}:${EXTEN})
+exten => h,9,AHEventsProxy(MSG_TYPE_QUEUE_ABANDONED:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => h,10,Goto(aheeva_ccs,h,20)
+
+exten => h,20,Hangup
+exten => t,1,Hangup
+
+exten => _OUT.,1,NoOp(AHEEVA1 Variables: AH_PHONE_NUMBER=[${AH_PHONE_NUMBER}] AH_QUEUE=[${AH_QUEUE}] AH_URL=[${AH_URL}] AH_RECORDID=[${AH_RECORDID}] AH_AMD_REQUIRED=[${AH_AMD_REQUIRED}] AH_CALLERID=[${AH_CALLERID}] AHEEVA_TRACKNUM=[${AHEEVA_TRACKNUM}] AH_LEAVE_MESSAGE=[${AH_LEAVE_MESSAGE}])
+exten => _OUT.,2,SetCallerId(${AH_CALLERID})
+exten => _OUT.,3,Dial(${TRUNK}/${AH_PHONE_NUMBER},45,tT)
+exten => _OUT.,4,NoOp(Dial Status=[${DIALSTATUS}] Hangup Cause=[${HANGUPCAUSE}])
+exten => _OUT.,5,GotoIf($["${DIALSTATUS}" = "CHANUNAVAIL" & "${HANGUPCAUSE}" = "16"]?6:8)
+exten => _OUT.,6,AHEventsProxy(MSG_TYPE_CALL_SIT:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => _OUT.,7,Goto(8)
+exten => _OUT.,8,AHEventsProxy(${DIALSTATUS}:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => _OUT.,9,NoOp()
+
+; ************************************************************************************************************************************************
+
+exten => ccs_answer,1,Answer
+exten => ccs_answer,2,GotoIf($["${AH_AMD_REQUIRED}" = "1"]?3:aheeva_ccs,ccs_answer-AMD_PERSON,1)
+exten => ccs_answer,3,Set(AH_ANSWERING_MACHINE=0)
+exten => ccs_answer,4,Set(AH_QUEUESTATUS=UNKNOWN)
+exten => ccs_answer,5,AMD
+exten => ccs_answer,6,Noop(AMDSTATUS[${AMDSTATUS}] AMDCAUSE[${AMDCAUSE}])
+exten => ccs_answer,7,Goto(aheeva_ccs,ccs_answer-${AMDSTATUS},1)
+
+exten => ccs_answer-AMD_PERSON,1,Set(AH_ANSWERING_MACHINE=0)
+exten => ccs_answer-AMD_PERSON,2,AHEventsProxy(MSG_TYPE_CALL_ANSWERED:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => ccs_answer-AMD_PERSON,3,GotoIf($["${AH_URL:0:9}" = "broadcast"]?aheeva_ccs,ccs_answer_broadcast,3:4)
+;exten => ccs_answer-AMD_PERSON,4,AhAgentDistribute(${AH_QUEUE}|${EPOCH}|${AH_PHONE_NUMBER}|ccs_answer|${AHEEVA_TRACKNUM}|||1|${AH_URL})
+; ************************************************************************************************************************************************
+; MODIFICO 2006-08-17 SI EL GRUPO es televenta no se envia el RECORD_ID con ? sino con &
+; ************************************************************************************************************************************************
+exten => ccs_answer-AMD_PERSON,4,GotoIf($["${AH_QUEUE:0:14}" = "portateleventa"]?5:7)
+exten => ccs_answer-AMD_PERSON,5,AhAgentDistribute(${AH_QUEUE}|${EPOCH}|${AH_PHONE_NUMBER}|ccs_answer|${AHEEVA_TRACKNUM}|||1|${AH_URL}&RECORD_ID=${AH_RECORDID})
+exten => ccs_answer-AMD_PERSON,6,Goto(14)
+exten => ccs_answer-AMD_PERSON,7,GotoIf($["${AH_QUEUE:0:14}" = "HTM"]?8:10)
+exten => ccs_answer-AMD_PERSON,8,AhAgentDistribute(${AH_QUEUE}|${EPOCH}|${AH_PHONE_NUMBER}|ccs_answer|${AHEEVA_TRACKNUM}|||1|${AH_URL}&RECORDID=${AH_RECORDID})
+exten => ccs_answer-AMD_PERSON,9,Goto(14)
+;Aumentado por FB(the buggo is here!)
+exten => ccs_answer-AMD_PERSON,10,GotoIf($["${AH_QUEUE:0:14}" = "actualizacion"]?11:13)
+exten => ccs_answer-AMD_PERSON,11,AhAgentDistribute(${AH_QUEUE}|${EPOCH}|${AH_PHONE_NUMBER}|ccs_answer|${AHEEVA_TRACKNUM}|||1|${AH_URL}&RECORDID=${AH_RECORDID})
+exten => ccs_answer-AMD_PERSON,12,Goto(14)
+exten => ccs_answer-AMD_PERSON,13,AhAgentDistribute(${AH_QUEUE}|${EPOCH}|${AH_PHONE_NUMBER}|ccs_answer|${AHEEVA_TRACKNUM}|||1|${AH_URL}?RECORDID=${AH_RECORDID})
+exten => ccs_answer-AMD_PERSON,14,Hangup
+
+;exten => ccs_answer-AMD_PERSON,10,AhAgentDistribute(${AH_QUEUE}|${EPOCH}|${AH_PHONE_NUMBER}|ccs_answer|${AHEEVA_TRACKNUM}|||1|${AH_URL}?RECORDID=${AH_RECORDID})
+;exten => ccs_answer-AMD_PERSON,11,Hangup
+
+
+exten => ccs_answer-AMD_MACHINE,1,AHEventsProxy(MSG_TYPE_CALL_ANSWER_MACHINE:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => ccs_answer-AMD_MACHINE,2,GotoIf($["${AH_URL:0:9}" = "broadcast"]?aheeva_ccs,ccs_answer_broadcast,1:3)
+exten => ccs_answer-AMD_MACHINE,3,Set(AH_ANSWERING_MACHINE=1)
+exten => ccs_answer-AMD_MACHINE,4,Hangup
+
+exten => ccs_answer-AMD_NOTSURE,1,Goto(ccs_answer-AMD_PERSON,1)
+
+exten => ccs_answer-AMD_HANGUP,1,AHEventsProxy(MSG_TYPE_CALL_ANSWERED:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => ccs_answer-AMD_HANGUP,n,AHEventsProxy(MSG_TYPE_QUEUE_CALL:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_QUEUE}:${EPOCH}:${EXTEN})
+exten => ccs_answer-AMD_HANGUP,n,AHEventsProxy(MSG_TYPE_QUEUE_ABANDONED:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => ccs_answer-AMD_HANGUP,n,Set(AH_ANSWERING_MACHINE=1)
+exten => ccs_answer-AMD_HANGUP,n,Hangup
+
+exten => ccs_answer_broadcast,1,Set(AH_ANSWERING_MACHINE=1)
+exten => ccs_answer_broadcast,2,GotoIf($["${AH_LEAVE_MESSAGE}" = "1"]?3:4)
+exten => ccs_answer_broadcast,3,Goto(aheeva_sbr,BR${AH_PHONE_NUMBER}^script=${AH_QUEUE},1)
+exten => ccs_answer_broadcast,4,Hangup
+
+[ccsr]
+exten => _CCS.,1,Set(AH_TEMP=${EXTEN:3})
+exten => _CCS.,n,Noop([${AH_TEMP}])
+exten => _CCS.,n,Set(AHEEVA_TRACKNUM=${CUT(AH_TEMP,^,1)})
+exten => _CCS.,n,Set(AH_EXTEN=${CUT(AH_TEMP,^,2)})
+exten => _CCS.,n,Set(AH_QUEUE=${CUT(AH_TEMP,^,3)})
+exten => _CCS.,n,Set(AH_QUEUE_ADDRESS=${CUT(AH_TEMP,^,4)})
+exten => _CCS.,n,Set(AH_AGENTID=${CUT(AH_TEMP,^,5)})
+exten => _CCS.,n,Set(AH_PHONENUMBER=${CUT(AH_TEMP,^,6)})
+exten => _CCS.,n,Set(AH_URL=${CUT(AH_TEMP,^,7)})
+exten => _CCS.,n,Noop([${AHEEVA_TRACKNUM}] [${AH_PHONENUMBER}] [${AH_EXTEN}] [${AH_QUEUE}] [${AH_QUEUE_ADDRESS}] [${AH_AGENTID}] [${AH_PHONENUMBER}] [${AH_URL}] )
+exten => _CCS.,n,AhAgentDistribute(${AH_QUEUE}|${EPOCH}|${AH_PHONENUMBER}|${AH_PHONENUMBER}|${AHEEVA_TRACKNUM}|${AH_AGENTID}|||${AH_URL})
+exten => _CCS.,n,Hangup
+
+exten => h,1,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:${AH_PHONENUMBER}:${AH_RECORDID}:${EPOCH})
+exten => h,n,Hangup
+
+
+[aheeva_ccs_transfer]
+exten => _TFER.,1,Dial(${TRUNK}/${EXTEN:4})
+exten => _TFER.,n,Hangup
+
+exten => h,1,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => h,n,Hangup
+exten => t,1,Hangup
+
+
+[aheeva_ccs_conference]
+exten => _MEETME.,1,NoCDR()
+exten => _MEETME.,2,GotoIf($["${AH_MASTER_CHANNEL}" = "1"]?3:5)
+exten => _MEETME.,3,Meetme(${EXTEN:6},Adqx)
+exten => _MEETME.,4,Hangup
+exten => _MEETME.,5,Meetme(${EXTEN:6},wdqx)
+exten => _MEETME.,6,Hangup
+
+exten => h,1,GotoIf($[$["${AH_MASTER_CHANNEL}" = "1"] | $["${AH_THIRD_CHANNEL}" = "1"]]?2:3)
+exten => h,2,AHEventsProxy(MSG_TYPE_TERMINATE_CALL:${AHEEVA_TRACKNUM}:${AH_PHONE_NUMBER}:${AH_RECORDID}:${EPOCH})
+exten => h,3,Hangup
+exten => t,1,Hangup
+
+[aheeva_spy]
+exten => _AGSPY.,1,NoCDR()
+exten => _AGSPY.,n,NOOP(AHEEVA MANAGER SPY)
+exten => _AGSPY.,n,AhChanSpy(Agent/${EXTEN:5}&IAX2/${EXTEN:5}|qb)
+exten => _AGSPY.,n,Hangup
